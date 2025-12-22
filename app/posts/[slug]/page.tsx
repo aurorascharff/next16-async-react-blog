@@ -9,31 +9,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { deletePost } from '@/data/actions/post-actions';
-import { getPostById } from '@/data/queries/post-queries';
+import { getPostBySlug } from '@/data/queries/post-queries';
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return [{ id: 'none' }];
+  return [{ slug: 'none' }];
 }
 
 export default async function PostPage({ params }: Props) {
-  const { id } = await params;
+  const { slug } = await params;
 
   return (
-    <ViewTransition name={`post-card-${id}`} share="morph">
+    <ViewTransition name={`post-card-${slug}`} share="morph">
       <Card>
         <CardHeader className="pb-4">
           <Suspense fallback={<PostHeaderSkeleton />}>
-            <PostHeader id={id} />
+            <PostHeader slug={slug} />
           </Suspense>
         </CardHeader>
         <Separator />
         <CardContent className="pt-6">
           <Suspense fallback={<Skeleton className="h-24 w-full" />}>
-            <PostContent id={id} />
+            <PostContent slug={slug} />
           </Suspense>
         </CardContent>
       </Card>
@@ -41,8 +41,8 @@ export default async function PostPage({ params }: Props) {
   );
 }
 
-async function PostHeader({ id }: { id: string }) {
-  const post = await getPostById(id);
+async function PostHeader({ slug }: { slug: string }) {
+  const post = await getPostBySlug(slug);
 
   const createdDate = new Date(post.createdAt).toLocaleDateString('en-US', {
     day: 'numeric',
@@ -83,12 +83,12 @@ async function PostHeader({ id }: { id: string }) {
         </div>
       </div>
       <div className="flex gap-2">
-        <Link href={`/posts/${post.id}/edit`} className={buttonVariants({ variant: 'outline' })}>
+        <Link href={`/posts/${post.slug}/edit`} className={buttonVariants({ variant: 'outline' })}>
           Edit
         </Link>
         <form>
           <ActionButton
-            action={deletePost.bind(null, post.id)}
+            action={deletePost.bind(null, post.slug)}
             successMessage="Post deleted successfully"
             redirectTo="/posts"
             variant="destructive"
@@ -101,8 +101,8 @@ async function PostHeader({ id }: { id: string }) {
   );
 }
 
-async function PostContent({ id }: { id: string }) {
-  const post = await getPostById(id);
+async function PostContent({ slug }: { slug: string }) {
+  const post = await getPostBySlug(slug);
 
   return <p className="text-base leading-relaxed whitespace-pre-wrap">{post.content}</p>;
 }

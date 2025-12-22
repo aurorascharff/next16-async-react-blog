@@ -9,18 +9,18 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { updatePost } from '@/data/actions/post-actions';
-import { getPostById } from '@/data/queries/post-queries';
+import { getPostBySlug } from '@/data/queries/post-queries';
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return [{ id: 'none' }];
+  return [{ slug: 'none' }];
 }
 
 export default async function EditPostPage({ params }: Props) {
-  const { id } = await params;
+  const { slug } = await params;
 
   return (
     <Card>
@@ -29,15 +29,15 @@ export default async function EditPostPage({ params }: Props) {
       </CardHeader>
       <CardContent>
         <Suspense fallback={<EditPostPageSkeleton />}>
-          <EditPostContent id={id} />
+          <EditPostContent slug={slug} />
         </Suspense>
       </CardContent>
     </Card>
   );
 }
 
-async function EditPostContent({ id }: { id: string }) {
-  const post = await getPostById(id);
+async function EditPostContent({ slug }: { slug: string }) {
+  const post = await getPostBySlug(slug);
 
   return (
     <form className="space-y-6">
@@ -78,14 +78,14 @@ async function EditPostContent({ id }: { id: string }) {
       </div>
       <div className="flex gap-3 pt-2">
         <ActionButton
-          action={updatePost.bind(null, post.id)}
+          action={updatePost.bind(null, post.slug)}
           successMessage="Post updated successfully"
-          redirectTo={`/posts/${post.id}`}
+          redirectTo={`/posts/${post.slug}`}
           size="lg"
         >
           Save Changes
         </ActionButton>
-        <Link href={`/posts/${post.id}`} className={buttonVariants({ size: 'lg', variant: 'outline' })}>
+        <Link href={`/posts/${post.slug}`} className={buttonVariants({ size: 'lg', variant: 'outline' })}>
           Cancel
         </Link>
       </div>

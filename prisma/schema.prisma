@@ -20,6 +20,7 @@ model Example {
 
 model Post {
     id        String   @id @default(cuid())
+    slug      String   @unique
     title     String
     content   String
     published Boolean  @default(false)

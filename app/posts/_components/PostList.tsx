@@ -36,8 +36,8 @@ export async function PostList({ searchParams }: Props) {
     <div className="space-y-4">
       {posts.map(post => {
         return (
-          <Link key={post.id} href={`/posts/${post.id}`} className="block">
-            <ViewTransition name={`post-card-${post.id}`} share="morph">
+          <Link key={post.slug} href={`/posts/${post.slug}`} className="block">
+            <ViewTransition name={`post-card-${post.slug}`} share="morph">
               <Card className="hover:bg-muted/50 transition-all duration-200 hover:shadow-md">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3">

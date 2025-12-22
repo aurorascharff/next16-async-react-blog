@@ -15,10 +15,10 @@ export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts') =>
   });
 });
 
-export const getPostById = cache(async (id: string) => {
+export const getPostBySlug = cache(async (slug: string) => {
   await slow();
   const post = await prisma.post.findUnique({
-    where: { id },
+    where: { slug },
   });
   if (!post) {
     notFound();
