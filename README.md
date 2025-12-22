@@ -1,6 +1,6 @@
-# Next.js 16 Starter
+# Next.js 16 Interactive Posts
 
-A [Next.js 16](https://nextjs.org/) starter with [Prisma](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)), and modern patterns for building demos and applications. Includes [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) with [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) for opt-in caching and Partial Pre-Rendering.
+A blog posts demo app showcasing [Next.js 16](https://nextjs.org/) patterns with [Prisma](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)), and [sonner](https://sonner.dev/) for toasts. Demonstrates [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) with Partial Pre-Rendering, streaming with Suspense, and modern React 19 patterns.
 
 ## Getting Started
 

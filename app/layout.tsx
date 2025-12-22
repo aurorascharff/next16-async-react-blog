@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  description: 'A Next.js 16 starter with React 19, Prisma, Tailwind CSS, and shadcn/ui',
-  title: 'Next.js Starter',
+  description: 'A Next.js 16 blog posts demo with streaming, Suspense, and modern React 19 patterns',
+  title: 'Interactive Posts',
 };
 
 export default function RootLayout({
