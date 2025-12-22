@@ -15,6 +15,10 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
+export function generateStaticParams() {
+  return [{ id: 'none' }];
+}
+
 export default async function EditPostPage({ params }: Props) {
   const { id } = await params;
 
