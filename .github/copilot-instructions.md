@@ -17,8 +17,8 @@ Always read the patterns and conventions in `README.md` before making suggestion
 - `data/actions/` - Server Actions for mutations with `'use server'`
 - `data/queries/` - Server-side data queries wrapped with `cache()`
 - `_components/` - Route-local components (prefixed with `_`)
-
-Every page folder should contain everything it needs to work. Every component or function should live at the nearest shared space in the hierarchy.
+- Every page folder should contain everything it needs. Components/functions should live at the nearest shared space in the hierarchy.
+- Skeleton components should be exported from the same file as the component they represent, not in separate files.
 
 ## shadcn/ui Components
 
