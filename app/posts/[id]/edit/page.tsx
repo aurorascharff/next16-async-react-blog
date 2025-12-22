@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { ActionButton } from '@/components/design/ActionButton';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
+import { updatePost } from '@/data/actions/post-actions';
 import { getPostById } from '@/data/queries/post-queries';
-
-import { UpdatePostButton } from './_components/UpdatePostButton';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -77,7 +77,14 @@ async function EditPostContent({ id }: { id: string }) {
         </Label>
       </div>
       <div className="flex gap-3 pt-2">
-        <UpdatePostButton postId={post.id} />
+        <ActionButton
+          action={updatePost.bind(null, post.id)}
+          successMessage="Post updated successfully"
+          redirectTo={`/posts/${post.id}`}
+          size="lg"
+        >
+          Save Changes
+        </ActionButton>
         <Link href={`/posts/${post.id}`} className={buttonVariants({ size: 'lg', variant: 'outline' })}>
           Cancel
         </Link>

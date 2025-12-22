@@ -2,14 +2,14 @@ import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { ActionButton } from '@/components/design/ActionButton';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { deletePost } from '@/data/actions/post-actions';
 import { getPostById } from '@/data/queries/post-queries';
-
-import { DeletePostButton } from './_components/DeletePostButton';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -84,7 +84,16 @@ async function PostHeader({ id }: { id: string }) {
         <Link href={`/posts/${post.id}/edit`} className={buttonVariants({ variant: 'outline' })}>
           Edit
         </Link>
-        <DeletePostButton postId={post.id} />
+        <form>
+          <ActionButton
+            action={deletePost.bind(null, post.id)}
+            successMessage="Post deleted successfully"
+            redirectTo="/posts"
+            variant="destructive"
+          >
+            Delete
+          </ActionButton>
+        </form>
       </div>
     </div>
   );

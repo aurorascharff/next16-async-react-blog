@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
+import { ActionButton } from '@/components/design/ActionButton';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-
-import { CreatePostButton } from './_components/CreatePostButton';
+import { createPost } from '@/data/actions/post-actions';
 
 export default function NewPostPage() {
   return (
@@ -45,7 +45,14 @@ export default function NewPostPage() {
                 </Label>
               </div>
               <div className="flex gap-3 pt-2">
-                <CreatePostButton />
+                <ActionButton
+                  action={createPost}
+                  successMessage="Post created successfully"
+                  redirectTo="/posts"
+                  size="lg"
+                >
+                  Create Post
+                </ActionButton>
                 <Link href="/posts" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                   Cancel
                 </Link>
