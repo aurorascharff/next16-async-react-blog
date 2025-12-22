@@ -151,37 +151,37 @@
   }
 }
 
-::view-transition-new(.animate-slide-from-left) {
+::view-transition-new(.slide-from-left) {
   --slide-offset: -60px;
   animation:
-    var(--duration-enter) ease-out var(--duration-exit) both fade,
-    var(--duration-move) ease-in-out both slide;
+    fade var(--duration-move) ease-out both,
+    slide var(--duration-move) ease-in-out both;
 }
-::view-transition-old(.animate-slide-to-right) {
+::view-transition-old(.slide-to-right) {
   --slide-offset: 60px;
   animation:
-    var(--duration-exit) ease-in both fade reverse,
-    var(--duration-move) ease-in-out both slide reverse;
+    fade var(--duration-move) ease-in both reverse,
+    slide var(--duration-move) ease-in-out both reverse;
 }
 
-::view-transition-new(.animate-slide-from-right) {
+::view-transition-new(.slide-from-right) {
   --slide-offset: 60px;
   animation:
-    var(--duration-enter) ease-out var(--duration-exit) both fade,
-    var(--duration-move) ease-in-out both slide;
+    fade var(--duration-move) ease-out both,
+    slide var(--duration-move) ease-in-out both;
 }
-::view-transition-old(.animate-slide-to-left) {
+::view-transition-old(.slide-to-left) {
   --slide-offset: -60px;
   animation:
-    var(--duration-exit) ease-in both fade reverse,
-    var(--duration-move) ease-in-out both slide reverse;
+    fade var(--duration-move) ease-in both reverse,
+    slide var(--duration-move) ease-in-out both reverse;
 }
 
-::view-transition-group(.animate-morph) {
+::view-transition-group(.morph) {
   animation-duration: var(--duration-move);
 }
 
-::view-transition-image-pair(.animate-morph) {
+::view-transition-image-pair(.morph) {
   animation-name: via-blur;
 }
 

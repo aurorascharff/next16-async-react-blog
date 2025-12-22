@@ -23,19 +23,21 @@ export default async function PostPage({ params }: Props) {
   const { id } = await params;
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
-        <Suspense fallback={<PostHeaderSkeleton />}>
-          <PostHeader id={id} />
-        </Suspense>
-      </CardHeader>
-      <Separator />
-      <CardContent className="pt-6">
-        <Suspense fallback={<Skeleton className="h-24 w-full" />}>
-          <PostContent id={id} />
-        </Suspense>
-      </CardContent>
-    </Card>
+    <ViewTransition name={`post-card-${id}`} share="morph">
+      <Card>
+        <CardHeader className="pb-4">
+          <Suspense fallback={<PostHeaderSkeleton />}>
+            <PostHeader id={id} />
+          </Suspense>
+        </CardHeader>
+        <Separator />
+        <CardContent className="pt-6">
+          <Suspense fallback={<Skeleton className="h-24 w-full" />}>
+            <PostContent id={id} />
+          </Suspense>
+        </CardContent>
+      </Card>
+    </ViewTransition>
   );
 }
 
@@ -60,9 +62,7 @@ async function PostHeader({ id }: { id: string }) {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <ViewTransition name={`post-title-${post.id}`} share="morph">
-            <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
-          </ViewTransition>
+          <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
         </div>
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
