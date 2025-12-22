@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-
 import { ActionButton } from '@/components/design/ActionButton';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,10 +13,6 @@ import { getPostBySlug } from '@/data/queries/post-queries';
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-export function generateStaticParams() {
-  return [{ slug: 'none' }];
-}
 
 export default async function EditPostPage({ params }: Props) {
   const { slug } = await params;

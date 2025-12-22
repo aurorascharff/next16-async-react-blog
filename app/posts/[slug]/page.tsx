@@ -15,10 +15,6 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return [{ slug: 'none' }];
-}
-
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
 

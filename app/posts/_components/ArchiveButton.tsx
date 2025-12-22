@@ -2,7 +2,7 @@
 
 import { Archive } from 'lucide-react';
 import { useOptimistic, useTransition } from 'react';
-import { Toggle } from '@/components/ui/toggle';
+import { cn } from '@/lib/utils';
 import { toggleArchivePost } from '@/data/actions/post-actions';
 
 type Props = {
@@ -14,12 +14,10 @@ export function ArchiveButton({ slug, archived }: Props) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived ?? false);
   const [isPending, startTransition] = useTransition();
 
-  function handleInteraction(e: React.MouseEvent | React.KeyboardEvent) {
+  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     e.preventDefault();
-  }
 
-  function pressedAction() {
     startTransition(async () => {
       setOptimisticArchived(!optimisticArchived);
       await toggleArchivePost(slug, !optimisticArchived);
@@ -27,16 +25,20 @@ export function ArchiveButton({ slug, archived }: Props) {
   }
 
   return (
-    <span onClick={handleInteraction} onKeyDown={handleInteraction} role="presentation">
-      <Toggle
-        pressed={optimisticArchived}
-        onPressedChange={pressedAction}
-        disabled={isPending}
-        size="sm"
-        aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
-      >
-        <Archive className={optimisticArchived ? 'text-primary' : ''} />
-      </Toggle>
-    </span>
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={isPending}
+      aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
+      className="group rounded-full p-2 transition-colors hover:bg-primary/10 disabled:opacity-50"
+    >
+      <Archive
+        strokeWidth={optimisticArchived ? 2.5 : 1.5}
+        className={cn(
+          'size-[18px] transition-all',
+          optimisticArchived ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
+        )}
+      />
+    </button>
   );
 }

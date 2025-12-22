@@ -41,3 +41,29 @@ export const getPostBySlug = cache(async (slug: string) => {
   }
   return post;
 });
+
+// Public queries for blog readers
+export const getPublishedPosts = cache(async () => {
+  'use cache';
+  cacheTag('posts');
+
+  await slow();
+  return await prisma.post.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { archived: false, published: true },
+  });
+});
+
+export const getPublishedPostBySlug = cache(async (slug: string) => {
+  'use cache';
+  cacheTag('posts');
+
+  await slow();
+  const post = await prisma.post.findUnique({
+    where: { archived: false, published: true, slug },
+  });
+  if (!post) {
+    notFound();
+  }
+  return post;
+});
