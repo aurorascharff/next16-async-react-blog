@@ -65,3 +65,13 @@ export async function deletePost(slug: string) {
 
   updateTag('posts');
 }
+
+export async function toggleArchivePost(slug: string, archived: boolean) {
+  await slow();
+  await prisma.post.update({
+    data: { archived },
+    where: { slug },
+  });
+
+  updateTag('posts');
+}

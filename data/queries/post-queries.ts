@@ -7,11 +7,21 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
 
-export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts') => {
+export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | 'archived') => {
   await slow();
+
+  const where =
+    filter === 'archived'
+      ? { archived: true }
+      : filter === 'published'
+        ? { archived: false, published: true }
+        : filter === 'drafts'
+          ? { archived: false, published: false }
+          : { archived: false };
+
   return await prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
-    where: filter === 'published' ? { published: true } : filter === 'drafts' ? { published: false } : undefined,
+    where,
   });
 });
 

@@ -7,6 +7,7 @@ const tabs = [
   { label: 'All', value: 'all' },
   { label: 'Published', value: 'published' },
   { label: 'Drafts', value: 'drafts' },
+  { label: 'Archived', value: 'archived' },
 ];
 
 export function PostTabs() {
