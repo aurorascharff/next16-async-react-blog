@@ -28,7 +28,7 @@ export async function createPost(formData: FormData) {
   });
 
   if (!result.success) {
-    throw new Error(result.error.errors[0].message);
+    throw new Error(result.error.issues[0].message);
   }
 
   const { title, description, content, published } = result.data;
@@ -60,7 +60,7 @@ export async function updatePost(slug: string, formData: FormData) {
   });
 
   if (!result.success) {
-    throw new Error(result.error.errors[0].message);
+    throw new Error(result.error.issues[0].message);
   }
 
   const { title, description, content, published } = result.data;
