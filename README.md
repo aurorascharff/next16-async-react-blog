@@ -1,4 +1,4 @@
-# Next.js Starter
+# Next.js 16 Starter
 
 A [Next.js 16](https://nextjs.org/) starter with [Prisma](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)), and modern patterns for building demos and applications. Includes [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) with [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) for opt-in caching and Partial Pre-Rendering.
 
@@ -14,6 +14,12 @@ bun run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Prisma Setup
+
+Generate the Prisma client:
+
+```bash
+npm run prisma.generate
+```
 
 Initialize the local SQLite database:
 
@@ -37,6 +43,8 @@ npm run prisma.studio
 
 - `app` - Pages and layouts using [file-based routing](https://nextjs.org/docs/app/building-your-application/routing)
 - `components` - Shared components
+- `components/ui` - [shadcn/ui](https://ui.shadcn.com/) components built on [Base UI](https://base-ui.com/). Add with `bunx shadcn@latest add <component-name>`
+- `components/design` - Design components that expose Action props and handle async coordination internally
 - `data/actions` - [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) for mutations
 - `data/queries` - Server-side data queries with [`cache()`](https://react.dev/reference/react/cache)
 - `_components` - Route-local components (prefixed with `_`)
@@ -47,19 +55,21 @@ Every page folder should contain everything it needs to work. Every component or
 
 The project uses [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for code formatting. The configuration is in `eslint.config.mjs` and `.prettierrc`. The project is configured to run code formatting and linting on save in Visual Studio Code. Opening the `.code-workspace` file will ensure the correct extensions are set.
 
-## shadcn/ui Components
-
-UI components are from [shadcn/ui](https://ui.shadcn.com/) built on [Base UI](https://base-ui.com/) in `components/ui/`. Add components with `bunx shadcn@latest add <component-name>`.
-
 ## Naming Conventions
 
 - Pascal case for components
 - Kebab case for folders and files
 - Camel case for utility functions and hooks
 
-## Data Fetching and Mutation
+## Development Flow
 
-Mutations are done using [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations). Files are stored inside the `data` folder, where `data/queries` are server-side data queries and `data/actions` are mutations. Take extra consideration when creating hidden endpoints with [`"use server"`](https://react.dev/reference/rsc/use-server) to avoid exposing sensitive data.
+This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) - data fetching is **dynamic by default**. Async components must be wrapped in `<Suspense>` with skeleton fallbacks (export skeleton from same file) or you'll get errors.
+
+**Fetching data** → Create queries in `data/queries/` and call them directly in async Server Components. Wrap with `cache()` for deduplication.
+**Mutating data** → Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
+**Navigation and filtering** → Wrap state changes in `useTransition` to keep old content visible while new data loads.
+
+**Opting into caching** → Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
 
 ## Deployment
 

@@ -14,6 +14,7 @@ Always read the patterns and conventions in `README.md` before making suggestion
 - `app/` - Pages and layouts using file-based routing
 - `components/` - Shared components
 - `components/ui/` - shadcn/ui components built on Base UI
+- `components/design/` - Design components with Action props that handle async coordination internally
 - `data/actions/` - Server Actions for mutations with `'use server'`
 - `data/queries/` - Server-side data queries wrapped with `cache()`
 - `_components/` - Route-local components (prefixed with `_`)
@@ -29,13 +30,14 @@ Always read the patterns and conventions in `README.md` before making suggestion
 
 ## React 19 and Server Components
 
+- This project uses `cacheComponents: true` - data fetching is **dynamic by default**. Add `"use cache"` to opt into caching.
 - All components are **Server Components by default** - only add `'use client'` when needed for interactivity, hooks, or browser APIs.
 - Server Components can be `async` and fetch data directly with `await`.
 - Wrap async Server Components and components using `use()` in `<Suspense>` with appropriate fallbacks for good UX.
 - Use `use()` hook to unwrap promises in client components.
 - Pass promises (not awaited data) from server to client components for streaming.
 - Data fetching goes in `data/queries/` wrapped with `cache()` for deduplication.
-- Mutations go in `data/actions/` with `'use server'` directive.
+- Mutations go in `data/actions/` with `'use server'` directive. Invalidate with `updateTag()` or `revalidateTag()`.
+- Use `useFormStatus()` or `useTransition` for pending states.
 - Use `useOptimistic()` for immediate UI feedback during mutations.
-- Use `useFormStatus()` in form children to access pending state.
 - Use `startTransition` or `useTransition` for non-blocking updates like filter changes.
