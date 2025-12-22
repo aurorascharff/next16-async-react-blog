@@ -7,11 +7,16 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPublishedPostBySlug } from '@/data/queries/post-queries';
+import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map(post => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

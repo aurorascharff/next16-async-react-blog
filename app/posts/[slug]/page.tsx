@@ -7,12 +7,17 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPostBySlug } from '@/data/queries/post-queries';
+import { getPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
 import { DeletePostButton } from '../_components/DeletePostButton';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map(post => ({ slug: post.slug }));
+}
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
