@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
 }
 
 // Example model - replace with your own
