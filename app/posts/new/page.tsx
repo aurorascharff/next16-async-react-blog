@@ -1,11 +1,12 @@
 import Link from 'next/link';
 
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { createPost } from '@/data/actions/post-actions';
+
+import { CreatePostButton } from './_components/CreatePostButton';
 
 export default function NewPostPage() {
   return (
@@ -16,18 +17,16 @@ export default function NewPostPage() {
             ← Back to posts
           </Link>
         </div>
-
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Create New Post</CardTitle>
           </CardHeader>
           <CardContent>
-            <form action={createPost} className="space-y-6">
+            <form className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
                 <Input id="title" name="title" placeholder="Enter post title" required className="h-11" />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="content">Content</Label>
                 <Textarea
@@ -39,18 +38,14 @@ export default function NewPostPage() {
                   className="resize-none"
                 />
               </div>
-
               <div className="flex items-center gap-3">
                 <input type="checkbox" id="published" name="published" className="border-input size-4 rounded" />
                 <Label htmlFor="published" className="cursor-pointer">
                   Publish immediately
                 </Label>
               </div>
-
               <div className="flex gap-3 pt-2">
-                <Button type="submit" size="lg">
-                  Create Post
-                </Button>
+                <CreatePostButton />
                 <Link href="/posts" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                   Cancel
                 </Link>

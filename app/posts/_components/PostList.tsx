@@ -1,23 +1,28 @@
 import Link from 'next/link';
-
+import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getPosts } from '@/data/queries/post-queries';
 
+const filterSchema = z.enum(['all', 'published', 'drafts']).catch('all');
+
 type Props = {
-  filter: 'all' | 'published' | 'drafts';
+  searchParams: Promise<{ filter?: string }>;
 };
 
-export async function PostList({ filter }: Props) {
-  const posts = await getPosts(filter);
+export async function PostList({ searchParams }: Props) {
+  const { filter } = await searchParams;
+  const validFilter = filterSchema.parse(filter);
+  const posts = await getPosts(validFilter);
 
   if (posts.length === 0) {
     return (
       <Card className="py-16 text-center">
         <CardContent>
           <p className="text-muted-foreground text-lg">
-            {filter === 'drafts'
+            {validFilter === 'drafts'
               ? 'No drafts yet.'
-              : filter === 'published'
+              : validFilter === 'published'
                 ? 'No published posts yet.'
                 : 'No posts yet. Create your first post!'}
           </p>
@@ -54,6 +59,26 @@ export async function PostList({ filter }: Props) {
               </CardContent>
             </Card>
           </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+export function PostListSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map(i => {
+        return (
+          <Card key={i}>
+            <CardHeader className="pb-3">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-24" />
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
         );
       })}
     </div>

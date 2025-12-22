@@ -5,7 +5,7 @@ Before you ever suggest anything, review `package.json` to see what packages are
 
 ## Code Style
 
-- Pascal case for components, kebab case for folders and files, camel case for utility functions and hooks.
+- Pascal case for components and component file names, kebab case for folders and non-component files, camel case for utility functions and hooks.
 - Suffix functions that run in transitions with "Action" (e.g., `submitAction`, `deleteAction`).
 - Use `cn` util when merging conditional classes with other classes.
 - Use Base UI for custom interactive UI components not in shadcn/ui.
@@ -23,8 +23,9 @@ Before you ever suggest anything, review `package.json` to see what packages are
 ## Server Components
 
 - All components are **Server Components by default** - only add `'use client'` when needed.
-- Wrap async Server Components in `<Suspense>` with skeleton fallbacks (export skeleton from same file).
-- Pass promises (not awaited data) to client components for streaming.
+- Push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible to maximize static content.
+- Wrap async Server Components accessing dynamic data in `<Suspense>` with skeleton fallbacks (export skeleton from same file).
+- Pass promises (not awaited data) to child components for streaming.
 - Add `"use cache"` to pages, components, or functions you want to pre-render or cache.
 - Invalidate cache with `revalidateTag()` or `updateTag()` after mutations.
 

@@ -63,7 +63,7 @@ The project uses [ESLint](https://eslint.org/) for linting and [Prettier](https:
 
 ## Development Flow
 
-This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) - data fetching is **dynamic by default**. Async components must be wrapped in `<Suspense>` with skeleton fallbacks (export skeleton from same file) or you'll get errors.
+This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) - data fetching is **dynamic by default**. To maximize static content, push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree. This allows parent components to be prerendered while only the dynamic parts stream in. Async components accessing dynamic data must be wrapped in `<Suspense>` with skeleton fallbacks.
 
 **Fetching data** → Create queries in `data/queries/` and call them directly in async Server Components. Wrap with `cache()` for deduplication.
 **Mutating data** → Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.

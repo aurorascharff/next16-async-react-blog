@@ -1,18 +1,14 @@
 import Link from 'next/link';
-
+import { Suspense } from 'react';
 import { buttonVariants } from '@/components/ui/button';
-
-import { PostList } from './_components/post-list';
-import { PostTabs } from './_components/post-tabs';
+import { PostList, PostListSkeleton } from './_components/PostList';
+import { PostTabs } from './_components/PostTabs';
 
 type Props = {
   searchParams: Promise<{ filter?: string }>;
 };
 
-export default async function PostsPage({ searchParams }: Props) {
-  const { filter } = await searchParams;
-  const validFilter = filter === 'published' || filter === 'drafts' ? filter : 'all';
-
+export default function PostsPage({ searchParams }: Props) {
   return (
     <div className="bg-muted/30 min-h-screen">
       <div className="container mx-auto max-w-4xl px-4 py-12">
@@ -25,12 +21,14 @@ export default async function PostsPage({ searchParams }: Props) {
             Create Post
           </Link>
         </div>
-
         <div className="mb-6">
-          <PostTabs />
+          <Suspense>
+            <PostTabs />
+          </Suspense>
         </div>
-
-        <PostList filter={validFilter} />
+        <Suspense fallback={<PostListSkeleton />}>
+          <PostList searchParams={searchParams} />
+        </Suspense>
       </div>
     </div>
   );

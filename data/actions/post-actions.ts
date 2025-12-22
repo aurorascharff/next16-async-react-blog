@@ -1,7 +1,6 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
@@ -21,7 +20,6 @@ export async function createPost(formData: FormData) {
   });
 
   updateTag('posts');
-  redirect('/posts');
 }
 
 export async function updatePost(id: string, formData: FormData) {
@@ -40,7 +38,6 @@ export async function updatePost(id: string, formData: FormData) {
   });
 
   updateTag('posts');
-  redirect(`/posts/${id}`);
 }
 
 export async function deletePost(id: string) {
@@ -50,5 +47,4 @@ export async function deletePost(id: string) {
   });
 
   updateTag('posts');
-  redirect('/posts');
 }

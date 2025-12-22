@@ -36,7 +36,7 @@ const eslintConfig = [
       'autofix/no-unused-vars': [
         'warn',
         {
-          argsIgnorePattern: '^_',
+          args: 'none',
           destructuredArrayIgnorePattern: '^_',
           ignoreRestSiblings: true,
         },

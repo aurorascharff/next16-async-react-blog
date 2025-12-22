@@ -2,6 +2,8 @@ import 'server-only';
 
 import { cache } from 'react';
 
+import { notFound } from 'next/navigation';
+
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
 
@@ -15,7 +17,11 @@ export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts') =>
 
 export const getPostById = cache(async (id: string) => {
   await slow();
-  return await prisma.post.findUnique({
+  const post = await prisma.post.findUnique({
     where: { id },
   });
+  if (!post) {
+    notFound();
+  }
+  return post;
 });
