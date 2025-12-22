@@ -126,9 +126,9 @@
 }
 
 @theme {
-  --duration-enter: 210ms;
-  --duration-move: 400ms;
-  --duration-exit: 150ms;
+  --duration-enter: 150ms;
+  --duration-move: 250ms;
+  --duration-exit: 100ms;
 }
 
 @keyframes fade {
