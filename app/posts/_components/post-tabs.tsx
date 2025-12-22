@@ -18,11 +18,13 @@ export function PostTabs() {
   return (
     <Tabs value={currentTab}>
       <TabsList>
-        {tabs.map(tab => (
-          <TabsTrigger key={tab.value} value={tab.value} render={<Link href={`/posts?filter=${tab.value}`} />}>
-            {tab.label}
-          </TabsTrigger>
-        ))}
+        {tabs.map(tab => {
+          return (
+            <TabsTrigger key={tab.value} value={tab.value} render={<Link href={`/posts?filter=${tab.value}`} />}>
+              {tab.label}
+            </TabsTrigger>
+          );
+        })}
       </TabsList>
     </Tabs>
   );
