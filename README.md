@@ -44,7 +44,7 @@ npm run prisma.studio
 - `app` - Pages and layouts using [file-based routing](https://nextjs.org/docs/app/building-your-application/routing)
 - `components` - Shared components
 - `components/ui` - [shadcn/ui](https://ui.shadcn.com/) components built on [Base UI](https://base-ui.com/). Add with `bunx shadcn@latest add <component-name>`
-- `components/design` - Design components that expose Action props and handle async coordination internally
+- `components/design` - Design components that expose [Action props](https://react.dev/reference/react/useTransition#exposing-action-props-from-components) and handle async coordination internally
 - `data/actions` - [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) for mutations
 - `data/queries` - Server-side data queries with [`cache()`](https://react.dev/reference/react/cache)
 - `_components` - Route-local components (prefixed with `_`)
@@ -68,7 +68,6 @@ This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-refe
 **Fetching data** → Create queries in `data/queries/` and call them directly in async Server Components. Wrap with `cache()` for deduplication.
 **Mutating data** → Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
 **Navigation and filtering** → Wrap state changes in `useTransition` to keep old content visible while new data loads.
-
 **Opting into caching** → Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
 
 ## Deployment
