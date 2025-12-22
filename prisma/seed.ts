@@ -26,6 +26,7 @@ async function main() {
       {
         content:
           'React Server Components allow you to render components on the server, reducing the JavaScript bundle sent to the client and improving performance.',
+        description: 'Learn how React Server Components can improve your app performance by rendering on the server.',
         published: true,
         slug: 'getting-started-with-react-server-components',
         title: 'Getting Started with React Server Components',
@@ -33,6 +34,7 @@ async function main() {
       {
         content:
           'Suspense boundaries let you show fallback content while waiting for async operations. Combined with React 19, you can stream content progressively.',
+        description: 'Master Suspense boundaries to create smooth loading experiences with progressive streaming.',
         published: true,
         slug: 'understanding-suspense-boundaries',
         title: 'Understanding Suspense Boundaries',
@@ -40,6 +42,7 @@ async function main() {
       {
         content:
           'Skeleton loaders provide visual feedback during data fetching. They reduce perceived loading time and improve user experience significantly.',
+        description: 'Implement skeleton loaders to reduce perceived loading time and enhance user experience.',
         published: true,
         slug: 'skeleton-loading-patterns',
         title: 'Skeleton Loading Patterns',
@@ -47,6 +50,7 @@ async function main() {
       {
         content:
           'Error boundaries catch JavaScript errors in component trees. In Next.js, you can use error.tsx files to handle errors declaratively.',
+        description: 'Handle errors gracefully using error boundaries and Next.js error.tsx conventions.',
         published: true,
         slug: 'error-handling-with-error-boundaries',
         title: 'Error Handling with Error Boundaries',
@@ -54,6 +58,7 @@ async function main() {
       {
         content:
           'This is a draft post that is not yet published. Only visible to authors. This demonstrates the draft functionality in our CRUD app.',
+        description: 'A preview of exciting new features coming soon to the platform.',
         published: false,
         slug: 'draft-upcoming-features',
         title: 'Draft: Upcoming Features',

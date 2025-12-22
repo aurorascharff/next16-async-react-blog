@@ -62,9 +62,13 @@ export async function PostList({ searchParams }: Props) {
                     })}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-muted-foreground line-clamp-2 leading-relaxed">{post.content}</p>
-                </CardContent>
+                {post.description && (
+                  <CardContent className="pt-0">
+                    <p className="text-muted-foreground line-clamp-2 leading-relaxed">
+                      {post.description}
+                    </p>
+                  </CardContent>
+                )}
               </Card>
             </ViewTransition>
           </Link>

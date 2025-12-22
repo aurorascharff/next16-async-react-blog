@@ -1,6 +1,8 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense, ViewTransition } from 'react';
+import { MarkdownContent } from '@/components/Markdown';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -10,6 +12,16 @@ import { getPublishedPostBySlug } from '@/data/queries/post-queries';
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPublishedPostBySlug(slug);
+
+  return {
+    description: post.description || undefined,
+    title: post.title,
+  };
+}
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
@@ -84,7 +96,7 @@ async function PostHeader({ slug }: { slug: string }) {
 async function PostContent({ slug }: { slug: string }) {
   const post = await getPublishedPostBySlug(slug);
 
-  return <p className="text-base leading-relaxed whitespace-pre-wrap">{post.content}</p>;
+  return <MarkdownContent>{post.content}</MarkdownContent>;
 }
 
 function PostHeaderSkeleton() {

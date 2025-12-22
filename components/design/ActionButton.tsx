@@ -28,7 +28,8 @@ export function ActionButton<T extends string>({ children, action, successMessag
         router.push(redirectTo);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Something went wrong');
+      console.error(error);
+      toast.error('Something went wrong');
     }
   }
 

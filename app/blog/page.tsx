@@ -56,9 +56,11 @@ async function BlogList() {
                   {readTime} min read
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
-                <p className="text-muted-foreground line-clamp-2 leading-relaxed">{post.content}</p>
-              </CardContent>
+              {post.description && (
+                <CardContent className="pt-0">
+                  <p className="text-muted-foreground line-clamp-2 leading-relaxed">{post.description}</p>
+                </CardContent>
+              )}
             </Card>
           </Link>
         );

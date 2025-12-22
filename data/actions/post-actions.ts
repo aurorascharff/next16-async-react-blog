@@ -1,8 +1,16 @@
 'use server';
 
 import { updateTag } from 'next/cache';
+import { z } from 'zod';
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
+
+const postSchema = z.object({
+  content: z.string().min(1, 'Content is required'),
+  description: z.string().min(1, 'Description is required'),
+  published: z.boolean(),
+  title: z.string().min(1, 'Title is required'),
+});
 
 function generateSlug(title: string): string {
   return title
@@ -12,13 +20,18 @@ function generateSlug(title: string): string {
 }
 
 export async function createPost(formData: FormData) {
-  const title = formData.get('title') as string;
-  const content = formData.get('content') as string;
-  const published = formData.get('published') === 'on';
+  const result = postSchema.safeParse({
+    content: formData.get('content'),
+    description: formData.get('description'),
+    published: formData.get('published') === 'on',
+    title: formData.get('title'),
+  });
 
-  if (!title || !content) {
-    throw new Error('Title and content are required');
+  if (!result.success) {
+    throw new Error(result.error.errors[0].message);
   }
+
+  const { title, description, content, published } = result.data;
 
   const baseSlug = generateSlug(title);
   let slug = baseSlug;
@@ -32,24 +45,29 @@ export async function createPost(formData: FormData) {
 
   await slow();
   await prisma.post.create({
-    data: { content, published, slug, title },
+    data: { content, description, published, slug, title },
   });
 
   updateTag('posts');
 }
 
 export async function updatePost(slug: string, formData: FormData) {
-  const title = formData.get('title') as string;
-  const content = formData.get('content') as string;
-  const published = formData.get('published') === 'on';
+  const result = postSchema.safeParse({
+    content: formData.get('content'),
+    description: formData.get('description'),
+    published: formData.get('published') === 'on',
+    title: formData.get('title'),
+  });
 
-  if (!title || !content) {
-    throw new Error('Title and content are required');
+  if (!result.success) {
+    throw new Error(result.error.errors[0].message);
   }
+
+  const { title, description, content, published } = result.data;
 
   await slow();
   await prisma.post.update({
-    data: { content, published, title },
+    data: { content, description, published, title },
     where: { slug },
   });
 

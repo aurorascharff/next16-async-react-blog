@@ -1,15 +1,14 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, ViewTransition } from 'react';
-
-import { ActionButton } from '@/components/design/ActionButton';
+import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { deletePost } from '@/data/actions/post-actions';
 import { getPostBySlug } from '@/data/queries/post-queries';
+import { DeletePostButton } from '../_components/DeletePostButton';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -57,14 +56,12 @@ async function PostHeader({ slug }: { slug: string }) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
-          <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
-        </div>
+        <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+          <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
           <span className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4" />
-            Created {createdDate}
+            {createdDate}
           </span>
           {wasUpdated && (
             <span className="flex items-center gap-1.5">
@@ -82,16 +79,7 @@ async function PostHeader({ slug }: { slug: string }) {
         <Link href={`/posts/${post.slug}/edit`} className={buttonVariants({ variant: 'outline' })}>
           Edit
         </Link>
-        <form>
-          <ActionButton
-            action={deletePost.bind(null, post.slug)}
-            successMessage="Post deleted successfully"
-            redirectTo="/posts"
-            variant="destructive"
-          >
-            Delete
-          </ActionButton>
-        </form>
+        <DeletePostButton slug={post.slug} />
       </div>
     </div>
   );
@@ -100,18 +88,16 @@ async function PostHeader({ slug }: { slug: string }) {
 async function PostContent({ slug }: { slug: string }) {
   const post = await getPostBySlug(slug);
 
-  return <p className="text-base leading-relaxed whitespace-pre-wrap">{post.content}</p>;
+  return <MarkdownContent>{post.content}</MarkdownContent>;
 }
 
 function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-9 w-64" />
-          <Skeleton className="h-[22px] w-20 rounded-full" />
-        </div>
+        <Skeleton className="h-9 w-64" />
         <div className="flex items-center gap-4">
+          <Skeleton className="h-5 w-20" />
           <Skeleton className="h-5 w-36" />
           <Skeleton className="h-5 w-20" />
         </div>

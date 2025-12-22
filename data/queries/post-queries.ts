@@ -42,7 +42,6 @@ export const getPostBySlug = cache(async (slug: string) => {
   return post;
 });
 
-// Public queries for blog readers
 export const getPublishedPosts = cache(async () => {
   'use cache';
   cacheTag('posts');

@@ -48,15 +48,30 @@ async function EditPostContent({ slug }: { slug: string }) {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="content">Content</Label>
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          name="description"
+          defaultValue={post.description}
+          placeholder="A brief summary for previews and SEO..."
+          required
+          rows={2}
+          className="resize-none"
+        />
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-baseline justify-between">
+          <Label htmlFor="content">Content</Label>
+          <span className="text-muted-foreground text-xs">Markdown supported</span>
+        </div>
         <Textarea
           id="content"
           name="content"
           defaultValue={post.content}
-          placeholder="Write your post content..."
+          placeholder="Write your post content using **markdown**..."
           required
-          rows={10}
-          className="resize-none"
+          rows={12}
+          className="resize-y font-mono text-sm"
         />
       </div>
       <div className="flex items-center gap-3">
