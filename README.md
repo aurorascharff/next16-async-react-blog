@@ -1,4 +1,4 @@
-# Next.js 16 Interactive Posts
+# Next.js 16 Modern Blog
 
 A blog posts demo app showcasing [Next.js 16](https://nextjs.org/) patterns with [Prisma](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)), and [sonner](https://sonner.dev/) for toasts. Demonstrates [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) with Partial Pre-Rendering, streaming with Suspense, and modern React 19 patterns.
 
