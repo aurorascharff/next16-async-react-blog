@@ -1,6 +1,6 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 
 import { ActionButton } from '@/components/design/ActionButton';
 import { Badge } from '@/components/ui/badge';
@@ -60,7 +60,9 @@ async function PostHeader({ id }: { id: string }) {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
+          <ViewTransition name={`post-title-${post.id}`} share="morph">
+            <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
+          </ViewTransition>
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
         </div>
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
