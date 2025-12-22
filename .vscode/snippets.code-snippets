@@ -1,0 +1,38 @@
+{
+  "React Server Component": {
+    "prefix": "rsc",
+    "body": [
+      "export default async function ${1:Component}() {",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  );",
+      "}"
+    ]
+  },
+  "React Client Component": {
+    "prefix": "rcc",
+    "body": [
+      "'use client';",
+      "",
+      "export default function ${1:Component}() {",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  );",
+      "}"
+    ]
+  },
+  "Server Action": {
+    "prefix": "sa",
+    "body": [
+      "'use server';",
+      "",
+      "export async function ${1:actionName}() {",
+      "  $0",
+      "}"
+    ]
+  }
+}
