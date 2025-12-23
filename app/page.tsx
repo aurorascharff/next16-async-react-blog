@@ -30,7 +30,7 @@ export default function HomePage() {
                 <Github className="size-5" />
               </a>
               {showDashboard && (
-                <Link href="/dashboard" target="_blank" className={buttonVariants({ variant: 'outline' })}>
+                <Link href="/dashboard" className={buttonVariants({ variant: 'outline' })}>
                   Dashboard
                 </Link>
               )}
