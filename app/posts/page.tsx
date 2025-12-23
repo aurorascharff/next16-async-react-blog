@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { PostList, PostListSkeleton } from './_components/PostList';
-import { PostTabs } from './_components/PostTabs';
+import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
 
 type Props = {
   searchParams: Promise<{ filter?: string }>;
@@ -24,7 +24,7 @@ export default function PostsPage({ searchParams }: Props) {
             </Link>
           </div>
           <div className="mb-6">
-            <Suspense>
+            <Suspense fallback={<PostTabsSkeleton />}>
               <PostTabs />
             </Suspense>
           </div>
