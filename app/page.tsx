@@ -21,6 +21,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-2">
               <a
+                target="_blank"
                 href="https://github.com/aurorascharff/next16-interactive-posts"
                 rel="noopener noreferrer"
                 className={buttonVariants({ size: 'icon', variant: 'ghost' })}
