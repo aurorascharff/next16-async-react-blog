@@ -34,10 +34,10 @@ async function EditPostContent({ slug }: { slug: string }) {
       key={`${post.slug}-${post.updatedAt.getTime()}`}
       action={updatePost.bind(null, post.slug)}
       defaultValues={{
-        title: post.title,
-        description: post.description,
         content: post.content,
+        description: post.description,
         published: post.published,
+        title: post.title,
       }}
       submitLabel="Save Changes"
       successMessage="Post updated successfully"

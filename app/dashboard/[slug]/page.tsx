@@ -40,9 +40,7 @@ async function PostHeader({ slug }: { slug: string }) {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-2">
         <h1 className="text-xl font-semibold">{post.title}</h1>
-        {post.description && (
-          <p className="text-muted-foreground">{post.description}</p>
-        )}
+        {post.description && <p className="text-muted-foreground">{post.description}</p>}
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
           <span className="flex items-center gap-1.5">
@@ -81,7 +79,7 @@ export function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-2">
-        <Skeleton className="h-7 w-64" />
+        <Skeleton className="h-8 w-64" />
         <Skeleton className="h-5 w-96" />
         <div className="flex items-center gap-4">
           <Skeleton className="h-5 w-20" />

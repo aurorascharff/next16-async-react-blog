@@ -55,15 +55,11 @@ export async function PostList({ searchParams }: Props) {
                     </div>
                     <ArchiveButton slug={post.slug} archived={post.archived} />
                   </div>
-                  <CardDescription className="text-sm">
-                    {formatDate(post.createdAt)}
-                  </CardDescription>
+                  <CardDescription className="text-sm">{formatDate(post.createdAt)}</CardDescription>
                 </CardHeader>
                 {post.description && (
                   <CardContent className="pt-0">
-                    <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-                      {post.description}
-                    </p>
+                    <p className="text-muted-foreground line-clamp-2 leading-relaxed">{post.description}</p>
                   </CardContent>
                 )}
               </Card>
@@ -86,7 +82,7 @@ export function PostListSkeleton() {
               <Skeleton className="h-4 w-24" />
             </CardHeader>
             <CardContent className="pt-0">
-              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-8 w-full" />
             </CardContent>
           </Card>
         );

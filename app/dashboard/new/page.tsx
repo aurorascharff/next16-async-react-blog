@@ -22,7 +22,7 @@ export default function NewPostPage() {
             <CardContent>
               <PostForm
                 action={createPost}
-                defaultValues={{ title: '', description: '', content: '', published: false }}
+                defaultValues={{ content: '', description: '', published: false, title: '' }}
                 submitLabel="Create Post"
                 successMessage="Post created successfully"
                 redirectTo="/dashboard"

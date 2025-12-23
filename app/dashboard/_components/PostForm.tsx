@@ -1,6 +1,5 @@
 'use client';
 
-import type { Route } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActionState } from 'react';
@@ -11,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { ActionResult } from '@/data/actions/post-actions';
+import type { Route } from 'next';
 
 type FormValues = {
   title: string;
@@ -28,7 +28,14 @@ type Props<T extends string> = {
   cancelHref: Route<T>;
 };
 
-export function PostForm<T extends string>({ action, defaultValues, submitLabel, successMessage, redirectTo, cancelHref }: Props<T>) {
+export function PostForm<T extends string>({
+  action,
+  defaultValues,
+  submitLabel,
+  successMessage,
+  redirectTo,
+  cancelHref,
+}: Props<T>) {
   const router = useRouter();
 
   const [state, formAction] = useActionState(async (_prevState: FormValues, formData: FormData) => {
@@ -104,4 +111,3 @@ export function PostForm<T extends string>({ action, defaultValues, submitLabel,
     </form>
   );
 }
-

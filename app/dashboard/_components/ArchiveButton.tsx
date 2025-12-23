@@ -2,8 +2,8 @@
 
 import { Archive } from 'lucide-react';
 import { useOptimistic } from 'react';
-import { cn } from '@/lib/utils';
 import { toggleArchivePost } from '@/data/actions/post-actions';
+import { cn } from '@/lib/utils';
 
 type Props = {
   slug: string;
@@ -19,21 +19,23 @@ export function ArchiveButton({ slug, archived }: Props) {
         setOptimisticArchived(!optimisticArchived);
         await toggleArchivePost(slug, !optimisticArchived);
       }}
-      onClick={(e) => e.stopPropagation()}
+      onClick={e => {
+        return e.stopPropagation();
+      }}
     >
       <button
         type="submit"
         aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
         className={cn(
           'group rounded-md p-1.5 transition-colors disabled:opacity-50',
-          optimisticArchived ? 'bg-foreground/10' : 'hover:bg-muted'
+          optimisticArchived ? 'bg-foreground/10' : 'hover:bg-muted',
         )}
       >
         <Archive
           strokeWidth={optimisticArchived ? 2 : 1.5}
           className={cn(
             'size-4 transition-colors',
-            optimisticArchived ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'
+            optimisticArchived ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
           )}
         />
       </button>

@@ -1,6 +1,14 @@
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
+import { getPosts } from '@/data/queries/post-queries';
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map(post => {
+    return { slug: post.slug };
+  });
+}
 
 type Props = {
   children: React.ReactNode;

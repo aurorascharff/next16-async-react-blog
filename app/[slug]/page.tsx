@@ -1,5 +1,4 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { MarkdownContent } from '@/components/Markdown';
@@ -7,6 +6,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
 import { formatDate, getWordCount } from '@/lib/utils';
+import type { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -14,7 +14,9 @@ type Props = {
 
 export async function generateStaticParams() {
   const posts = await getPublishedPosts();
-  return posts.map(post => ({ slug: post.slug }));
+  return posts.map(post => {
+    return { slug: post.slug };
+  });
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -37,7 +39,7 @@ export default async function BlogPostPage({ params }: Props) {
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
-          <Link href="/" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-8' })}>
+          <Link href="/" className={buttonVariants({ className: 'mb-8', size: 'sm', variant: 'ghost' })}>
             ← Back to blog
           </Link>
           <article>
@@ -65,4 +67,3 @@ export default async function BlogPostPage({ params }: Props) {
     </ViewTransition>
   );
 }
-

@@ -26,14 +26,15 @@ function validateMarkdown(content: string): string | null {
 }
 
 const postSchema = z.object({
-  content: z.string().min(1, 'Content is required').check(
-    ctx => {
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .check(ctx => {
       const error = validateMarkdown(ctx.value);
       if (error) {
-        ctx.issues.push({ code: 'custom', message: error, input: ctx.value, path: [] });
+        ctx.issues.push({ code: 'custom', input: ctx.value, message: error, path: [] });
       }
-    }
-  ),
+    }),
   description: z.string().min(1, 'Description is required'),
   published: z.boolean(),
   title: z.string().min(1, 'Title is required'),
@@ -46,26 +47,30 @@ function generateSlug(title: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-export type ActionResult = 
-  | { success: true } 
-  | { success: false; error: string; formData?: { title: string; description: string; content: string; published: boolean } };
+export type ActionResult =
+  | { success: true }
+  | {
+      success: false;
+      error: string;
+      formData?: { title: string; description: string; content: string; published: boolean };
+    };
 
 export async function createPost(formData: FormData): Promise<ActionResult> {
   if (!canManagePosts()) {
-    return { success: false, error: 'Unauthorized' };
+    return { error: 'Unauthorized', success: false };
   }
 
   const rawData = {
-    content: formData.get('content') as string || '',
-    description: formData.get('description') as string || '',
+    content: (formData.get('content') as string) || '',
+    description: (formData.get('description') as string) || '',
     published: formData.get('published') === 'on',
-    title: formData.get('title') as string || '',
+    title: (formData.get('title') as string) || '',
   };
 
   const result = postSchema.safeParse(rawData);
 
   if (!result.success) {
-    return { success: false, error: result.error.issues[0].message, formData: rawData };
+    return { error: result.error.issues[0].message, formData: rawData, success: false };
   }
 
   const { title, description, content, published } = result.data;
@@ -91,20 +96,20 @@ export async function createPost(formData: FormData): Promise<ActionResult> {
 
 export async function updatePost(slug: string, formData: FormData): Promise<ActionResult> {
   if (!canManagePosts()) {
-    return { success: false, error: 'Unauthorized' };
+    return { error: 'Unauthorized', success: false };
   }
 
   const rawData = {
-    content: formData.get('content') as string || '',
-    description: formData.get('description') as string || '',
+    content: (formData.get('content') as string) || '',
+    description: (formData.get('description') as string) || '',
     published: formData.get('published') === 'on',
-    title: formData.get('title') as string || '',
+    title: (formData.get('title') as string) || '',
   };
 
   const result = postSchema.safeParse(rawData);
 
   if (!result.success) {
-    return { success: false, error: result.error.issues[0].message, formData: rawData };
+    return { error: result.error.issues[0].message, formData: rawData, success: false };
   }
 
   const { title, description, content, published } = result.data;
