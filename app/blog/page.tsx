@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
+import { ViewTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import { getPublishedPosts } from '@/data/queries/post-queries';
 
 export default function BlogPage() {
@@ -13,9 +12,7 @@ export default function BlogPage() {
             <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
             <p className="text-muted-foreground mt-1">Thoughts, ideas, and tutorials</p>
           </div>
-          <Suspense fallback={<BlogListSkeleton />}>
-            <BlogList />
-          </Suspense>
+          <BlogList />
         </div>
       </div>
     </ViewTransition>
@@ -63,26 +60,6 @@ async function BlogList() {
               )}
             </Card>
           </Link>
-        );
-      })}
-    </div>
-  );
-}
-
-function BlogListSkeleton() {
-  return (
-    <div className="space-y-4">
-      {[1, 2, 3].map(i => {
-        return (
-          <Card key={i}>
-            <CardHeader className="pb-3">
-              <Skeleton className="h-6 w-48" />
-              <Skeleton className="h-4 w-32" />
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Skeleton className="h-10 w-full" />
-            </CardContent>
-          </Card>
         );
       })}
     </div>
