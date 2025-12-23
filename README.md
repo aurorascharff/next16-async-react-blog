@@ -1,8 +1,6 @@
 # Next.js 16 Modern Blog
 
-A self-documenting blog demo built with [Next.js 16](https://nextjs.org/), [Prisma](https://www.prisma.io/), [Tailwind CSS v4](https://tailwindcss.com/), and [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)). The blog posts explain the patterns used to build the app.
-
-Features opt-in caching with [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) and Partial Pre-Rendering via [`cacheComponents`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents).
+A Next.js 16 blog with React 19, Prisma, TailwindCSS v4, and shadcn/ui. Features streaming, View Transitions, and Cache Components. Posts explain the patterns used.
 
 ## Self-Documenting
 
