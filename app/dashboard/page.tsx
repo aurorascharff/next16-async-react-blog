@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { unauthorized } from 'next/navigation';
 import { Suspense } from 'react';
 import { ViewTransition } from 'react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { buttonVariants } from '@/components/ui/button';
 import { canManagePosts } from '@/data/queries/auth-queries';
 import { PostList, PostListSkeleton } from './_components/PostList';
@@ -25,7 +26,8 @@ export default function DashboardPage({ searchParams }: Props) {
               <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
               <p className="text-muted-foreground mt-1">Manage your blog posts</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
               <Link href="/" target="_blank" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                 Go to Blog
               </Link>
