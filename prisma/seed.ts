@@ -380,15 +380,41 @@ const nextConfig = {
 };
 \`\`\`
 
-With this enabled, data fetching is dynamic by default. Use \`"use cache"\` to opt into caching.
+With this enabled, data fetching is **dynamic by default**. Use \`"use cache"\` to opt into caching.
+
+## Push Dynamic Data Down
+
+The key pattern: push dynamic data access (\`searchParams\`, \`cookies()\`, \`headers()\`, uncached fetches) as deep as possible in your component tree. This maximizes static content.
+
+\`\`\`tsx
+// ❌ Dynamic at page level - entire page is dynamic
+export default async function DashboardPage({ searchParams }) {
+  const { filter } = await searchParams;
+  const posts = await getPosts(filter);
+  return <PostList posts={posts} />;
+}
+
+// ✅ Dynamic pushed down - page shell is static
+export default function DashboardPage({ searchParams }) {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <Suspense fallback={<PostListSkeleton />}>
+        <PostList searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+}
+\`\`\`
+
+The dashboard uses this pattern. The page shell renders statically while \`PostList\` streams in with the filtered data.
 
 ## Basic Usage
 
-The blog's queries use this pattern:
+Add \`"use cache"\` to functions you want cached:
 
 \`\`\`tsx
 import { cacheTag } from 'next/cache';
-import { cache } from 'react';
 
 export const getPublishedPosts = cache(async () => {
   'use cache';
@@ -396,7 +422,6 @@ export const getPublishedPosts = cache(async () => {
 
   return await prisma.post.findMany({
     where: { published: true },
-    orderBy: { createdAt: 'desc' },
   });
 });
 \`\`\`
