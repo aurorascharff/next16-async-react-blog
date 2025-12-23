@@ -58,6 +58,9 @@ async function PostHeader({ slug }: { slug: string }) {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-3">
         <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
+        {post.description && (
+          <p className="text-muted-foreground text-base">{post.description}</p>
+        )}
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
           <span className="flex items-center gap-1.5">

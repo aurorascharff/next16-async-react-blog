@@ -9,10 +9,9 @@ import type { Route } from 'next';
 
 type Props<T extends string> = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    action: ((formData: FormData) => Promise<void>) | (() => Promise<void>);
+    action: (formData: FormData) => Promise<void>;
     successMessage?: string;
     redirectTo?: Route<T>;
-    loading?: boolean;
   };
 
 export function ActionButton<T extends string>({ children, action, successMessage, redirectTo, ...props }: Props<T>) {
@@ -28,6 +27,7 @@ export function ActionButton<T extends string>({ children, action, successMessag
         router.push(redirectTo);
       }
     } catch (error) {
+      console.error(error);
       toast.error('Something went wrong');
     }
   }

@@ -3,14 +3,10 @@ import 'server-only';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
 
 export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | 'archived') => {
-  'use cache';
-  cacheTag('posts');
-
   await slow();
 
   const where =
@@ -29,9 +25,6 @@ export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | '
 });
 
 export const getPostBySlug = cache(async (slug: string) => {
-  'use cache';
-  cacheTag(`post-${slug}`);
-
   await slow();
   const post = await prisma.post.findUnique({
     where: { slug },

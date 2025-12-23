@@ -1,14 +1,9 @@
-import Link from 'next/link';
 import { Suspense } from 'react';
-import { ActionButton } from '@/components/design/ActionButton';
-import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Textarea } from '@/components/ui/textarea';
 import { updatePost } from '@/data/actions/post-actions';
 import { getPostBySlug } from '@/data/queries/post-queries';
+import { PostForm } from '../../_components/PostForm';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -35,71 +30,19 @@ async function EditPostContent({ slug }: { slug: string }) {
   const post = await getPostBySlug(slug);
 
   return (
-    <form className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          name="title"
-          defaultValue={post.title}
-          placeholder="Enter post title"
-          required
-          className="h-11"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          name="description"
-          defaultValue={post.description}
-          placeholder="A brief summary for previews and SEO..."
-          required
-          rows={2}
-          className="resize-none"
-        />
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-baseline justify-between">
-          <Label htmlFor="content">Content</Label>
-          <span className="text-muted-foreground text-xs">Markdown supported</span>
-        </div>
-        <Textarea
-          id="content"
-          name="content"
-          defaultValue={post.content}
-          placeholder="Write your post content using **markdown**..."
-          required
-          rows={12}
-          className="resize-y font-mono text-sm"
-        />
-      </div>
-      <div className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          id="published"
-          name="published"
-          defaultChecked={post.published}
-          className="border-input size-4 rounded"
-        />
-        <Label htmlFor="published" className="cursor-pointer">
-          Published
-        </Label>
-      </div>
-      <div className="flex gap-3 pt-2">
-        <ActionButton
-          action={updatePost.bind(null, post.slug)}
-          successMessage="Post updated successfully"
-          redirectTo={`/posts/${post.slug}`}
-          size="lg"
-        >
-          Save Changes
-        </ActionButton>
-        <Link href={`/posts/${post.slug}`} className={buttonVariants({ size: 'lg', variant: 'outline' })}>
-          Cancel
-        </Link>
-      </div>
-    </form>
+    <PostForm
+      action={updatePost.bind(null, post.slug)}
+      defaultValues={{
+        title: post.title,
+        description: post.description,
+        content: post.content,
+        published: post.published,
+      }}
+      submitLabel="Save Changes"
+      successMessage="Post updated successfully"
+      redirectTo={`/posts/${post.slug}`}
+      cancelHref={`/posts/${post.slug}`}
+    />
   );
 }
 

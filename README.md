@@ -21,28 +21,28 @@ This project uses [Prisma Postgres](https://www.prisma.io/postgres). Set your co
 DATABASE_URL="postgres://..."
 ```
 
-Generate the Prisma client (runs automatically on `bun install`):
+Generate the Prisma client:
 
 ```bash
-bun prisma generate
+bun run prisma.generate
 ```
 
 Push the schema:
 
 ```bash
-bun prisma db push
+bun run prisma.push
 ```
 
 Seed initial data:
 
 ```bash
-bun prisma db seed
+bun run prisma.seed
 ```
 
 View data in Prisma Studio:
 
 ```bash
-bun prisma studio
+bun run prisma.studio
 ```
 
 To use a local SQLite database instead, change the provider in `prisma/schema.prisma` to `sqlite`, update `db.ts` to use `@prisma/adapter-libsql`, and set `DATABASE_URL="file:./dev.db"` in `.env`.

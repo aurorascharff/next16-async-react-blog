@@ -1,13 +1,9 @@
 import Link from 'next/link';
 import { ViewTransition } from 'react';
-
-import { ActionButton } from '@/components/design/ActionButton';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { createPost } from '@/data/actions/post-actions';
+import { PostForm } from '../_components/PostForm';
 
 export default function NewPostPage() {
   return (
@@ -24,56 +20,14 @@ export default function NewPostPage() {
               <CardTitle className="text-2xl">Create New Post</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input id="title" name="title" placeholder="Enter post title" required className="h-11" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    placeholder="A brief summary for previews and SEO..."
-                    required
-                    rows={2}
-                    className="resize-none"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-baseline justify-between">
-                    <Label htmlFor="content">Content</Label>
-                    <span className="text-muted-foreground text-xs">Markdown supported</span>
-                  </div>
-                  <Textarea
-                    id="content"
-                    name="content"
-                    placeholder="Write your post content using **markdown**..."
-                    required
-                    rows={12}
-                    className="resize-y font-mono text-sm"
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <input type="checkbox" id="published" name="published" className="border-input size-4 rounded" />
-                  <Label htmlFor="published" className="cursor-pointer">
-                    Publish immediately
-                  </Label>
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <ActionButton
-                    action={createPost}
-                    successMessage="Post created successfully"
-                    redirectTo="/posts"
-                    size="lg"
-                  >
-                    Create Post
-                  </ActionButton>
-                  <Link href="/posts" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
-                    Cancel
-                  </Link>
-                </div>
-              </form>
+              <PostForm
+                action={createPost}
+                defaultValues={{ title: '', description: '', content: '', published: false }}
+                submitLabel="Create Post"
+                successMessage="Post created successfully"
+                redirectTo="/posts"
+                cancelHref="/posts"
+              />
             </CardContent>
           </Card>
         </div>
