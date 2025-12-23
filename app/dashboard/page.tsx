@@ -26,7 +26,7 @@ export default function DashboardPage({ searchParams }: Props) {
               <p className="text-muted-foreground mt-1">Manage your blog posts</p>
             </div>
             <div className="flex items-center gap-3">
-              <Link href="/" target="_blank" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
+              <Link href="/" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                 Go to Blog
               </Link>
               <Link href="/dashboard/new" className={buttonVariants({ size: 'lg' })}>
