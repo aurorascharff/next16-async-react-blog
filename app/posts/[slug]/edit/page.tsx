@@ -31,6 +31,7 @@ async function EditPostContent({ slug }: { slug: string }) {
 
   return (
     <PostForm
+      key={post.slug}
       action={updatePost.bind(null, post.slug)}
       defaultValues={{
         title: post.title,
