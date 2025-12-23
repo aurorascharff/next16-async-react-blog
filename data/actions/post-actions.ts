@@ -6,7 +6,7 @@ import { visit } from 'unist-util-visit';
 import { z } from 'zod';
 import { canManagePosts } from '@/data/queries/auth-queries';
 import { prisma } from '@/db';
-import { slow } from '@/utils/slow';
+import { slow } from '@/lib/utils';
 
 function validateMarkdown(content: string): string | null {
   const tree = remark().parse(content);

@@ -4,7 +4,7 @@ import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { prisma } from '@/db';
-import { slow } from '@/utils/slow';
+import { slow } from '@/lib/utils';
 
 export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | 'archived') => {
   await slow();

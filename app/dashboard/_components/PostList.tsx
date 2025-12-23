@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPosts } from '@/data/queries/post-queries';
+import { formatDate } from '@/lib/utils';
 import { ArchiveButton } from './ArchiveButton';
 
 const filterSchema = z.enum(['all', 'published', 'drafts', 'archived']).catch('all');
@@ -55,11 +56,7 @@ export async function PostList({ searchParams }: Props) {
                     <ArchiveButton slug={post.slug} archived={post.archived} />
                   </div>
                   <CardDescription className="text-sm">
-                    {new Date(post.createdAt).toLocaleDateString('en-US', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
+                    {formatDate(post.createdAt)}
                   </CardDescription>
                 </CardHeader>
                 {post.description && (

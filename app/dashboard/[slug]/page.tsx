@@ -7,6 +7,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPostBySlug } from '@/data/queries/post-queries';
+import { formatDate, getWordCount } from '@/lib/utils';
 import { DeletePostButton } from '../_components/DeletePostButton';
 
 type Props = {
@@ -33,19 +34,6 @@ export default async function PostPage({ params }: Props) {
 
 async function PostHeader({ slug }: { slug: string }) {
   const post = await getPostBySlug(slug);
-
-  const createdDate = new Date(post.createdAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-
-  const updatedDate = new Date(post.updatedAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-
   const wasUpdated = post.updatedAt > post.createdAt;
 
   return (
@@ -59,17 +47,17 @@ async function PostHeader({ slug }: { slug: string }) {
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
           <span className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4" />
-            {createdDate}
+            {formatDate(post.createdAt)}
           </span>
           {wasUpdated && (
             <span className="flex items-center gap-1.5">
               <Clock className="h-4 w-4" />
-              Updated {updatedDate}
+              Updated {formatDate(post.updatedAt)}
             </span>
           )}
           <span className="flex items-center gap-1.5">
             <FileText className="h-4 w-4" />
-            {post.content.split(/\s+/).filter(Boolean).length} words
+            {getWordCount(post.content)} words
           </span>
         </div>
       </div>

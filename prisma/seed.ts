@@ -17,12 +17,6 @@ async function main() {
 
   // Clear existing data
   await prisma.post.deleteMany();
-  await prisma.example.deleteMany();
-
-  // Example seed data - replace with your own
-  await prisma.example.createMany({
-    data: [{ name: 'Example 1' }, { name: 'Example 2' }, { name: 'Example 3' }],
-  });
 
   // Seed posts
   await prisma.post.createMany({

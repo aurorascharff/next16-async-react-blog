@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { canManagePosts } from '@/data/queries/auth-queries';
 import { getPublishedPosts } from '@/data/queries/post-queries';
+import { formatDate, getReadTime } from '@/lib/utils';
 
 export default function HomePage() {
   const showDashboard = canManagePosts();
@@ -58,22 +59,15 @@ async function BlogList() {
   return (
     <div className="space-y-4">
       {posts.map(post => {
-        const wordCount = post.content.split(/\s+/).filter(Boolean).length;
-        const readTime = Math.max(1, Math.ceil(wordCount / 200));
-
         return (
           <Link key={post.slug} href={`/${post.slug}`} className="block">
             <Card className="hover:bg-muted/50 transition-all duration-200 hover:shadow-md">
               <CardHeader className="pb-3">
                 <CardTitle className="text-xl">{post.title}</CardTitle>
                 <CardDescription className="text-sm">
-                  {new Date(post.createdAt).toLocaleDateString('en-US', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                  {formatDate(post.createdAt)}
                   {' · '}
-                  {readTime} min read
+                  {getReadTime(post.content)} min read
                 </CardDescription>
               </CardHeader>
               {post.description && (
