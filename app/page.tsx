@@ -15,7 +15,7 @@ export default function HomePage() {
           <div className="mb-10 flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-              <p className="text-muted-foreground mt-1">Thoughts, ideas, and tutorials</p>
+              <p className="text-muted-foreground mt-1">Next.js 16 patterns explained</p>
             </div>
             {showDashboard && (
               <Link href="/dashboard" target="_blank" className={buttonVariants({ variant: 'outline' })}>
