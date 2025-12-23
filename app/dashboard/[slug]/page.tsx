@@ -73,7 +73,7 @@ async function PostHeader({ slug }: { slug: string }) {
         </div>
       </div>
       <div className="flex gap-2">
-        <Link href={`/posts/${post.slug}/edit`} className={buttonVariants({ variant: 'outline' })}>
+        <Link href={`/dashboard/${post.slug}/edit`} className={buttonVariants({ variant: 'outline' })}>
           Edit
         </Link>
         <DeletePostButton slug={post.slug} />

@@ -11,7 +11,7 @@ export default function NewPostPage() {
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-2xl px-4 py-12">
           <div className="mb-6">
-            <Link href="/posts" className={buttonVariants({ variant: 'ghost' })}>
+            <Link href="/dashboard" className={buttonVariants({ variant: 'ghost' })}>
               ← Back to posts
             </Link>
           </div>
@@ -25,8 +25,8 @@ export default function NewPostPage() {
                 defaultValues={{ title: '', description: '', content: '', published: false }}
                 submitLabel="Create Post"
                 successMessage="Post created successfully"
-                redirectTo="/posts"
-                cancelHref="/posts"
+                redirectTo="/dashboard"
+                cancelHref="/dashboard"
               />
             </CardContent>
           </Card>

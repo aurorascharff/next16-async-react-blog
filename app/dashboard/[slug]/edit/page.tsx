@@ -41,8 +41,8 @@ async function EditPostContent({ slug }: { slug: string }) {
       }}
       submitLabel="Save Changes"
       successMessage="Post updated successfully"
-      redirectTo={`/posts/${post.slug}`}
-      cancelHref={`/posts/${post.slug}`}
+      redirectTo={`/dashboard/${post.slug}`}
+      cancelHref={`/dashboard/${post.slug}`}
     />
   );
 }

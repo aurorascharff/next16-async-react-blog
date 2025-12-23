@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { canManagePosts } from '@/data/queries/auth-queries';
 import { getPublishedPosts } from '@/data/queries/post-queries';
 
 export default function HomePage() {
+  const showDashboard = canManagePosts();
+
   return (
     <ViewTransition enter="slide-from-left" exit="slide-to-left">
       <div className="min-h-screen">
@@ -14,9 +17,11 @@ export default function HomePage() {
               <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
               <p className="text-muted-foreground mt-1">Thoughts, ideas, and tutorials</p>
             </div>
-            <Link href="/posts" target="_blank" className={buttonVariants({ variant: 'outline' })}>
-              Manage
-            </Link>
+            {showDashboard && (
+              <Link href="/dashboard" target="_blank" className={buttonVariants({ variant: 'outline' })}>
+                Dashboard
+              </Link>
+            )}
           </div>
           <BlogList />
         </div>

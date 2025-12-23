@@ -12,7 +12,7 @@ export default function PostNotFound() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Link href="/posts" className={buttonVariants({ variant: 'default' })}>
+        <Link href="/dashboard" className={buttonVariants({ variant: 'default' })}>
           Back to posts
         </Link>
       </CardContent>

@@ -32,7 +32,7 @@ export function DeletePostButton({ slug }: Props) {
       try {
         await deletePost(slug);
         toast.success('Post deleted successfully');
-        router.push('/posts');
+        router.push('/dashboard');
       } catch (error) {
         toast.error('Something went wrong');
       } finally {

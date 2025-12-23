@@ -12,7 +12,7 @@ export default function PostLayout({ children }: Props) {
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
           <div className="mb-6">
-            <Link href="/posts" className={buttonVariants({ variant: 'ghost' })}>
+            <Link href="/dashboard" className={buttonVariants({ variant: 'ghost' })}>
               ← Back to posts
             </Link>
           </div>

@@ -17,7 +17,7 @@ export function PostTabs() {
   const currentTab = searchParams.get('filter') ?? 'all';
 
   function tabAction(value: string) {
-    router.push(`/posts?filter=${value}`);
+    router.push(`/dashboard?filter=${value}`);
   }
 
   return <TabList tabs={tabs} activeTab={currentTab} changeAction={tabAction} />;

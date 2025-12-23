@@ -4,6 +4,7 @@ import { updateTag } from 'next/cache';
 import { remark } from 'remark';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
+import { canManagePosts } from '@/data/queries/auth-queries';
 import { prisma } from '@/db';
 import { slow } from '@/utils/slow';
 
@@ -50,6 +51,10 @@ export type ActionResult =
   | { success: false; error: string; formData?: { title: string; description: string; content: string; published: boolean } };
 
 export async function createPost(formData: FormData): Promise<ActionResult> {
+  if (!canManagePosts()) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
   const rawData = {
     content: formData.get('content') as string || '',
     description: formData.get('description') as string || '',
@@ -85,6 +90,10 @@ export async function createPost(formData: FormData): Promise<ActionResult> {
 }
 
 export async function updatePost(slug: string, formData: FormData): Promise<ActionResult> {
+  if (!canManagePosts()) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
   const rawData = {
     content: formData.get('content') as string || '',
     description: formData.get('description') as string || '',
@@ -112,6 +121,10 @@ export async function updatePost(slug: string, formData: FormData): Promise<Acti
 }
 
 export async function deletePost(slug: string) {
+  if (!canManagePosts()) {
+    throw new Error('Unauthorized');
+  }
+
   await slow();
   await prisma.post.delete({
     where: { slug },
@@ -122,6 +135,10 @@ export async function deletePost(slug: string) {
 }
 
 export async function toggleArchivePost(slug: string, archived: boolean) {
+  if (!canManagePosts()) {
+    throw new Error('Unauthorized');
+  }
+
   await slow();
   await prisma.post.update({
     data: { archived },
