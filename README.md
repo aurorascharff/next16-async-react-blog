@@ -30,9 +30,6 @@ Each post uses code examples from this app.
 
 ```bash
 bun install
-bun run prisma.generate
-bun run prisma.push
-bun run prisma.seed
 bun run dev
 ```
 
