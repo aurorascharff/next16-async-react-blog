@@ -30,7 +30,7 @@ export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | '
 
 export const getPostBySlug = cache(async (slug: string) => {
   'use cache';
-  cacheTag('posts');
+  cacheTag(`post-${slug}`);
 
   await slow();
   const post = await prisma.post.findUnique({
@@ -55,7 +55,7 @@ export const getPublishedPosts = cache(async () => {
 
 export const getPublishedPostBySlug = cache(async (slug: string) => {
   'use cache';
-  cacheTag('posts');
+  cacheTag(`post-${slug}`);
 
   await slow();
   const post = await prisma.post.findUnique({

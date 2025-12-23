@@ -72,6 +72,7 @@ export async function updatePost(slug: string, formData: FormData) {
   });
 
   updateTag('posts');
+  updateTag(`post-${slug}`);
 }
 
 export async function deletePost(slug: string) {
@@ -81,6 +82,7 @@ export async function deletePost(slug: string) {
   });
 
   updateTag('posts');
+  updateTag(`post-${slug}`);
 }
 
 export async function toggleArchivePost(slug: string, archived: boolean) {
@@ -91,4 +93,5 @@ export async function toggleArchivePost(slug: string, archived: boolean) {
   });
 
   updateTag('posts');
+  updateTag(`post-${slug}`);
 }
