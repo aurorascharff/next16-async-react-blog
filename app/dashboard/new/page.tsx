@@ -9,7 +9,7 @@ export default function NewPostPage() {
   return (
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="bg-muted/30 min-h-screen">
-        <div className="container mx-auto max-w-2xl px-4 py-12">
+        <div className="container mx-auto max-w-4xl px-4 py-12">
           <div className="mb-6">
             <Link href="/dashboard" className={buttonVariants({ variant: 'ghost' })}>
               ← Back to posts
