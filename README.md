@@ -1,6 +1,6 @@
 # Next.js 16 Modern Blog
 
-A modern blog demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing React 19 patterns with "use cache", view transitions, and optimistic updates.
+A modern blog CRUD demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing Server Components, streaming, and Cache Components.
 
 ## Getting Started
 
