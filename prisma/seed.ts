@@ -318,43 +318,42 @@ This creates snappy interfaces where users don't wait for server responses.
 
 ## The Pattern
 
-Combine \`useOptimistic\` with \`useTransition\` to update UI immediately while the Server Action executes. The archive button in the dashboard uses this pattern:
+Use \`useOptimistic\` with a form action to update UI immediately. The archive button in the dashboard uses this pattern:
 
 \`\`\`tsx
 'use client';
 
-import { useOptimistic, useTransition } from 'react';
+import { useOptimistic } from 'react';
 
 export function ArchiveButton({ slug, archived }) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
-  const [isPending, startTransition] = useTransition();
-
-  function handleClick() {
-    startTransition(async () => {
-      setOptimisticArchived(!optimisticArchived);
-      await toggleArchivePost(slug, !optimisticArchived);
-    });
-  }
 
   return (
-    <button onClick={handleClick} disabled={isPending}>
-      {optimisticArchived ? 'Unarchive' : 'Archive'}
-    </button>
+    <form
+      action={async () => {
+        setOptimisticArchived(!optimisticArchived);
+        await toggleArchivePost(slug, !optimisticArchived);
+      }}
+    >
+      <button type="submit">
+        {optimisticArchived ? 'Unarchive' : 'Archive'}
+      </button>
+    </form>
   );
 }
 \`\`\`
 
 ## How It Works
 
-1. User clicks the button
+1. User submits the form
 2. \`setOptimisticArchived\` immediately updates the UI
 3. The Server Action runs in the background
 4. On success, the optimistic state becomes the real state
 5. On failure, React reverts automatically
 
-## Why useTransition?
+## Why Form Actions?
 
-Wrapping in \`startTransition\` marks it as non-urgent, keeping UI responsive. It also provides \`isPending\` to disable the button during the operation.
+Using the form \`action\` prop integrates naturally with React's form handling. React automatically manages the pending state and handles the async operation. The form also works without JavaScript as a progressive enhancement.
 
 Use optimistic updates for actions with high success rates: toggles, likes, bookmarks.`,
         description: 'Implement instant UI feedback with useOptimistic.',

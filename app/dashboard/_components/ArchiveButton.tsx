@@ -1,7 +1,7 @@
 'use client';
 
 import { Archive } from 'lucide-react';
-import { useOptimistic, useTransition } from 'react';
+import { useOptimistic } from 'react';
 import { cn } from '@/lib/utils';
 import { toggleArchivePost } from '@/data/actions/post-actions';
 
@@ -12,32 +12,28 @@ type Props = {
 
 export function ArchiveButton({ slug, archived }: Props) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived ?? false);
-  const [isPending, startTransition] = useTransition();
-
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-
-    startTransition(async () => {
-      setOptimisticArchived(!optimisticArchived);
-      await toggleArchivePost(slug, !optimisticArchived);
-    });
-  }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={isPending}
-      aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
-      className="group rounded-full p-2 transition-colors hover:bg-primary/10 disabled:opacity-50"
+    <form
+      action={async () => {
+        setOptimisticArchived(!optimisticArchived);
+        await toggleArchivePost(slug, !optimisticArchived);
+      }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <Archive
-        strokeWidth={optimisticArchived ? 2.5 : 1.5}
-        className={cn(
-          'size-[18px] transition-all',
-          optimisticArchived ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
-        )}
-      />
-    </button>
+      <button
+        type="submit"
+        aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
+        className="group rounded-md p-1.5 transition-colors hover:bg-muted disabled:opacity-50"
+      >
+        <Archive
+          strokeWidth={1.5}
+          className={cn(
+            'size-4 transition-colors',
+            optimisticArchived ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'
+          )}
+        />
+      </button>
+    </form>
   );
 }

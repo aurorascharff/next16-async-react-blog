@@ -1,62 +1,90 @@
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
-const minimalLight = {
+// Light theme - minimal, monochromatic
+const themeLight = {
   'code[class*="language-"]': {
-    color: '#393a34',
-    fontFamily: 'var(--font-geist-mono), monospace',
+    color: '#24292e',
+    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
     fontSize: '0.875rem',
-    lineHeight: '1.5',
+    lineHeight: '1.6',
   },
   'pre[class*="language-"]': {
-    color: '#393a34',
-    fontFamily: 'var(--font-geist-mono), monospace',
+    color: '#24292e',
+    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
     fontSize: '0.875rem',
-    lineHeight: '1.5',
-  },
-  comment: { color: '#999988', fontStyle: 'italic' },
-  string: { color: '#e3116c' },
-  'attr-value': { color: '#e3116c' },
-  punctuation: { color: '#393a34' },
-  operator: { color: '#393a34' },
-  keyword: { color: '#00a4db' },
-  function: { color: '#9a050f' },
-  'function-variable': { color: '#9a050f' },
-  'class-name': { color: '#9a050f' },
-  tag: { color: '#00009f' },
-  'attr-name': { color: '#00a4db' },
-  boolean: { color: '#00a4db' },
-  number: { color: '#00a4db' },
-  builtin: { color: '#9a050f' },
-};
-
-const minimalDark = {
-  'code[class*="language-"]': {
-    color: '#d4d4d4',
-    fontFamily: 'var(--font-geist-mono), monospace',
-    fontSize: '0.875rem',
-    lineHeight: '1.5',
-  },
-  'pre[class*="language-"]': {
-    color: '#d4d4d4',
-    fontFamily: 'var(--font-geist-mono), monospace',
-    fontSize: '0.875rem',
-    lineHeight: '1.5',
+    lineHeight: '1.6',
   },
   comment: { color: '#6a737d', fontStyle: 'italic' },
-  string: { color: '#9ecbff' },
-  'attr-value': { color: '#9ecbff' },
-  punctuation: { color: '#d4d4d4' },
-  operator: { color: '#d4d4d4' },
-  keyword: { color: '#f97583' },
-  function: { color: '#b392f0' },
-  'function-variable': { color: '#b392f0' },
-  'class-name': { color: '#b392f0' },
+  prolog: { color: '#6a737d' },
+  doctype: { color: '#6a737d' },
+  cdata: { color: '#6a737d' },
+  punctuation: { color: '#24292e' },
+  property: { color: '#005cc5' },
+  tag: { color: '#22863a' },
+  boolean: { color: '#005cc5' },
+  number: { color: '#005cc5' },
+  constant: { color: '#005cc5' },
+  symbol: { color: '#005cc5' },
+  selector: { color: '#6f42c1' },
+  'attr-name': { color: '#6f42c1' },
+  string: { color: '#032f62' },
+  char: { color: '#032f62' },
+  builtin: { color: '#005cc5' },
+  operator: { color: '#d73a49' },
+  entity: { color: '#6f42c1' },
+  url: { color: '#032f62' },
+  variable: { color: '#e36209' },
+  atrule: { color: '#005cc5' },
+  'attr-value': { color: '#032f62' },
+  function: { color: '#6f42c1' },
+  'class-name': { color: '#6f42c1' },
+  keyword: { color: '#d73a49' },
+  regex: { color: '#032f62' },
+  important: { color: '#d73a49', fontWeight: 'bold' },
+};
+
+// Dark theme - minimal, monochromatic
+const themeDark = {
+  'code[class*="language-"]': {
+    color: '#e1e4e8',
+    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+    fontSize: '0.875rem',
+    lineHeight: '1.6',
+  },
+  'pre[class*="language-"]': {
+    color: '#e1e4e8',
+    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+    fontSize: '0.875rem',
+    lineHeight: '1.6',
+  },
+  comment: { color: '#6a737d', fontStyle: 'italic' },
+  prolog: { color: '#6a737d' },
+  doctype: { color: '#6a737d' },
+  cdata: { color: '#6a737d' },
+  punctuation: { color: '#e1e4e8' },
+  property: { color: '#79b8ff' },
   tag: { color: '#85e89d' },
-  'attr-name': { color: '#b392f0' },
   boolean: { color: '#79b8ff' },
   number: { color: '#79b8ff' },
-  builtin: { color: '#b392f0' },
+  constant: { color: '#79b8ff' },
+  symbol: { color: '#79b8ff' },
+  selector: { color: '#b392f0' },
+  'attr-name': { color: '#b392f0' },
+  string: { color: '#9ecbff' },
+  char: { color: '#9ecbff' },
+  builtin: { color: '#79b8ff' },
+  operator: { color: '#f97583' },
+  entity: { color: '#b392f0' },
+  url: { color: '#9ecbff' },
+  variable: { color: '#ffab70' },
+  atrule: { color: '#79b8ff' },
+  'attr-value': { color: '#9ecbff' },
+  function: { color: '#b392f0' },
+  'class-name': { color: '#b392f0' },
+  keyword: { color: '#f97583' },
+  regex: { color: '#9ecbff' },
+  important: { color: '#f97583', fontWeight: 'bold' },
 };
 
 type Props = {
@@ -86,7 +114,7 @@ export function MarkdownContent({ children }: Props) {
             return (
               <div className="not-prose my-4 overflow-hidden rounded-lg border border-border">
                 <SyntaxHighlighter
-                  style={minimalLight}
+                  style={themeLight}
                   language={match[1]}
                   PreTag="div"
                   className="!m-0 !bg-muted/50 !p-4 dark:hidden"
@@ -94,7 +122,7 @@ export function MarkdownContent({ children }: Props) {
                   {codeString}
                 </SyntaxHighlighter>
                 <SyntaxHighlighter
-                  style={minimalDark}
+                  style={themeDark}
                   language={match[1]}
                   PreTag="div"
                   className="!m-0 !bg-muted/50 !p-4 hidden dark:block"
