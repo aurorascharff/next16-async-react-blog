@@ -20,7 +20,7 @@ export default function PostsPage({ searchParams }: Props) {
               <p className="text-muted-foreground mt-1">Manage your blog posts</p>
             </div>
             <div className="flex gap-3">
-              <Link href="/blog" target="_blank" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
+              <Link href="/" target="_blank" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                 Go to Blog
               </Link>
               <Link href="/posts/new" className={buttonVariants({ size: 'lg' })}>

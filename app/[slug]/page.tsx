@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: Props) {
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
-          <Link href="/blog" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-8' })}>
+          <Link href="/" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-8' })}>
             ← Back to blog
           </Link>
           <article>
@@ -77,3 +77,4 @@ export default async function BlogPostPage({ params }: Props) {
     </ViewTransition>
   );
 }
+
