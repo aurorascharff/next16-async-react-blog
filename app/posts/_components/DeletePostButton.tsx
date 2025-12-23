@@ -34,7 +34,6 @@ export function DeletePostButton({ slug }: Props) {
         toast.success('Post deleted successfully');
         router.push('/posts');
       } catch (error) {
-        console.error(error);
         toast.error('Something went wrong');
       } finally {
         setOpen(false);
