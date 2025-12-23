@@ -1,6 +1,6 @@
 # Next.js 16 Modern Blog
 
-A blog posts demo app showcasing [Next.js 16](https://nextjs.org/) patterns with [Prisma](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)), and [sonner](https://sonner.dev/) for toasts. Demonstrates [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) with Partial Pre-Rendering, streaming with Suspense, and modern React 19 patterns.
+A modern blog demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing React 19 patterns with "use cache", view transitions, and optimistic updates.
 
 ## Getting Started
 
@@ -15,29 +15,37 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Prisma Setup
 
-Generate the Prisma client:
+This project uses [Prisma Postgres](https://www.prisma.io/postgres). Set your connection string in `.env`:
 
-```bash
-npm run prisma.generate
+```env
+DATABASE_URL="postgres://..."
 ```
 
-Initialize the local SQLite database:
+Generate the Prisma client (runs automatically on `bun install`):
 
 ```bash
-npm run prisma.push
+bun prisma generate
+```
+
+Push the schema:
+
+```bash
+bun prisma db push
 ```
 
 Seed initial data:
 
 ```bash
-npm run prisma.seed
+bun prisma db seed
 ```
 
 View data in Prisma Studio:
 
 ```bash
-npm run prisma.studio
+bun prisma studio
 ```
+
+To use a local SQLite database instead, change the provider in `prisma/schema.prisma` to `sqlite`, update `db.ts` to use `@prisma/adapter-libsql`, and set `DATABASE_URL="file:./dev.db"` in `.env`.
 
 ## Project Structure
 
@@ -75,9 +83,9 @@ This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-refe
 Build for production:
 
 ```bash
-npm run build
+bun run build
 ```
 
-Deploy to [Vercel](https://vercel.com) for the easiest experience. Note: Use a production database instead of SQLite.
+Deploy to [Vercel](https://vercel.com) for the easiest experience with Prisma Postgres.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
