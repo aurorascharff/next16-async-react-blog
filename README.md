@@ -1,6 +1,28 @@
 # Next.js 16 Modern Blog
 
-A modern blog CRUD demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing React 19 patterns, Server Components, streaming, View Transitions, and Cache Components.
+A self-documenting blog demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing React 19 patterns, Server Components, streaming, View Transitions, and Cache Components. The blog posts themselves explain the patterns used to build the app.
+
+## Self-Documenting
+
+Run `bun run prisma.seed` to populate the blog with posts explaining each pattern used in this app:
+
+- React Server Components
+- Suspense and Streaming
+- Server Actions
+- useActionState
+- useFormStatus
+- useOptimistic
+- The "use cache" Directive
+- View Transitions
+- Error Handling
+- generateStaticParams
+- URL State with searchParams
+- React cache()
+- useTransition
+- Skeleton Loading
+- Authorization Patterns
+
+Each post uses code examples from this app.
 
 ## Getting Started
 

@@ -57,4 +57,3 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className, ch
 }
 
 export { Tabs, TabsTrigger, tabsListVariants };
-export { TabsList as BaseTabsList } from '@/components/ui/tabs';
