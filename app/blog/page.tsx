@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ViewTransition } from 'react';
+import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getPublishedPosts } from '@/data/queries/post-queries';
 
@@ -8,9 +9,14 @@ export default function BlogPage() {
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
-          <div className="mb-10">
-            <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-            <p className="text-muted-foreground mt-1">Thoughts, ideas, and tutorials</p>
+          <div className="mb-10 flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
+              <p className="text-muted-foreground mt-1">Thoughts, ideas, and tutorials</p>
+            </div>
+            <Link href="/posts" target="_blank" className={buttonVariants({ variant: 'outline' })}>
+              Manage
+            </Link>
           </div>
           <BlogList />
         </div>
