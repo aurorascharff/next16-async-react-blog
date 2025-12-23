@@ -1037,7 +1037,7 @@ After \`updateTag('posts')\`, the next request regenerates the static content.
 - **Static pages**: Load instantly for most users. First user may wait while content generates.
 - **Dynamic pages**: Every user waits for fresh data. Use Suspense to keep the UI responsive.
 
-The blog homepage has no loading states because static content is ready. The dashboard shows skeletons because it fetches per-request based on the filter.`,
+The blog homepage has no loading states because static content is ready. The dashboard shows skeletons everywhere—the post list, individual post pages, and edit forms—because it fetches fresh data per-request.`,
         description: 'Understand when pages are static vs dynamic and why loading states differ.',
         published: true,
         slug: 'static-vs-dynamic',

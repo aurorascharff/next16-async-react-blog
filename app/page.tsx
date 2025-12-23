@@ -1,3 +1,4 @@
+import { Github } from 'lucide-react';
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
@@ -17,11 +18,22 @@ export default function HomePage() {
               <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
               <p className="text-muted-foreground mt-1">Next.js 16 patterns explained</p>
             </div>
-            {showDashboard && (
-              <Link href="/dashboard" target="_blank" className={buttonVariants({ variant: 'outline' })}>
-                Dashboard
-              </Link>
-            )}
+            <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/aurorascharff/next16-interactive-posts"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+                aria-label="View source on GitHub"
+              >
+                <Github className="size-5" />
+              </a>
+              {showDashboard && (
+                <Link href="/dashboard" target="_blank" className={buttonVariants({ variant: 'outline' })}>
+                  Dashboard
+                </Link>
+              )}
+            </div>
           </div>
           <BlogList />
         </div>
