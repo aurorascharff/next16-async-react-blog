@@ -1,10 +1,12 @@
 # Next.js 16 Modern Blog
 
-A self-documenting blog demo built with Next.js 16, Prisma, TailwindCSS v4, and shadcn/ui (Base UI), showcasing React 19 patterns, Server Components, streaming, View Transitions, and Cache Components. The blog posts themselves explain the patterns used to build the app.
+A self-documenting blog demo built with [Next.js 16](https://nextjs.org/), [Prisma](https://www.prisma.io/), [Tailwind CSS v4](https://tailwindcss.com/), and [shadcn/ui](https://ui.shadcn.com/) (built on [Base UI](https://base-ui.com/)). The blog posts explain the React 19 patterns used to build the app.
+
+Features opt-in caching with [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) and Partial Pre-Rendering via [`cacheComponents`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents).
 
 ## Self-Documenting
 
-Run `bun run prisma.seed` to populate the blog with posts explaining each pattern used in this app:
+Run `bun run prisma.seed` to populate the blog with posts explaining each pattern:
 
 - React Server Components
 - Suspense and Streaming
@@ -26,14 +28,15 @@ Each post uses code examples from this app.
 
 ## Getting Started
 
-Install dependencies and run the development server:
-
 ```bash
 bun install
+bun run prisma.generate
+bun run prisma.push
+bun run prisma.seed
 bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Prisma Setup
 
@@ -43,66 +46,53 @@ This project uses [Prisma Postgres](https://www.prisma.io/postgres). Set your co
 DATABASE_URL="postgres://..."
 ```
 
-Generate the Prisma client:
-
 ```bash
-bun run prisma.generate
+bun run prisma.generate   # Generate the Prisma client
+bun run prisma.push       # Push schema to database
+bun run prisma.seed       # Seed blog posts
+bun run prisma.studio     # View data in Prisma Studio
 ```
 
-Push the schema:
-
-```bash
-bun run prisma.push
-```
-
-Seed initial data:
-
-```bash
-bun run prisma.seed
-```
-
-View data in Prisma Studio:
-
-```bash
-bun run prisma.studio
-```
-
-To use a local SQLite database instead, change the provider in `prisma/schema.prisma` to `sqlite`, update `db.ts` to use `@prisma/adapter-libsql`, and set `DATABASE_URL="file:./dev.db"` in `.env`.
+**Using SQLite instead:** Change the provider in `prisma/schema.prisma` to `sqlite`, update `db.ts` to use `@prisma/adapter-libsql`, and set `DATABASE_URL="file:./dev.db"` in `.env`.
 
 ## Project Structure
 
-- `app` - Pages and layouts using [file-based routing](https://nextjs.org/docs/app/building-your-application/routing)
-- `components` - Shared components
-- `components/ui` - [shadcn/ui](https://ui.shadcn.com/) components built on [Base UI](https://base-ui.com/). Add with `bunx shadcn@latest add <component-name>`
-- `components/design` - Design components that expose [Action props](https://react.dev/reference/react/useTransition#exposing-action-props-from-components) and handle async coordination internally
-- `data/actions` - [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) for mutations
-- `data/queries` - Server-side data queries with [`cache()`](https://react.dev/reference/react/cache)
-- `_components` - Route-local components (prefixed with `_`)
+```plaintext
+app/
+  [slug]/                 # Public blog posts
+  dashboard/              # Admin dashboard
+    _components/          # Route-local components
+    [slug]/               # Post detail/edit
+    new/                  # Create post
+components/
+  design/                 # Action prop components
+  ui/                     # shadcn/ui primitives
+data/
+  actions/                # Server Actions
+  queries/                # Data fetching with cache()
+```
 
-Every page folder should contain everything it needs to work. Every component or function should live at the nearest shared space in the hierarchy.
+- **components/ui** — [shadcn/ui](https://ui.shadcn.com/) components. Add with `bunx shadcn@latest add <component-name>`
+- **components/design** — Components that expose [Action props](https://react.dev/reference/react/useTransition#exposing-action-props-from-components) and handle async coordination internally
 
-## Development Tools
+Every page folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
 
-The project uses [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for code formatting. The configuration is in `eslint.config.mjs` and `.prettierrc`. The project is configured to run code formatting and linting on save in Visual Studio Code. Opening the `.code-workspace` file will ensure the correct extensions are set.
-
-## Naming Conventions
-
-- Pascal case for components
-- Kebab case for folders and files
-- Camel case for utility functions and hooks
+**Naming:** PascalCase for components, kebab-case for files/folders, camelCase for functions/hooks.
 
 ## Development Flow
 
-This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) - data fetching is **dynamic by default**. To maximize static content, push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree. This allows parent components to be prerendered while only the dynamic parts stream in. Async components accessing dynamic data must be wrapped in `<Suspense>` with skeleton fallbacks.
+This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) — data fetching is **dynamic by default**. Push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree to maximize static content. Async components accessing dynamic data must be wrapped in `<Suspense>` with skeleton fallbacks.
 
-**Fetching data** → Create queries in `data/queries/` and call them directly in async Server Components. Wrap with `cache()` for deduplication.
-**Mutating data** → Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
-**Navigation and filtering** → Wrap state changes in `useTransition` to keep old content visible while new data loads.
-**Opting into caching** → Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
+- **Fetching data** — Create queries in `data/queries/`, call in Server Components. Wrap with `cache()` for deduplication.
+- **Mutating data** — Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
+- **Navigation** — Wrap state changes in `useTransition` to keep old content visible while loading.
+- **Caching** — Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
+
+## Development Tools
+
+Uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) with format-on-save in VS Code. Configuration in `eslint.config.mjs` and `.prettierrc`. Open the `.code-workspace` file to ensure correct extensions are set.
 
 ## Deployment
-
-Build for production:
 
 ```bash
 bun run build
@@ -110,4 +100,4 @@ bun run build
 
 Deploy to [Vercel](https://vercel.com) for the easiest experience with Prisma Postgres.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See the [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
