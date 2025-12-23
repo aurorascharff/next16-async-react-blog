@@ -51,6 +51,7 @@ async function PostHeader({ slug }: { slug: string }) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-2">
+        <h1 className="text-xl font-semibold">{post.title}</h1>
         {post.description && (
           <p className="text-muted-foreground">{post.description}</p>
         )}
@@ -92,6 +93,7 @@ function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-2">
+        <Skeleton className="h-7 w-64" />
         <Skeleton className="h-5 w-96" />
         <div className="flex items-center gap-4">
           <Skeleton className="h-5 w-20" />
