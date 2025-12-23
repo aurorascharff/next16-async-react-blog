@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPostBySlug } from '@/data/queries/post-queries';
 import { formatDate, getWordCount } from '@/lib/utils';
-import { DeletePostButton } from '../_components/DeletePostButton';
+import { DeletePostButton } from './_components/DeletePostButton';
 
 type Props = {
   params: Promise<{ slug: string }>;
