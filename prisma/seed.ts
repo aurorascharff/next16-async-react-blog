@@ -312,9 +312,9 @@ React needs to track which form triggered the submission. By requiring the hook 
       {
         content: `# useOptimistic
 
-\`useOptimistic\` provides immediate UI feedback while an action runs in the background. If the action fails, React automatically reverts to the previous state.
+\`useOptimistic\` provides immediate UI feedback while an action runs in the background. It shows a temporary "optimistic" value until the real data arrives.
 
-This creates snappy interfaces where users don't wait for server responses.
+This creates snappy interfaces where users see instant responses.
 
 ## The Pattern
 
@@ -346,14 +346,18 @@ export function ArchiveButton({ slug, archived }) {
 ## How It Works
 
 1. User submits the form
-2. \`setOptimisticArchived\` immediately updates the UI
+2. \`setOptimisticArchived\` immediately updates the UI with the optimistic value
 3. The Server Action runs in the background
-4. On success, the optimistic state becomes the real state
-5. On failure, React reverts automatically
+4. When the action completes, the parent re-renders with new data
+5. The optimistic value is replaced by the real \`archived\` prop
+
+If the action fails, the server state doesn't change, so when the component re-renders it receives the original prop value—effectively "reverting" the UI.
 
 ## Why Form Actions?
 
-Using the form \`action\` prop integrates naturally with React's form handling. React automatically manages the pending state and handles the async operation. The form also works without JavaScript as a progressive enhancement.
+Using the form \`action\` prop lets React manage the async lifecycle. React knows when the action starts and finishes, which is required for the optimistic state to work correctly.
+
+Note: This pattern requires JavaScript. The inline async function is client-side code, not a Server Action that would work without JS.
 
 Use optimistic updates for actions with high success rates: toggles, likes, bookmarks.`,
         description: 'Implement instant UI feedback with useOptimistic.',
@@ -735,7 +739,7 @@ Both work together—\`cache()\` prevents duplicate queries during rendering, \`
 
 ## The Problem
 
-When users click a filter, the UI should respond immediately. But if new content takes time to load, the interface can freeze while React processes the update.
+When users trigger an action, the UI should respond immediately. But if the action takes time (like a Server Action with a database call), the interface can freeze while React processes.
 
 ## Basic Usage
 
@@ -746,44 +750,40 @@ When users click a filter, the UI should respond immediately. But if new content
 
 import { useTransition } from 'react';
 
-export function PostTabs() {
-  const [isPending, startTransition] = useTransition();
+export function DeletePostButton({ slug }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  function tabAction(value: string) {
-    startTransition(() => {
-      router.push(\`/dashboard?filter=\${value}\`);
+  function deleteAction() {
+    startTransition(async () => {
+      await deletePost(slug);
+      router.push('/dashboard');
     });
   }
 
   return (
-    <div className={isPending ? 'opacity-50' : ''}>
-      <TabList changeAction={tabAction} />
-    </div>
+    <button onClick={deleteAction} disabled={isPending}>
+      {isPending ? 'Deleting...' : 'Delete'}
+    </button>
   );
 }
 \`\`\`
 
-Updates inside \`startTransition\` are non-urgent. React keeps current UI visible while processing in the background.
+The delete button in the dashboard uses this pattern. When clicked, \`isPending\` becomes true immediately, and stays true until both the Server Action and navigation complete.
 
-## With Server Actions
+## How It Works
 
-\`useTransition\` works with async functions too:
-
-\`\`\`tsx
-function handleDelete() {
-  startTransition(async () => {
-    await deletePost(slug);
-    router.push('/dashboard');
-  });
-}
-\`\`\`
-
-\`isPending\` remains true until the entire operation completes, including navigation.
+1. User clicks delete
+2. \`startTransition\` wraps the async operation
+3. \`isPending\` becomes true immediately
+4. The UI stays responsive (button shows "Deleting...")
+5. Server Action runs in the background
+6. Navigation happens
+7. \`isPending\` becomes false
 
 ## Visual Feedback
 
-Use \`isPending\` to dim content or show subtle loading indicators. The content stays visible but users know something is happening.`,
+Use \`isPending\` to disable buttons, show spinners, or dim content. Users see immediate feedback while the operation completes.`,
         description: 'Keep your UI responsive during expensive operations with useTransition.',
         published: true,
         slug: 'usetransition',
