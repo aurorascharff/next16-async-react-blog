@@ -16,7 +16,6 @@ export function ArchiveButton({ slug, archived }: Props) {
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    e.preventDefault();
 
     startTransition(async () => {
       setOptimisticArchived(!optimisticArchived);

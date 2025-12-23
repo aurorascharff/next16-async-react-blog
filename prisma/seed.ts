@@ -28,349 +28,195 @@ async function main() {
   await prisma.post.createMany({
     data: [
       {
-        content: `# React Server Components in Next.js
+        content: `# React Server Components
 
-In Next.js App Router, all components are **Server Components by default**. This means they render on the server and send HTML to the client with zero JavaScript.
+In Next.js App Router, all components are Server Components by default. They render on the server and send HTML to the client with zero JavaScript bundle cost.
+
+This is a fundamental shift from traditional React where components run in the browser. Server Components can directly access databases, file systems, and other backend resources without exposing sensitive information to the client.
 
 ## When to Use Server Components
 
-Server Components are ideal for:
+Server Components are ideal when you need to fetch data, access backend resources, or keep sensitive information secure. Since they never run in the browser, API keys and database queries stay on the server.
 
-- Fetching data directly in the component
-- Accessing backend resources (databases, file system)
-- Keeping sensitive information on the server (API keys, tokens)
-
-## Example: Fetching Data
+In this blog, the post page fetches data directly in the component:
 
 \`\`\`tsx
-// This runs on the server - no "use client" directive
-async function BlogPost({ slug }: { slug: string }) {
-  const post = await prisma.post.findUnique({ 
-    where: { slug } 
-  });
-  
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPublishedPostBySlug(slug);
+
   return (
     <article>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
+      <MarkdownContent>{post.content}</MarkdownContent>
     </article>
   );
 }
 \`\`\`
 
+No API route needed. This simplifies data fetching and eliminates client-server waterfalls.
+
 ## When to Use Client Components
 
-Add \`'use client'\` at the top of a file when you need:
+Add \`'use client'\` at the top of a file when you need interactivity—event handlers, React hooks like \`useState\`, or browser APIs.
 
-- **Interactivity** - onClick, onChange, useState, useEffect
-- **Browser APIs** - localStorage, window, navigator
-- **Custom hooks** that depend on state or effects
+The archive button in the dashboard needs click handlers and state, so it's a Client Component:
 
 \`\`\`tsx
 'use client';
 
-import { useState } from 'react';
-
-export function LikeButton() {
-  const [likes, setLikes] = useState(0);
-  return <button onClick={() => setLikes(l => l + 1)}>{likes}</button>;
+export function ArchiveButton({ slug, archived }) {
+  function handleClick() {
+    // Handle the click...
+  }
+  return <button onClick={handleClick}>Archive</button>;
 }
 \`\`\`
 
-Server Components can import and render Client Components, but not vice versa.`,
+## The Composition Pattern
+
+Server Components can import and render Client Components, but not vice versa. Keep Client Components at the leaves of your component tree and pass server-fetched data as props. This maximizes server rendering while enabling interactivity where needed.`,
         description: 'Understand when to use Server Components vs Client Components in Next.js App Router.',
         published: true,
-        slug: 'getting-started-with-react-server-components',
-        title: 'React Server Components in Next.js',
+        slug: 'react-server-components',
+        title: 'React Server Components',
       },
       {
-        content: `# Suspense and Streaming in Next.js
+        content: `# Suspense and Streaming
 
-Suspense lets you declaratively specify loading UI while async content loads. In Next.js, this enables **streaming** - sending HTML in chunks as it becomes ready.
+Suspense lets you declaratively specify loading UI while async content loads. In Next.js, this enables streaming—sending HTML to the browser in chunks as each part becomes ready.
 
-## Basic Suspense Usage
+Without streaming, users would see nothing until the entire page loads. With streaming, the shell appears immediately while slower content loads progressively.
+
+## How Streaming Works
+
+When a component wrapped in Suspense needs to fetch data, React shows the fallback immediately. Once the data resolves, the content streams to the browser and replaces the fallback.
+
+The dashboard page wraps async components in Suspense:
 
 \`\`\`tsx
-import { Suspense } from 'react';
-
-export default function Page() {
+export default function DashboardPage({ searchParams }: Props) {
   return (
     <div>
-      <h1>My Page</h1>
-      <Suspense fallback={<p>Loading posts...</p>}>
-        <PostList />
+      <Suspense fallback={<PostTabsSkeleton />}>
+        <PostTabs />
+      </Suspense>
+      <Suspense fallback={<PostListSkeleton />}>
+        <PostList searchParams={searchParams} />
       </Suspense>
     </div>
   );
 }
-
-async function PostList() {
-  const posts = await getPosts(); // This can take time
-  return <ul>{posts.map(p => <li key={p.id}>{p.title}</li>)}</ul>;
-}
 \`\`\`
 
-## How Streaming Works
+The tabs and list load independently—whichever finishes first appears first.
 
-1. Server sends the shell (layout, static content) immediately
-2. Suspense boundaries show their fallback
-3. As each async component resolves, its HTML streams to the client
-4. React hydrates each chunk as it arrives
+## The loading.tsx Convention
 
-## loading.tsx Convention
-
-Next.js automatically wraps \`page.tsx\` in Suspense when you create \`loading.tsx\`:
+Next.js provides a file convention that automatically wraps your page in Suspense. Create a \`loading.tsx\` alongside your \`page.tsx\`:
 
 \`\`\`tsx
-// app/posts/loading.tsx
-export default function Loading() {
-  return <div>Loading...</div>;
-}
-\`\`\`
-
-This is equivalent to wrapping your page in \`<Suspense fallback={<Loading />}>\`.
-
-## Nested Suspense
-
-You can nest Suspense boundaries for granular loading states:
-
-\`\`\`tsx
-<Suspense fallback={<HeaderSkeleton />}>
-  <Header />
-</Suspense>
-<Suspense fallback={<ContentSkeleton />}>
-  <Content />
-</Suspense>
-\`\`\`
-
-Each section loads independently and streams as soon as it's ready.`,
-        description: 'Learn how Suspense enables streaming HTML and progressive loading in Next.js.',
-        published: true,
-        slug: 'understanding-suspense-boundaries',
-        title: 'Suspense and Streaming in Next.js',
-      },
-      {
-        content: `# Skeleton Loading Patterns
-
-Skeletons are placeholder UI that mimics the shape of content before it loads. They reduce perceived loading time by showing users the page structure immediately.
-
-## Creating a Skeleton Component
-
-\`\`\`tsx
-// components/ui/skeleton.tsx
-import { cn } from '@/lib/utils';
-
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('animate-pulse rounded-md bg-muted', className)}
-      {...props}
-    />
-  );
-}
-\`\`\`
-
-## Usage with Suspense
-
-\`\`\`tsx
-function PostCardSkeleton() {
-  return (
-    <div className="space-y-3">
-      <Skeleton className="h-6 w-3/4" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-2/3" />
-    </div>
-  );
-}
-
-export default function Page() {
-  return (
-    <Suspense fallback={<PostCardSkeleton />}>
-      <PostCard />
-    </Suspense>
-  );
-}
-\`\`\`
-
-## Best Practices
-
-1. **Match the layout** - Skeleton shape should match the final content
-2. **Use consistent animation** - \`animate-pulse\` is the standard
-3. **Avoid layout shift** - Use fixed dimensions that match final content
-4. **Keep it simple** - Don't over-detail skeletons
-
-## loading.tsx for Route Segments
-
-\`\`\`tsx
-// app/posts/[slug]/loading.tsx
-import { Skeleton } from '@/components/ui/skeleton';
-
 export default function PostLoading() {
   return (
-    <article className="space-y-4">
-      <Skeleton className="h-10 w-2/3" />
-      <Skeleton className="h-4 w-1/4" />
+    <article>
+      <Skeleton className="h-5 w-96" />
       <Skeleton className="h-64 w-full" />
     </article>
   );
 }
 \`\`\`
 
-This automatically shows while the page loads.`,
-        description: 'Implement skeleton loaders with Suspense for better perceived performance.',
+This is equivalent to wrapping your page in \`<Suspense fallback={<PostLoading />}>\`.
+
+## Nested Suspense Boundaries
+
+For more granular control, nest multiple Suspense boundaries within a single page. Each section loads independently—fast queries resolve first while slow ones continue streaming.`,
+        description: 'Learn how Suspense enables streaming HTML and progressive loading in Next.js.',
         published: true,
-        slug: 'skeleton-loading-patterns',
-        title: 'Skeleton Loading Patterns',
+        slug: 'suspense-and-streaming',
+        title: 'Suspense and Streaming',
       },
       {
-        content: `# Error Handling in Next.js
-
-Next.js provides file conventions for handling errors at different levels of your application.
-
-## error.tsx - Route Error Boundary
-
-Create \`error.tsx\` to catch errors in a route segment and its children:
-
-\`\`\`tsx
-'use client'; // Error boundaries must be Client Components
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  return (
-    <div className="p-4">
-      <h2>Something went wrong!</h2>
-      <p>{error.message}</p>
-      <button onClick={() => reset()}>Try again</button>
-    </div>
-  );
-}
-\`\`\`
-
-The \`reset\` function attempts to re-render the error boundary's contents.
-
-## global-error.tsx - Root Error Boundary
-
-For errors in the root layout, create \`app/global-error.tsx\`:
-
-\`\`\`tsx
-'use client';
-
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  return (
-    <html>
-      <body>
-        <h2>Something went wrong!</h2>
-        <button onClick={() => reset()}>Try again</button>
-      </body>
-    </html>
-  );
-}
-\`\`\`
-
-## not-found.tsx - 404 Handling
-
-Handle missing resources with \`not-found.tsx\`:
-
-\`\`\`tsx
-// app/posts/[slug]/not-found.tsx
-import Link from 'next/link';
-
-export default function NotFound() {
-  return (
-    <div>
-      <h2>Post Not Found</h2>
-      <p>Could not find the requested post.</p>
-      <Link href="/posts">Back to posts</Link>
-    </div>
-  );
-}
-\`\`\`
-
-Trigger it with:
-
-\`\`\`tsx
-import { notFound } from 'next/navigation';
-
-async function getPost(slug: string) {
-  const post = await prisma.post.findUnique({ where: { slug } });
-  if (!post) notFound();
-  return post;
-}
-\`\`\`
-
-## Error Hierarchy
-
-Errors bubble up to the nearest error boundary. Create error.tsx at different levels for granular handling.`,
-        description: 'Handle errors gracefully using Next.js error.tsx, global-error.tsx, and not-found.tsx.',
-        published: true,
-        slug: 'error-handling-with-error-boundaries',
-        title: 'Error Handling in Next.js',
-      },
-      {
-        content: `# Server Actions and Forms
+        content: `# Server Actions
 
 Server Actions are async functions that run on the server. They're the recommended way to handle form submissions and data mutations in Next.js.
 
+Unlike API routes, Server Actions can be called directly from components. They integrate with React's form handling and provide automatic CSRF protection.
+
 ## Defining a Server Action
 
+Create a file with \`'use server'\` at the top. Every exported function becomes a Server Action:
+
 \`\`\`tsx
-// data/actions/post-actions.ts
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { updateTag } from 'next/cache';
 
 export async function createPost(formData: FormData) {
   const title = formData.get('title') as string;
   const content = formData.get('content') as string;
-  
+
   await prisma.post.create({
-    data: { title, content },
+    data: { title, content, slug: generateSlug(title) },
   });
-  
-  revalidatePath('/posts');
+
+  updateTag('posts');
+  return { success: true };
 }
 \`\`\`
+
+The \`updateTag\` call invalidates cached data so the UI reflects the change.
 
 ## Using with Forms
 
-\`\`\`tsx
-import { createPost } from '@/data/actions/post-actions';
+Pass the action directly to a form's \`action\` prop:
 
-export default function NewPostForm() {
-  return (
-    <form action={createPost}>
-      <input name="title" required />
-      <textarea name="content" required />
-      <button type="submit">Create Post</button>
-    </form>
-  );
-}
+\`\`\`tsx
+<form action={createPost}>
+  <input name="title" required />
+  <textarea name="content" required />
+  <button type="submit">Create</button>
+</form>
 \`\`\`
 
-## useActionState for Form State
+This works without JavaScript—the form submits normally if JS fails to load. When JS is available, React handles the submission without a page reload.
+
+## Returning Data
+
+Server Actions can return validation errors, success messages, or created records. Use \`useActionState\` to access this returned data in Client Components.`,
+        description: 'Learn how to define and use Server Actions for mutations in Next.js.',
+        published: true,
+        slug: 'server-actions',
+        title: 'Server Actions',
+      },
+      {
+        content: `# useActionState
+
+\`useActionState\` is a React hook that manages form state across submissions. It's useful when you need to preserve user input after validation errors.
+
+## The Problem
+
+Without \`useActionState\`, form state resets on each submission. If validation fails server-side, users lose their input.
+
+## Basic Usage
+
+The hook wraps your Server Action and provides the current state plus a bound action:
 
 \`\`\`tsx
 'use client';
 
 import { useActionState } from 'react';
 
-export function PostForm({ action }) {
-  const [state, formAction] = useActionState(action, initialState);
-  
+export function PostForm({ action, defaultValues }) {
+  const [state, formAction] = useActionState(async (prevState, formData) => {
+    const result = await action(formData);
+    if (result.success) {
+      return prevState;
+    }
+    return result.formData ?? prevState;
+  }, defaultValues);
+
   return (
     <form action={formAction}>
-      {state.error && <p className="text-red-500">{state.error}</p>}
       <input name="title" defaultValue={state.title} />
       <button type="submit">Save</button>
     </form>
@@ -378,28 +224,720 @@ export function PostForm({ action }) {
 }
 \`\`\`
 
-## Pending States with useFormStatus
+When the action returns \`formData\` on error, the form repopulates with the user's input.
+
+## Returning Errors
+
+Structure your Server Action to return both the error and submitted data:
+
+\`\`\`tsx
+export async function createPost(formData: FormData) {
+  const rawData = {
+    title: formData.get('title') as string,
+    content: formData.get('content') as string,
+  };
+
+  const result = postSchema.safeParse(rawData);
+  if (!result.success) {
+    return { success: false, error: result.error.issues[0].message, formData: rawData };
+  }
+
+  await prisma.post.create({ data: result.data });
+  return { success: true };
+}
+\`\`\`
+
+This pattern ensures users never lose their work on validation errors.`,
+        description: 'Manage form state across submissions with useActionState.',
+        published: true,
+        slug: 'useactionstate',
+        title: 'useActionState',
+      },
+      {
+        content: `# useFormStatus
+
+\`useFormStatus\` provides the pending state of the nearest parent form. It's the simplest way to show loading indicators during form submissions.
+
+## Basic Usage
+
+The hook returns a \`pending\` boolean that's true while submitting:
 
 \`\`\`tsx
 'use client';
 
 import { useFormStatus } from 'react-dom';
 
-function SubmitButton() {
+export function SubmitButton({ children }) {
   const { pending } = useFormStatus();
+
   return (
-    <button disabled={pending}>
-      {pending ? 'Saving...' : 'Save'}
+    <button type="submit" disabled={pending}>
+      {pending ? 'Saving...' : children}
     </button>
   );
 }
 \`\`\`
 
-Server Actions automatically integrate with Next.js caching and revalidation.`,
-        description: 'Learn how to use Server Actions for form handling and data mutations in Next.js.',
-        published: false,
-        slug: 'draft-upcoming-features',
-        title: 'Server Actions and Forms',
+## The Child Component Constraint
+
+\`useFormStatus\` only works in components that are children of the form. It won't work in the same component that renders the form:
+
+\`\`\`tsx
+// ❌ Always returns pending: false
+function Form() {
+  const { pending } = useFormStatus();
+  return <form>...</form>;
+}
+
+// ✅ Works correctly
+function Form() {
+  return (
+    <form action={myAction}>
+      <SubmitButton>Save</SubmitButton>
+    </form>
+  );
+}
+\`\`\`
+
+Extract the button into a child component, then use the hook there.
+
+## Why This Design?
+
+React needs to track which form triggered the submission. By requiring the hook inside a form's children, React can reliably determine the pending state for that specific form.`,
+        description: 'Show loading states during form submissions with useFormStatus.',
+        published: true,
+        slug: 'useformstatus',
+        title: 'useFormStatus',
+      },
+      {
+        content: `# useOptimistic
+
+\`useOptimistic\` provides immediate UI feedback while an action runs in the background. If the action fails, React automatically reverts to the previous state.
+
+This creates snappy interfaces where users don't wait for server responses.
+
+## The Pattern
+
+Combine \`useOptimistic\` with \`useTransition\` to update UI immediately while the Server Action executes. The archive button in the dashboard uses this pattern:
+
+\`\`\`tsx
+'use client';
+
+import { useOptimistic, useTransition } from 'react';
+
+export function ArchiveButton({ slug, archived }) {
+  const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
+  const [isPending, startTransition] = useTransition();
+
+  function handleClick() {
+    startTransition(async () => {
+      setOptimisticArchived(!optimisticArchived);
+      await toggleArchivePost(slug, !optimisticArchived);
+    });
+  }
+
+  return (
+    <button onClick={handleClick} disabled={isPending}>
+      {optimisticArchived ? 'Unarchive' : 'Archive'}
+    </button>
+  );
+}
+\`\`\`
+
+## How It Works
+
+1. User clicks the button
+2. \`setOptimisticArchived\` immediately updates the UI
+3. The Server Action runs in the background
+4. On success, the optimistic state becomes the real state
+5. On failure, React reverts automatically
+
+## Why useTransition?
+
+Wrapping in \`startTransition\` marks it as non-urgent, keeping UI responsive. It also provides \`isPending\` to disable the button during the operation.
+
+Use optimistic updates for actions with high success rates: toggles, likes, bookmarks.`,
+        description: 'Implement instant UI feedback with useOptimistic.',
+        published: true,
+        slug: 'useoptimistic',
+        title: 'useOptimistic',
+      },
+      {
+        content: `# The "use cache" Directive
+
+Next.js 16 introduces the \`"use cache"\` directive for fine-grained caching control. Unlike previous versions where caching was implicit, you now explicitly opt into caching.
+
+## Enabling Cache Components
+
+Enable the feature in your Next.js config:
+
+\`\`\`tsx
+const nextConfig = {
+  cacheComponents: true,
+};
+\`\`\`
+
+With this enabled, data fetching is dynamic by default. Use \`"use cache"\` to opt into caching.
+
+## Basic Usage
+
+The blog's queries use this pattern:
+
+\`\`\`tsx
+import { cacheTag } from 'next/cache';
+import { cache } from 'react';
+
+export const getPublishedPosts = cache(async () => {
+  'use cache';
+  cacheTag('posts');
+
+  return await prisma.post.findMany({
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+  });
+});
+\`\`\`
+
+The \`cacheTag\` function tags this data for later invalidation.
+
+## Cache Invalidation
+
+When data changes, invalidate with \`updateTag\`:
+
+\`\`\`tsx
+export async function createPost(formData: FormData) {
+  await prisma.post.create({ data });
+  updateTag('posts');
+}
+\`\`\`
+
+All functions tagged with \`'posts'\` will refetch on the next request.
+
+## Granular Tags
+
+Tag individual items separately from lists:
+
+\`\`\`tsx
+export const getPublishedPostBySlug = cache(async (slug: string) => {
+  'use cache';
+  cacheTag(\`post-\${slug}\`);
+
+  return await prisma.post.findUnique({ where: { slug } });
+});
+\`\`\`
+
+When updating a post, invalidate both its specific tag and the list tag.`,
+        description: 'Control caching with the "use cache" directive and cache tags.',
+        published: true,
+        slug: 'use-cache-directive',
+        title: 'The "use cache" Directive',
+      },
+      {
+        content: `# View Transitions
+
+React 19 introduces the \`<ViewTransition>\` component for smooth animations between route changes. Instead of abrupt page swaps, elements can morph, fade, or slide.
+
+## Page-Level Transitions
+
+Wrap page content with enter/exit animations:
+
+\`\`\`tsx
+import { ViewTransition } from 'react';
+
+export default function HomePage() {
+  return (
+    <ViewTransition enter="slide-from-left" exit="slide-to-left">
+      <div>
+        <h1>Blog</h1>
+        <BlogList />
+      </div>
+    </ViewTransition>
+  );
+}
+\`\`\`
+
+## Shared Element Transitions
+
+Connect elements across pages with the same \`name\`. The blog uses this for post cards:
+
+\`\`\`tsx
+<Link href={\`/dashboard/\${post.slug}\`}>
+  <ViewTransition name={\`post-card-\${post.slug}\`} share="morph">
+    <Card>
+      <CardTitle>{post.title}</CardTitle>
+    </Card>
+  </ViewTransition>
+</Link>
+\`\`\`
+
+On the detail page, use the same name:
+
+\`\`\`tsx
+<ViewTransition name={\`post-card-\${slug}\`} share="morph">
+  <article>
+    <PostHeader slug={slug} />
+  </article>
+</ViewTransition>
+\`\`\`
+
+The card smoothly morphs into the full article.
+
+## Browser Support
+
+View Transitions use the browser's native API. In unsupported browsers, navigation works normally—a progressive enhancement that improves experience where supported.`,
+        description: 'Add smooth page transitions with the ViewTransition component.',
+        published: true,
+        slug: 'view-transitions',
+        title: 'View Transitions',
+      },
+      {
+        content: `# Error Handling
+
+Next.js provides file conventions for handling errors. Instead of try-catch blocks, create special files that automatically catch errors in their route segment.
+
+## error.tsx
+
+Create an \`error.tsx\` file to catch errors:
+
+\`\`\`tsx
+'use client';
+
+export default function Error({ error, reset }) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <p>{error.message}</p>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+\`\`\`
+
+Error boundaries must be Client Components. The \`reset\` function attempts to re-render the error boundary's contents.
+
+## not-found.tsx
+
+Handle missing resources with \`not-found.tsx\`:
+
+\`\`\`tsx
+export default function PostNotFound() {
+  return (
+    <div>
+      <h2>Post Not Found</h2>
+      <p>The post you're looking for doesn't exist.</p>
+    </div>
+  );
+}
+\`\`\`
+
+Trigger it with \`notFound()\`:
+
+\`\`\`tsx
+import { notFound } from 'next/navigation';
+
+export const getPostBySlug = cache(async (slug: string) => {
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (!post) notFound();
+  return post;
+});
+\`\`\`
+
+## Error Hierarchy
+
+Errors bubble up to the nearest error boundary. Create \`error.tsx\` at different levels for granular handling—a post-specific error page might offer different recovery options than a general dashboard error.`,
+        description: 'Handle errors with error.tsx and not-found.tsx conventions.',
+        published: true,
+        slug: 'error-handling',
+        title: 'Error Handling',
+      },
+      {
+        content: `# generateStaticParams
+
+\`generateStaticParams\` pre-renders dynamic routes at build time. For a blog, posts are ready as static HTML before any user visits—instant page loads, no loading states.
+
+## Basic Usage
+
+Export the function from a dynamic route:
+
+\`\`\`tsx
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map(post => ({ slug: post.slug }));
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPublishedPostBySlug(slug);
+
+  return <MarkdownContent>{post.content}</MarkdownContent>;
+}
+\`\`\`
+
+At build time, Next.js calls \`generateStaticParams\` to get all values, then pre-renders a page for each.
+
+## Dynamic Metadata
+
+Combine with \`generateMetadata\` for SEO:
+
+\`\`\`tsx
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPublishedPostBySlug(slug);
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
+}
+\`\`\`
+
+## New Content After Build
+
+When a user requests a slug not in \`generateStaticParams\`, Next.js generates it on-demand and caches it. Use \`updateTag()\` in Server Actions to invalidate when content changes.
+
+## When to Use
+
+Use for public, content-heavy pages. Admin pages and user-specific content are better served dynamically.`,
+        description: 'Pre-render dynamic routes at build time for instant page loads.',
+        published: true,
+        slug: 'generatestaticparams',
+        title: 'generateStaticParams',
+      },
+      {
+        content: `# URL State with searchParams
+
+URL search parameters provide shareable, bookmarkable state. Unlike React state that resets on refresh, URL state persists and can be shared via links.
+
+## Reading searchParams
+
+In Next.js 16, \`searchParams\` is a Promise:
+
+\`\`\`tsx
+type Props = {
+  searchParams: Promise<{ filter?: string }>;
+};
+
+export default function DashboardPage({ searchParams }: Props) {
+  return (
+    <Suspense fallback={<PostListSkeleton />}>
+      <PostList searchParams={searchParams} />
+    </Suspense>
+  );
+}
+\`\`\`
+
+The PostList component awaits and validates the filter:
+
+\`\`\`tsx
+const filterSchema = z.enum(['all', 'published', 'drafts', 'archived']).catch('all');
+
+export async function PostList({ searchParams }: Props) {
+  const { filter } = await searchParams;
+  const validFilter = filterSchema.parse(filter);
+  const posts = await getPosts(validFilter);
+  // ...
+}
+\`\`\`
+
+## Updating URL State
+
+In Client Components, use \`useRouter\`:
+
+\`\`\`tsx
+'use client';
+
+export function PostTabs() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const currentTab = searchParams.get('filter') ?? 'all';
+
+  function tabAction(value: string) {
+    router.push(\`/dashboard?filter=\${value}\`);
+  }
+
+  return <TabList activeTab={currentTab} changeAction={tabAction} />;
+}
+\`\`\`
+
+## Benefits
+
+URL state works with browser history, can be bookmarked, and makes pages shareable. \`/dashboard?filter=drafts\` shows exactly that filtered view.`,
+        description: 'Use URL searchParams for shareable, bookmarkable filter state.',
+        published: true,
+        slug: 'url-state-searchparams',
+        title: 'URL State with searchParams',
+      },
+      {
+        content: `# React cache()
+
+React's \`cache()\` function deduplicates requests within a single render pass. Call the same function multiple times with the same arguments, and only one execution happens.
+
+## The Problem
+
+When multiple components need the same data:
+
+\`\`\`tsx
+async function PostHeader({ slug }) {
+  const post = await getPostBySlug(slug);
+  return <h1>{post.title}</h1>;
+}
+
+async function PostContent({ slug }) {
+  const post = await getPostBySlug(slug);
+  return <MarkdownContent>{post.content}</MarkdownContent>;
+}
+\`\`\`
+
+Without deduplication, this makes two database queries.
+
+## The Solution
+
+Wrap your function with \`cache()\`:
+
+\`\`\`tsx
+import { cache } from 'react';
+
+export const getPostBySlug = cache(async (slug: string) => {
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (!post) notFound();
+  return post;
+});
+\`\`\`
+
+Now both components call \`getPostBySlug(slug)\` independently, but only one query executes.
+
+## How It Works
+
+React tracks function calls during a render. When \`cache(fn)\` is called with the same arguments, it returns the cached result. This deduplication only applies within a single request.
+
+## Combining with "use cache"
+
+\`cache()\` deduplicates within a render. \`"use cache"\` caches across requests:
+
+\`\`\`tsx
+export const getPublishedPostBySlug = cache(async (slug: string) => {
+  'use cache';
+  cacheTag(\`post-\${slug}\`);
+
+  return await prisma.post.findUnique({ where: { slug } });
+});
+\`\`\`
+
+Both work together—\`cache()\` prevents duplicate queries during rendering, \`"use cache"\` stores results for future requests.`,
+        description: 'Deduplicate data requests with React cache().',
+        published: true,
+        slug: 'react-cache',
+        title: 'React cache()',
+      },
+      {
+        content: `# useTransition
+
+\`useTransition\` marks state updates as non-urgent, keeping your UI responsive during expensive operations.
+
+## The Problem
+
+When users click a filter, the UI should respond immediately. But if new content takes time to load, the interface can freeze while React processes the update.
+
+## Basic Usage
+
+\`useTransition\` returns a pending state and a function to wrap updates:
+
+\`\`\`tsx
+'use client';
+
+import { useTransition } from 'react';
+
+export function PostTabs() {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  function tabAction(value: string) {
+    startTransition(() => {
+      router.push(\`/dashboard?filter=\${value}\`);
+    });
+  }
+
+  return (
+    <div className={isPending ? 'opacity-50' : ''}>
+      <TabList changeAction={tabAction} />
+    </div>
+  );
+}
+\`\`\`
+
+Updates inside \`startTransition\` are non-urgent. React keeps current UI visible while processing in the background.
+
+## With Server Actions
+
+\`useTransition\` works with async functions too:
+
+\`\`\`tsx
+function handleDelete() {
+  startTransition(async () => {
+    await deletePost(slug);
+    router.push('/dashboard');
+  });
+}
+\`\`\`
+
+\`isPending\` remains true until the entire operation completes, including navigation.
+
+## Visual Feedback
+
+Use \`isPending\` to dim content or show subtle loading indicators. The content stays visible but users know something is happening.`,
+        description: 'Keep your UI responsive during expensive operations with useTransition.',
+        published: true,
+        slug: 'usetransition',
+        title: 'useTransition',
+      },
+      {
+        content: `# Skeleton Loading
+
+Skeletons are placeholder UI that mimics content shape. They reduce perceived loading time by showing page structure immediately.
+
+## Creating Skeletons
+
+A skeleton is a div with pulsing animation:
+
+\`\`\`tsx
+function Skeleton({ className }) {
+  return <div className={\`animate-pulse rounded-md bg-muted \${className}\`} />;
+}
+\`\`\`
+
+## Match Content Layout
+
+Skeletons should match the final content shape:
+
+\`\`\`tsx
+export function PostListSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map(i => (
+        <Card key={i}>
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-24" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+\`\`\`
+
+## Export with Components
+
+Keep skeletons in sync by exporting them together:
+
+\`\`\`tsx
+export async function PostList({ searchParams }) {
+  const posts = await getPosts(filter);
+  return posts.map(post => <PostCard post={post} />);
+}
+
+export function PostListSkeleton() {
+  // ...
+}
+\`\`\`
+
+When you change the component, the skeleton is right there to update.
+
+## Using with Suspense
+
+\`\`\`tsx
+<Suspense fallback={<PostListSkeleton />}>
+  <PostList searchParams={searchParams} />
+</Suspense>
+\`\`\`
+
+Users see the skeleton immediately while data loads.`,
+        description: 'Build skeleton loaders that match your content layout.',
+        published: true,
+        slug: 'skeleton-loading',
+        title: 'Skeleton Loading',
+      },
+      {
+        content: `# Authorization Patterns
+
+Next.js provides the \`unauthorized()\` function for handling authorization in Server Components. Combined with \`unauthorized.tsx\`, you can declaratively handle access control.
+
+## Enabling authInterrupts
+
+Enable in your config:
+
+\`\`\`tsx
+const config = {
+  experimental: {
+    authInterrupts: true,
+  },
+};
+\`\`\`
+
+## Checking Authorization
+
+In pages, check permissions and call \`unauthorized()\`:
+
+\`\`\`tsx
+import { unauthorized } from 'next/navigation';
+
+export default function DashboardPage({ searchParams }: Props) {
+  if (!canManagePosts()) {
+    unauthorized();
+  }
+
+  return <Dashboard />;
+}
+\`\`\`
+
+This stops rendering and shows the unauthorized page.
+
+## The unauthorized.tsx File
+
+Customize what denied users see:
+
+\`\`\`tsx
+export default function Unauthorized() {
+  return (
+    <Card className="text-center">
+      <CardHeader>
+        <CardTitle>Access Denied</CardTitle>
+        <CardDescription>You don't have permission to view this page.</CardDescription>
+      </CardHeader>
+    </Card>
+  );
+}
+\`\`\`
+
+## Protecting Server Actions
+
+Always check authorization in actions too—page checks aren't enough:
+
+\`\`\`tsx
+export async function deletePost(slug: string) {
+  if (!canManagePosts()) {
+    throw new Error('Unauthorized');
+  }
+  await prisma.post.delete({ where: { slug } });
+}
+\`\`\`
+
+## Conditional UI
+
+For softer restrictions, conditionally render elements:
+
+\`\`\`tsx
+{canManagePosts() && <Link href="/dashboard">Dashboard</Link>}
+\`\`\`
+
+Unauthorized users simply don't see the link.`,
+        description: 'Handle authorization with unauthorized() and unauthorized.tsx.',
+        published: true,
+        slug: 'authorization',
+        title: 'Authorization Patterns',
       },
     ],
   });
