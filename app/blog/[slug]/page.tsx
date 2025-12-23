@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { MarkdownContent } from '@/components/Markdown';
 import { buttonVariants } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
 
@@ -48,38 +47,31 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
-      <div className="bg-muted/30 min-h-screen">
-        <div className="container mx-auto max-w-4xl px-4 py-12">
-          <Link href="/blog" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-6' })}>
+      <div className="min-h-screen">
+        <div className="container mx-auto max-w-3xl px-4 py-12">
+          <Link href="/blog" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-8' })}>
             ← Back to blog
           </Link>
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="space-y-3">
-                <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
-                <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-4 w-4" />
-                    {createdDate}
-                  </span>
-                  {wasUpdated && (
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4" />
-                      Updated {updatedDate}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1.5">
-                    <FileText className="h-4 w-4" />
-                    {wordCount} words
-                  </span>
-                </div>
-              </div>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <MarkdownContent>{post.content}</MarkdownContent>
-            </CardContent>
-          </Card>
+          <article>
+            <MarkdownContent>{post.content}</MarkdownContent>
+            <Separator className="mt-12 mb-6" />
+            <footer className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="h-4 w-4" />
+                {createdDate}
+              </span>
+              {wasUpdated && (
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  Updated {updatedDate}
+                </span>
+              )}
+              <span className="flex items-center gap-1.5">
+                <FileText className="h-4 w-4" />
+                {wordCount} words
+              </span>
+            </footer>
+          </article>
         </div>
       </div>
     </ViewTransition>

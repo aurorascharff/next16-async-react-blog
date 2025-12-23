@@ -4,35 +4,29 @@ import { Suspense, ViewTransition } from 'react';
 import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
+import { getPostBySlug } from '@/data/queries/post-queries';
 import { DeletePostButton } from '../_components/DeletePostButton';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
 
   return (
     <ViewTransition name={`post-card-${slug}`} share="morph">
-      <Card>
-        <CardHeader className="pb-4">
-          <Suspense fallback={<PostHeaderSkeleton />}>
-            <PostHeader slug={slug} />
-          </Suspense>
-        </CardHeader>
-        <Separator />
-        <CardContent className="pt-6">
-          <Suspense fallback={<Skeleton className="h-24 w-full" />}>
-            <PostContent slug={slug} />
-          </Suspense>
-        </CardContent>
-      </Card>
+      <article>
+        <Suspense fallback={<PostHeaderSkeleton />}>
+          <PostHeader slug={slug} />
+        </Suspense>
+        <Separator className="my-6" />
+        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+          <PostContent slug={slug} />
+        </Suspense>
+      </article>
     </ViewTransition>
   );
 }
@@ -56,10 +50,9 @@ async function PostHeader({ slug }: { slug: string }) {
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="space-y-3">
-        <CardTitle className="text-3xl font-bold tracking-tight">{post.title}</CardTitle>
+      <div className="space-y-2">
         {post.description && (
-          <p className="text-muted-foreground text-base">{post.description}</p>
+          <p className="text-muted-foreground">{post.description}</p>
         )}
         <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           <Badge variant={post.published ? 'default' : 'secondary'}>{post.published ? 'Published' : 'Draft'}</Badge>
@@ -98,8 +91,8 @@ async function PostContent({ slug }: { slug: string }) {
 function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="space-y-3">
-        <Skeleton className="h-9 w-64" />
+      <div className="space-y-2">
+        <Skeleton className="h-5 w-96" />
         <div className="flex items-center gap-4">
           <Skeleton className="h-5 w-20" />
           <Skeleton className="h-5 w-36" />
