@@ -6,25 +6,7 @@ Features opt-in caching with [`"use cache"`](https://nextjs.org/docs/app/api-ref
 
 ## Self-Documenting
 
-Run `bun run prisma.seed` to populate the blog with posts explaining each pattern:
-
-- React Server Components
-- Suspense and Streaming
-- Server Actions
-- useActionState
-- useFormStatus
-- useOptimistic
-- The "use cache" Directive
-- View Transitions
-- Error Handling
-- generateStaticParams
-- URL State with searchParams
-- React cache()
-- useTransition
-- Skeleton Loading
-- Authorization Patterns
-
-Each post uses code examples from this app.
+Run `bun run prisma.seed` to populate the blog with posts covering: Server Components, Suspense, Server Actions, `useActionState`, `useFormStatus`, `useOptimistic`, `"use cache"`, View Transitions, error handling, `generateStaticParams`, URL state, `cache()`, `useTransition`, skeletons, authorization, and static vs dynamic rendering. Each post uses code examples from this app.
 
 ## Getting Started
 

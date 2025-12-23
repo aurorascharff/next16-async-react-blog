@@ -963,6 +963,86 @@ Unauthorized users simply don't see the link.`,
         slug: 'authorization',
         title: 'Authorization Patterns',
       },
+      {
+        content: `# Static vs Dynamic Rendering
+
+With \`cacheComponents: true\`, Next.js defaults to dynamic rendering. You opt into static rendering with \`"use cache"\`. Understanding this distinction explains why some pages need loading states and others don't.
+
+## Static Pages
+
+Static pages render once and serve the same result to subsequent users. They can be generated at build time OR on-demand when the first user visits—either way, the result is cached and served statically.
+
+The blog's home page is static:
+
+\`\`\`tsx
+export default function HomePage() {
+  return (
+    <div>
+      <h1>Blog</h1>
+      <BlogList />
+    </div>
+  );
+}
+
+async function BlogList() {
+  const posts = await getPublishedPosts(); // Uses "use cache"
+  return posts.map(post => <PostCard post={post} />);
+}
+\`\`\`
+
+Because \`getPublishedPosts\` uses \`"use cache"\`, the result is cached. The first user generates the static content, subsequent users get it instantly—no loading states needed.
+
+## Dynamic Pages
+
+Dynamic pages render fresh on each request. They're needed when content depends on request-time data like \`searchParams\`, \`cookies()\`, or \`headers()\`.
+
+The dashboard is dynamic:
+
+\`\`\`tsx
+export default function DashboardPage({ searchParams }: Props) {
+  return (
+    <div>
+      <Suspense fallback={<PostListSkeleton />}>
+        <PostList searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+}
+\`\`\`
+
+The \`searchParams\` prop triggers dynamic rendering—\`?filter=drafts\` shows different content than \`?filter=published\`. Each request fetches fresh data, so Suspense fallbacks show while loading.
+
+## What Makes a Page Dynamic?
+
+These trigger dynamic rendering:
+- Reading \`searchParams\` or \`params\`
+- Calling \`cookies()\` or \`headers()\`
+- Data fetches without \`"use cache"\`
+
+## Invalidating Static Content
+
+Static content stays cached until invalidated:
+
+\`\`\`tsx
+export async function createPost(formData: FormData) {
+  await prisma.post.create({ data });
+  updateTag('posts'); // Invalidate the cache
+}
+\`\`\`
+
+After \`updateTag('posts')\`, the next request regenerates the static content.
+
+## Why It Matters
+
+- **Static pages**: Load instantly for most users. First user may wait while content generates.
+- **Dynamic pages**: Every user waits for fresh data. Use Suspense to keep the UI responsive.
+
+The blog homepage has no loading states because static content is ready. The dashboard shows skeletons because it fetches per-request based on the filter.`,
+        description: 'Understand when pages are static vs dynamic and why loading states differ.',
+        published: true,
+        slug: 'static-vs-dynamic',
+        title: 'Static vs Dynamic Rendering',
+      },
     ],
   });
 
