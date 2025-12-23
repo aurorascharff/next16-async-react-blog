@@ -1,16 +1,10 @@
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
-import { getPublishedPosts } from '@/data/queries/post-queries';
 
 type Props = {
   children: React.ReactNode;
 };
-
-export async function generateStaticParams() {
-  const posts = await getPublishedPosts();
-  return posts.map(post => ({ slug: post.slug }));
-}
 
 export default function PostLayout({ children }: Props) {
   return (

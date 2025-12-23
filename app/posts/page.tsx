@@ -19,9 +19,14 @@ export default function PostsPage({ searchParams }: Props) {
               <h1 className="text-4xl font-bold tracking-tight">Posts</h1>
               <p className="text-muted-foreground mt-1">Manage your blog posts</p>
             </div>
-            <Link href="/posts/new" className={buttonVariants({ size: 'lg' })}>
-              Create Post
-            </Link>
+            <div className="flex gap-3">
+              <Link href="/blog" target="_blank" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
+                Go to Blog
+              </Link>
+              <Link href="/posts/new" className={buttonVariants({ size: 'lg' })}>
+                Create Post
+              </Link>
+            </div>
           </div>
           <div className="mb-6">
             <Suspense fallback={<PostTabsSkeleton />}>
