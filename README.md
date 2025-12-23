@@ -1,10 +1,7 @@
+
 # Next.js 16 Modern Blog
 
-A Next.js 16 blog with React 19, Prisma, TailwindCSS v4, and shadcn/ui. Features streaming, View Transitions, and Cache Components. Posts explain the patterns used.
-
-## Self-Documenting
-
-Run `bun run prisma.seed` to populate the blog with posts covering: Server Components, Suspense, Server Actions, `useActionState`, `useFormStatus`, `useOptimistic`, `"use cache"`, View Transitions, error handling, `generateStaticParams`, URL state, `cache()`, `useTransition`, skeletons, authorization, and static vs dynamic rendering. Each post uses code examples from this app.
+A modern blog built with Next.js 16, React 19, Prisma, TailwindCSS v4, and shadcn/ui. It showcases advanced patterns like streaming UI, View Transitions, and Cache Components, with each post explaining a real pattern used in the app.
 
 ## Getting Started
 
@@ -62,7 +59,6 @@ This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-refe
 
 - **Fetching data** — Create queries in `data/queries/`, call in Server Components. Wrap with `cache()` for deduplication.
 - **Mutating data** — Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
-- **Navigation** — Wrap state changes in `useTransition` to keep old content visible while loading.
 - **Caching** — Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
 
 ## Development Tools
