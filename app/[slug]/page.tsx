@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { MarkdownContent } from '@/components/Markdown';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
@@ -50,12 +49,9 @@ export default async function BlogPostPage({ params }: Props) {
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
-          <div className="mb-8 flex items-center justify-between">
-            <Link href="/" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-              ← Back to blog
-            </Link>
-            <ThemeToggle />
-          </div>
+          <Link href="/" className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'mb-8' })}>
+            ← Back to blog
+          </Link>
           <article>
             <MarkdownContent>{post.content}</MarkdownContent>
             <Separator className="mt-12 mb-6" />
