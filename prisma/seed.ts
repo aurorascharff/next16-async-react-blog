@@ -134,7 +134,7 @@ For more granular control, nest multiple Suspense boundaries within a single pag
 
 Server Actions are async functions that run on the server. They're the recommended way to handle form submissions and data mutations in Next.js.
 
-Unlike API routes, Server Actions can be called directly from components. They integrate with React's form handling and provide automatic CSRF protection.
+Unlike API routes, Server Actions can be called directly from components. They integrate with React's form handling.
 
 ## Defining a Server Action
 

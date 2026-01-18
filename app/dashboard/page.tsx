@@ -20,12 +20,12 @@ export default function DashboardPage({ searchParams }: Props) {
     <ViewTransition enter="slide-from-left" exit="slide-to-left">
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
-          <div className="mb-10 flex items-center justify-between">
+          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
               <p className="text-muted-foreground mt-1">Manage your blog posts</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <Link href="/" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
                 Go to Blog
               </Link>

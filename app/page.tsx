@@ -14,7 +14,7 @@ export default function HomePage() {
     <ViewTransition enter="slide-from-left" exit="slide-to-left">
       <div className="min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
-          <div className="mb-10 flex items-center justify-between">
+          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
               <p className="text-muted-foreground mt-1">Next.js 16 patterns explained</p>
