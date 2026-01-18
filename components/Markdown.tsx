@@ -114,7 +114,7 @@ export function MarkdownContent({ children }: Props) {
                   style={themeLight}
                   language={match[1]}
                   PreTag="div"
-                  className="bg-muted/50! m-0! p-4! dark:hidden"
+                  className="bg-muted/50! m-0! overflow-x-auto! p-4! dark:hidden"
                 >
                   {codeString}
                 </SyntaxHighlighter>
@@ -122,7 +122,7 @@ export function MarkdownContent({ children }: Props) {
                   style={themeDark}
                   language={match[1]}
                   PreTag="div"
-                  className="bg-muted/50! m-0! hidden p-4! dark:block"
+                  className="bg-muted/50! m-0! hidden overflow-x-auto! p-4! dark:block"
                 >
                   {codeString}
                 </SyntaxHighlighter>
