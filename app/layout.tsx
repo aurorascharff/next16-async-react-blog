@@ -31,7 +31,7 @@ export default function RootLayout({
     <html lang="en" className={geistSans.variable} suppressHydrationWarning>
       <body className={`${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          {children}
+          <main>{children}</main>
           <ThemeToggle />
           <Toaster />
         </ThemeProvider>
