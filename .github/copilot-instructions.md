@@ -28,6 +28,7 @@ Before you ever suggest anything, review `package.json` to see what packages are
 - Pass promises (not awaited data) to child components for streaming.
 - Add `"use cache"` to pages, components, or functions you want to pre-render or cache.
 - Invalidate cache with `revalidateTag()` or `updateTag()` after mutations.
+- Use `React.cache()` for service functions that make API/database calls to enable per-request deduplication.
 
 ## Client Components
 
