@@ -813,6 +813,81 @@ After \`updateTag\`, the next request regenerates the content.`,
         slug: 'static-vs-dynamic',
         title: 'Static vs Dynamic Rendering',
       },
+      {
+        content: `# The Action Prop Pattern
+
+Design components can accept \`action\` props and handle async coordination internally—keeping parent components simple.
+
+## Example: TabList
+
+From \`components/design/TabList.tsx\`:
+
+\`\`\`tsx
+'use client';
+
+import { useOptimistic, useTransition } from 'react';
+
+type TabListProps = {
+  tabs: Tab[];
+  activeTab: string;
+  changeAction?: (value: string) => void | Promise<void>;
+};
+
+export function TabList({ tabs, activeTab, changeAction }: TabListProps) {
+  const [optimisticTab, setOptimisticTab] = useOptimistic(activeTab);
+  const [isPending, startTransition] = useTransition();
+
+  function tabChangeAction(value: string) {
+    startTransition(async () => {
+      setOptimisticTab(value);
+      await changeAction?.(value);
+    });
+  }
+
+  return (
+    <Tabs value={optimisticTab}>
+      <TabsList>
+        {tabs.map(tab => (
+          <TabsTrigger key={tab.value} value={tab.value} onClick={() => tabChangeAction(tab.value)}>
+            {tab.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {isPending && <Loader2 className="animate-spin" />}
+    </Tabs>
+  );
+}
+\`\`\`
+
+## Why This Works
+
+The component handles:
+- **Optimistic updates** — Tab switches instantly via \`useOptimistic\`
+- **Pending state** — Shows a spinner while the action runs
+- **Transition wrapping** — Keeps UI responsive, avoids Suspense fallbacks
+
+The parent just passes the action:
+
+\`\`\`tsx
+export function PostTabs() {
+  const router = useRouter();
+
+  function tabAction(value: string) {
+    router.push(\`/dashboard?filter=\${value}\`);
+  }
+
+  return <TabList tabs={tabs} activeTab={currentTab} changeAction={tabAction} />;
+}
+\`\`\`
+
+## Naming Convention
+
+Use descriptive suffixes: \`changeAction\`, \`submitAction\`, \`deleteAction\`. This signals that the prop triggers an async operation with built-in UX handling.`,
+        description: 'Build reusable design components that handle async coordination internally.',
+        published: true,
+        slug: 'action-prop-pattern',
+        title: 'The Action Prop Pattern',
+      },
     ],
   });
 
