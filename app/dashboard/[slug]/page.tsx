@@ -89,7 +89,7 @@ export function PostHeaderSkeleton() {
       </div>
       <div className="flex gap-2">
         <Skeleton className="h-9 w-14" />
-        <Skeleton className="h-9 w-[72px]" />
+        <Skeleton className="h-9 w-18" />
       </div>
     </div>
   );

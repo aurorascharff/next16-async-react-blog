@@ -42,7 +42,7 @@ components/
   design/                 # Action prop components
   ui/                     # shadcn/ui primitives
 data/
-  actions/                # Server Actions
+  actions/                # Server Functions
   queries/                # Data fetching with cache()
 ```
 
@@ -58,7 +58,7 @@ Every page folder should contain everything it needs. Components and functions l
 This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) — data fetching is **dynamic by default**. Push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree to maximize static content. Async components accessing dynamic data must be wrapped in `<Suspense>` with skeleton fallbacks.
 
 - **Fetching data** — Create queries in `data/queries/`, call in Server Components. Wrap with `cache()` for deduplication.
-- **Mutating data** — Create Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
+- **Mutating data** — Create Server Functions in `data/actions/` with `"use server"`. Invalidate with `updateTag()` or `revalidateTag()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
 - **Caching** — Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
 
 ## Development Tools

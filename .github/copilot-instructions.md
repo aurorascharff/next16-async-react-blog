@@ -17,7 +17,7 @@ Before you ever suggest anything, review `package.json` to see what packages are
 - `_components/` - Route-local components (prefixed with `_`).
 - `components/` - Shared components. `components/ui/` for shadcn/ui, `components/design/` for design components that expose Action props (e.g., `action`, `submitAction`, `changeAction`) and handle async coordination internally.
 - `data/queries/` - Server-side queries wrapped with `cache()`.
-- `data/actions/` - Server Actions with `"use server"`.
+- `data/actions/` - Server Functions with `"use server"`.
 - Components should live at the nearest shared space in the hierarchy.
 
 ## Server Components
