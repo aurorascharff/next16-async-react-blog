@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { ViewTransition } from 'react';
-import { buttonVariants } from '@/components/ui/button';
+import { BackButton } from '@/components/BackButton';
 import { getPosts } from '@/data/queries/post-queries';
 
 export async function generateStaticParams() {
@@ -20,9 +19,7 @@ export default function PostLayout({ children }: Props) {
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
           <div className="mb-6">
-            <Link href="/dashboard" className={buttonVariants({ variant: 'ghost' })}>
-              ← Back to posts
-            </Link>
+            <BackButton href="/dashboard" />
           </div>
           {children}
         </div>

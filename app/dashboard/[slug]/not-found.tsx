@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { buttonVariants } from '@/components/ui/button';
+import { BackButton } from '@/components/BackButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function PostNotFound() {
@@ -12,9 +11,9 @@ export default function PostNotFound() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Link href="/dashboard" className={buttonVariants({ variant: 'default' })}>
+        <BackButton href="/dashboard" variant="default">
           Back to posts
-        </Link>
+        </BackButton>
       </CardContent>
     </Card>
   );

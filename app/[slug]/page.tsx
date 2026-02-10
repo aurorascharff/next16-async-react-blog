@@ -1,8 +1,7 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
-import Link from 'next/link';
 import { ViewTransition } from 'react';
+import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
-import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
 import { formatDate, getWordCount } from '@/lib/utils';
@@ -39,9 +38,9 @@ export default async function BlogPostPage({ params }: Props) {
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
-          <Link href="/" className={buttonVariants({ className: 'mb-8', size: 'sm', variant: 'ghost' })}>
+          <BackButton href="/" size="sm" className="mb-8">
             ← Back to blog
-          </Link>
+          </BackButton>
           <article>
             <MarkdownContent>{post.content}</MarkdownContent>
             <Separator className="mt-12 mb-6" />

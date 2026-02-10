@@ -26,7 +26,7 @@ async function main() {
 
 Server Components render on the server, can be \`async\`, and fetch data directly.
 
-## The BlogList Pattern
+## Example: BlogList
 
 From \`app/page.tsx\`:
 
@@ -60,7 +60,7 @@ export function ArchiveButton({ slug, archived }) {
 }
 \`\`\`
 
-## The Composition Pattern
+## Example: Composition
 
 Server Components render Client Components and pass data as props:
 
@@ -88,7 +88,7 @@ Keep Client Components at the leaves to maximize server rendering.`,
 
 Suspense specifies loading UI while async content loads, enabling streaming in Next.js.
 
-## The Dashboard Pattern
+## Example: Dashboard
 
 From \`app/dashboard/page.tsx\`:
 
@@ -140,11 +140,11 @@ Export skeletons alongside their components to keep them in sync.`,
         title: 'Suspense and Streaming',
       },
       {
-        content: `# Server Actions
+        content: `# Server Functions
 
-Server Actions are async functions that run on the server for form submissions and mutations.
+Server Functions are async functions that run on the server for form submissions and mutations.
 
-## The Pattern
+## Example: createPost
 
 From \`data/actions/post-actions.ts\`:
 
@@ -184,17 +184,17 @@ export async function updatePost(slug: string, formData: FormData) {
   updateTag(\`post-\${slug}\`); // Invalidate this post
 }
 \`\`\``,
-        description: 'Learn how to define and use Server Actions for mutations in Next.js.',
+        description: 'Learn how to define and use Server Functions for mutations in Next.js.',
         published: true,
-        slug: 'server-actions',
-        title: 'Server Actions',
+        slug: 'server-functions',
+        title: 'Server Functions',
       },
       {
         content: `# useActionState
 
 \`useActionState\` manages form state across submissions, preserving input after validation errors.
 
-## The PostForm Pattern
+## Example: PostForm
 
 From \`app/dashboard/_components/PostForm.tsx\`:
 
@@ -245,7 +245,7 @@ On error, the form data is returned so fields keep their values.
 
 \`useFormStatus\` provides the pending state of the nearest parent form. It's the simplest way to show loading indicators during form submissions.
 
-## The SubmitButton Pattern
+## Example: SubmitButton
 
 From \`components/design/SubmitButton.tsx\`:
 
@@ -293,7 +293,7 @@ React needs to track which form triggered the submission. By requiring the hook 
 
 \`useOptimistic\` provides immediate UI feedback while an action runs in the background.
 
-## The ArchiveButton Pattern
+## Example: ArchiveButton
 
 From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
@@ -324,7 +324,7 @@ export function ArchiveButton({ slug, archived }) {
 
 1. User submits the form
 2. \`setOptimisticArchived\` immediately updates the UI
-3. The Server Action runs in the background
+3. The Server Function runs in the background
 4. When complete, the real \`archived\` prop replaces the optimistic value
 5. If the action fails, the UI reverts to the original prop
 
@@ -578,7 +578,7 @@ URL state works with browser history and makes pages shareable—\`/dashboard?fi
 
 React's \`cache()\` deduplicates requests within a single render pass.
 
-## The Pattern
+## Example: getPostBySlug
 
 From \`data/queries/post-queries.ts\`:
 
@@ -618,7 +618,7 @@ Both work together—\`cache()\` prevents duplicate queries during rendering, \`
 
 \`useTransition\` marks state updates as non-urgent, keeping your UI responsive during expensive operations.
 
-## The DeletePostButton Pattern
+## Example: DeletePostButton
 
 From \`app/dashboard/[slug]/_components/DeletePostButton.tsx\`:
 
@@ -646,7 +646,7 @@ export function DeletePostButton({ slug }) {
 }
 \`\`\`
 
-When clicked, \`isPending\` becomes true immediately and stays true until the Server Action and navigation complete.
+When clicked, \`isPending\` becomes true immediately and stays true until the Server Function and navigation complete.
 
 ## Caveat: State Updates After Await
 
@@ -670,7 +670,7 @@ In the delete example, \`router.push\` handles this internally.`,
 
 Skeletons are placeholder UI that mimics content shape, reducing perceived loading time.
 
-## The PostListSkeleton Pattern
+## Example: PostListSkeleton
 
 From \`app/dashboard/_components/PostList.tsx\`—export skeletons alongside their components:
 
@@ -747,7 +747,7 @@ export default function Unauthorized() {
 }
 \`\`\`
 
-## Protecting Server Actions
+## Protecting Server Functions
 
 Always check authorization in actions too:
 
