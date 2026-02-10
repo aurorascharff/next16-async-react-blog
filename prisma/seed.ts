@@ -241,57 +241,6 @@ On error, the form data is returned so fields keep their values.
         title: 'useActionState',
       },
       {
-        content: `# The use() Hook
-
-\`use\` reads resources like Promises and Context, and can be called inside conditionals.
-
-## Reading Promises in Client Components
-
-\`\`\`tsx
-// Server Component
-export default async function PostPage({ params }) {
-  const commentsPromise = fetchComments(slug); // Don't await
-
-  return (
-    <Suspense fallback={<CommentsSkeleton />}>
-      <Comments commentsPromise={commentsPromise} />
-    </Suspense>
-  );
-}
-\`\`\`
-
-\`\`\`tsx
-// Client Component
-'use client';
-
-import { use } from 'react';
-
-export function Comments({ commentsPromise }) {
-  const comments = use(commentsPromise); // Suspends until resolved
-  return comments.map(c => <li key={c.id}>{c.text}</li>);
-}
-\`\`\`
-
-## Reading Context Conditionally
-
-\`\`\`tsx
-function StatusMessage({ show }) {
-  if (show) {
-    const theme = use(ThemeContext);
-    return <p className={theme}>Status visible</p>;
-  }
-  return null;
-}
-\`\`\`
-
-- **Server Components**: Use \`async/await\` directly
-- **Client Components**: Use \`use(promise)\` to read promises from Server Components`,
-        description: 'Read promises and context with the use() hook.',
-        published: true,
-        slug: 'use-hook',
-        title: 'The use() Hook',
-      },
-      {
         content: `# useFormStatus
 
 \`useFormStatus\` provides the pending state of the nearest parent form. It's the simplest way to show loading indicators during form submissions.
