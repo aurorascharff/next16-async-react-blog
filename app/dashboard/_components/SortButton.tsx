@@ -1,7 +1,7 @@
 'use client';
 
-import { ArrowDownAZ, ArrowDownUp, ArrowUpDown, Loader2 } from 'lucide-react';
-import Link, { useLinkStatus } from 'next/link';
+import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -14,17 +14,6 @@ const sortOptions = [
 
 type SortValue = (typeof sortOptions)[number]['value'];
 
-function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
-  const { pending } = useLinkStatus();
-
-  return (
-    <>
-      {pending ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
-      <span className="hidden sm:inline">{label}</span>
-    </>
-  );
-}
-
 export function SortButton() {
   const searchParams = useSearchParams();
   const currentSort = (searchParams.get('sort') as SortValue) ?? 'newest';
@@ -35,7 +24,6 @@ export function SortButton() {
   });
   const nextIndex = (currentIndex + 1) % sortOptions.length;
   const nextSort = sortOptions[nextIndex].value;
-  const CurrentIcon = sortOptions[currentIndex].icon;
 
   return (
     <Link
@@ -43,7 +31,7 @@ export function SortButton() {
       prefetch={false}
       className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}
     >
-      <SortIndicator icon={CurrentIcon} label={sortOptions[currentIndex].label} />
+      <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
     </Link>
   );
 }

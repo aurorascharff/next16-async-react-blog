@@ -21,7 +21,7 @@ export function PostTabs() {
     router.push(`/dashboard?filter=${value}&sort=${currentSort}`);
   }
 
-  return <TabList tabs={tabs} activeTab={currentTab} changeAction={tabAction} />;
+  return <TabList tabs={tabs} activeTab={currentTab} onChange={tabAction} />;
 }
 
 export function PostTabsSkeleton() {

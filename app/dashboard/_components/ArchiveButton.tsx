@@ -1,7 +1,6 @@
 'use client';
 
 import { Archive } from 'lucide-react';
-import { useOptimistic } from 'react';
 import { toast } from 'sonner';
 import { toggleArchivePost } from '@/data/actions/post';
 import { cn } from '@/lib/utils';
@@ -12,15 +11,10 @@ type Props = {
 };
 
 export function ArchiveButton({ slug, archived }: Props) {
-  const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived ?? false);
-  const isPending = optimisticArchived !== (archived ?? false);
-
   return (
     <form
-      data-pending={isPending || undefined}
       action={async () => {
-        const newValue = !optimisticArchived;
-        setOptimisticArchived(newValue);
+        const newValue = !archived;
         const result = await toggleArchivePost(slug, newValue);
         if (!result.success) {
           toast.error(result.error);
@@ -32,17 +26,17 @@ export function ArchiveButton({ slug, archived }: Props) {
     >
       <button
         type="submit"
-        aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
+        aria-label={archived ? 'Unarchive post' : 'Archive post'}
         className={cn(
           'group rounded-md p-1.5 transition-colors disabled:opacity-50',
-          optimisticArchived ? 'bg-primary/15' : 'hover:bg-muted',
+          archived ? 'bg-primary/15' : 'hover:bg-muted',
         )}
       >
         <Archive
-          strokeWidth={optimisticArchived ? 2.5 : 1.5}
+          strokeWidth={archived ? 2.5 : 1.5}
           className={cn(
             'size-4 transition-colors',
-            optimisticArchived ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground',
+            archived ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground',
           )}
         />
       </button>
