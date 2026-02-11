@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { updatePost } from '@/data/actions/post-actions';
-import { getPostBySlug } from '@/data/queries/post-queries';
+import { updatePost } from '@/data/actions/post';
+import { getPostBySlug } from '@/data/queries/post';
 import { PostForm } from '../../_components/PostForm';
 
 type Props = {

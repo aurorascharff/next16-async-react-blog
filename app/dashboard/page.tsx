@@ -3,7 +3,7 @@ import { unauthorized } from 'next/navigation';
 import { Suspense } from 'react';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
-import { canManagePosts } from '@/data/queries/auth-queries';
+import { canManagePosts } from '@/data/queries/auth';
 import { PostList, PostListSkeleton } from './_components/PostList';
 import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
 import { SortButton, SortButtonSkeleton } from './_components/SortButton';

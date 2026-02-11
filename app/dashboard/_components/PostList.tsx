@@ -3,7 +3,7 @@ import { ViewTransition } from 'react';
 import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPosts } from '@/data/queries/post-queries';
+import { getPosts } from '@/data/queries/post';
 import { formatDate } from '@/lib/utils';
 import { ArchiveButton } from './ArchiveButton';
 

@@ -4,7 +4,7 @@ import { refresh, revalidateTag } from 'next/cache';
 import { remark } from 'remark';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
-import { canManagePosts } from '@/data/queries/auth-queries';
+import { canManagePosts } from '@/data/queries/auth';
 import { prisma } from '@/db';
 import { slow } from '@/lib/utils';
 

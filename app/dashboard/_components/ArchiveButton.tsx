@@ -2,7 +2,7 @@
 
 import { Archive } from 'lucide-react';
 import { useOptimistic } from 'react';
-import { toggleArchivePost } from '@/data/actions/post-actions';
+import { toggleArchivePost } from '@/data/actions/post';
 import { cn } from '@/lib/utils';
 
 type Props = {

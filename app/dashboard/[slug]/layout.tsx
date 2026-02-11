@@ -1,6 +1,6 @@
 import { ViewTransition } from 'react';
 import { BackButton } from '@/components/BackButton';
-import { getPosts } from '@/data/queries/post-queries';
+import { getPosts } from '@/data/queries/post';
 
 export async function generateStaticParams() {
   const posts = await getPosts();

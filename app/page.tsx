@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { canManagePosts } from '@/data/queries/auth-queries';
-import { getPublishedPosts } from '@/data/queries/post-queries';
+import { canManagePosts } from '@/data/queries/auth';
+import { getPublishedPosts } from '@/data/queries/post';
 import { formatDate, getReadTime } from '@/lib/utils';
 
 export default function HomePage() {

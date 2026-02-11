@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { deletePost } from '@/data/actions/post-actions';
+import { deletePost } from '@/data/actions/post';
 
 type Props = {
   slug: string;

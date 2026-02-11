@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPostBySlug } from '@/data/queries/post-queries';
+import { getPostBySlug } from '@/data/queries/post';
 import { formatDate, getWordCount } from '@/lib/utils';
 import { DeletePostButton } from './_components/DeletePostButton';
 

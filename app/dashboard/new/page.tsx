@@ -1,7 +1,7 @@
 import { ViewTransition } from 'react';
 import { BackButton } from '@/components/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { createPost } from '@/data/actions/post-actions';
+import { createPost } from '@/data/actions/post';
 import { PostForm } from '../_components/PostForm';
 
 export default function NewPostPage() {

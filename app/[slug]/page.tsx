@@ -3,7 +3,7 @@ import { ViewTransition } from 'react';
 import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { Separator } from '@/components/ui/separator';
-import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post-queries';
+import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post';
 import { formatDate, getWordCount } from '@/lib/utils';
 import type { Metadata } from 'next';
 
