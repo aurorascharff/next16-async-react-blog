@@ -442,7 +442,7 @@ When updating a post, invalidate both its specific tag and the list tag.`,
       {
         content: `# View Transitions
 
-React 19's \`<ViewTransition>\` enables smooth animations between route changes.
+React's \`<ViewTransition>\` component wraps the browser's View Transitions API for smooth animations between route changes.
 
 ## Page-Level Transitions
 
