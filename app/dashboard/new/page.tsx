@@ -3,8 +3,6 @@ import { createPost } from '@/data/actions/post';
 import { PostForm } from '../_components/PostForm';
 
 export default function NewPostPage() {
-  throw new Error('Test error in PostHeader');
-
   return (
     <Card>
       <CardHeader>
