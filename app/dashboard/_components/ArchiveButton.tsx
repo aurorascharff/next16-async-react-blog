@@ -18,8 +18,12 @@ export function ArchiveButton({ slug, archived }: Props) {
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        setOptimisticArchived(!optimisticArchived);
-        await toggleArchivePost(slug, !optimisticArchived);
+        let newValue: boolean;
+        setOptimisticArchived(current => {
+          newValue = !current;
+          return newValue;
+        });
+        await toggleArchivePost(slug, newValue!);
       }}
       onClick={e => {
         return e.stopPropagation();
@@ -30,14 +34,14 @@ export function ArchiveButton({ slug, archived }: Props) {
         aria-label={optimisticArchived ? 'Unarchive post' : 'Archive post'}
         className={cn(
           'group rounded-md p-1.5 transition-colors disabled:opacity-50',
-          optimisticArchived ? 'bg-foreground/10' : 'hover:bg-muted',
+          optimisticArchived ? 'bg-primary/15' : 'hover:bg-muted',
         )}
       >
         <Archive
-          strokeWidth={optimisticArchived ? 2 : 1.5}
+          strokeWidth={optimisticArchived ? 2.5 : 1.5}
           className={cn(
             'size-4 transition-colors',
-            optimisticArchived ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
+            optimisticArchived ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground',
           )}
         />
       </button>

@@ -54,8 +54,12 @@ export function ArchiveButton({ slug, archived }) {
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        setOptimisticArchived(!optimisticArchived);
-        await toggleArchivePost(slug, !optimisticArchived);
+        let newValue;
+        setOptimisticArchived(current => {
+          newValue = !current;
+          return newValue;
+        });
+        await toggleArchivePost(slug, newValue);
       }}
     >
       <button>{optimisticArchived ? 'Unarchive' : 'Archive'}</button>
@@ -316,8 +320,13 @@ export function ArchiveButton({ slug, archived }) {
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        setOptimisticArchived(!optimisticArchived);
-        await toggleArchivePost(slug, !optimisticArchived);
+        // Use updater function to read current pending state
+        let newValue;
+        setOptimisticArchived(current => {
+          newValue = !current;
+          return newValue;
+        });
+        await toggleArchivePost(slug, newValue);
       }}
     >
       <button type="submit">
@@ -326,6 +335,20 @@ export function ArchiveButton({ slug, archived }) {
     </form>
   );
 }
+\`\`\`
+
+## Why Use Updater Functions?
+
+When users click rapidly, multiple actions queue up. Each closure captures the same \`optimisticArchived\` value:
+
+\`\`\`tsx
+// ❌ Stale closure - both clicks see archived=false
+setOptimisticArchived(!optimisticArchived); // false → true
+setOptimisticArchived(!optimisticArchived); // false → true (stale!)
+
+// ✅ Updater function reads from React's queue
+setOptimisticArchived(current => !current); // false → true  
+setOptimisticArchived(current => !current); // true → false
 \`\`\`
 
 ## Styling Parent Elements with CSS :has()
