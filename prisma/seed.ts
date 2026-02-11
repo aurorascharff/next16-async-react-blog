@@ -18,13 +18,61 @@ async function main() {
   // Clear existing data
   await prisma.post.deleteMany();
 
-  // Seed posts
+  // Seed posts - "Designing the In-Between States in React"
   await prisma.post.createMany({
     data: [
       {
+        content: `# The In-Between States
+
+Have you ever used an app and thought "this feels slow" or "this is janky" without knowing exactly why? The answer often lies in the **in-between moments**—loading screens, error states, and the gaps between user action and final render.
+
+## What Happens Between?
+
+Every async operation has three phases:
+
+\`\`\`
+User Action → Loading → Success or Error
+\`\`\`
+
+In React applications, this happens constantly:
+- **Async data loading** — Fetching content from the server
+- **Async mutations** — Submitting forms, toggling states
+- **Async routing** — Navigating between pages
+
+## Why These Moments Matter
+
+The in-between states determine how polished your app feels:
+
+| Bad UX | Good UX |
+|--------|---------|
+| Blank screens | Skeleton placeholders |
+| Jumping layouts (CLS) | Stable, reserved space |
+| Frozen buttons | Instant optimistic feedback |
+| Full-page spinners | Localized loading indicators |
+| Generic errors | Contextual error recovery |
+
+## The Core Web Vitals Connection
+
+These patterns directly impact measurable performance:
+
+- **CLS (Cumulative Layout Shift)** — Skeletons prevent content jumping
+- **FCP (First Contentful Paint)** — Streaming shows content progressively
+- **INP (Interaction to Next Paint)** — Optimistic UI feels instant
+
+## Not a DX Problem
+
+These are **UX problems**, which is why engineers often overlook them. We focus on making things work, not on what users see while they wait.
+
+Async React provides the blueprint to solve them systematically. The following posts explore each pattern with real examples from this app.`,
+        description: 'Why in-between states matter—loading, errors, and the impact on perceived performance.',
+        published: true,
+        slug: 'in-between-states',
+        title: 'The In-Between States',
+      },
+      {
         content: `# React Server Components
 
-Server Components render on the server, can be \`async\`, and fetch data directly.
+Server Components render on the server, can be \`async\`, and fetch data directly. This is the foundation for handling in-between states—Server Components determine **what** loads, while Suspense determines **how** users experience the loading.
 
 ## Example: BlogList
 
@@ -39,7 +87,7 @@ async function BlogList() {
 
 ## When to Use Client Components
 
-Add \`'use client'\` when you need interactivity—event handlers or React hooks.
+Add \`'use client'\` when you need interactivity—event handlers or React hooks. Client Components are where you handle the **mutation** in-between states: optimistic updates, pending indicators, form state.
 
 From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
@@ -68,9 +116,9 @@ export function ArchiveButton({ slug, archived }) {
 }
 \`\`\`
 
-## Example: Composition with CSS :has()
+## Propagating Pending State with CSS :has()
 
-Server Components render Client Components. Use CSS \`:has()\` to style parent elements based on child state—no state lifting required:
+Here's where it gets interesting for in-between states. The \`data-pending\` attribute exposes loading state to CSS, letting Server Components style based on Client Component state:
 
 \`\`\`tsx
 // PostList.tsx (Server Component)
@@ -96,11 +144,11 @@ Keep Client Components at the leaves to maximize server rendering.`,
       {
         content: `# Suspense and Streaming
 
-Suspense specifies loading UI while async content loads, enabling streaming in Next.js.
+Suspense is how you **design** loading states. Instead of showing a blank screen or a full-page spinner, you declare exactly what users see while async content loads.
 
-## Example: Dashboard
+## The Dashboard Pattern
 
-From \`app/dashboard/page.tsx\`:
+Each Suspense boundary is a design decision: "What should users see while this section loads?" From \`app/dashboard/page.tsx\`:
 
 \`\`\`tsx
 export default function DashboardPage({ searchParams }) {
@@ -117,7 +165,17 @@ export default function DashboardPage({ searchParams }) {
 }
 \`\`\`
 
-Separate boundaries let each section stream independently.
+Separate boundaries let each section stream independently. The tabs can render before the post list—users see progress, not a blank page.
+
+## Where to Place Boundaries
+
+**Ask your designer**: "How should this load?" The answer determines boundary placement:
+
+| Scenario | Boundary Strategy |
+|----------|-------------------|
+| Related content | Single boundary, load together |
+| Independent sections | Separate boundaries, stream in parallel |
+| Critical header | Outside boundary, always visible |
 
 ## Co-locating Skeletons
 
@@ -143,7 +201,11 @@ export function PostListSkeleton() {
 }
 \`\`\`
 
-Export skeletons alongside their components to keep them in sync.`,
+Export skeletons alongside their components to keep them in sync. When the layout changes, the skeleton is right there to update.
+
+## Suspense is Declarative UX
+
+You're not just handling loading—you're **designing** it.`,
         description: 'Streaming with Suspense boundaries, co-locating skeleton components with their data.',
         published: true,
         slug: 'suspense-and-streaming',
@@ -152,11 +214,11 @@ Export skeletons alongside their components to keep them in sync.`,
       {
         content: `# Server Functions
 
-Server Functions are async functions that run on the server for form submissions and mutations.
+Server Functions handle the **mutation** side of in-between states. When a user submits a form, what happens in that gap between click and result? Server Functions let you control validation, error handling, and how updates propagate.
 
 ## Example: createPost
 
-From \`data/actions/post-actions.ts\`:
+From \`data/actions/post.ts\`:
 
 \`\`\`tsx
 'use server';
@@ -170,12 +232,15 @@ export async function createPost(formData: FormData): Promise<ActionResult> {
   }
 
   await prisma.post.create({ data: result.data });
-  updateTag('posts');
+  revalidateTag('posts', 'max');
+  refresh();
   return { success: true };
 }
 \`\`\`
 
-## Returning Errors
+## Returning Errors for Form Recovery
+
+The key to good form UX is preserving user input when validation fails:
 
 \`\`\`tsx
 export type ActionResult =
@@ -183,17 +248,22 @@ export type ActionResult =
   | { success: false; error: string; formData?: FormValues };
 \`\`\`
 
-Return submitted data on errors so forms can repopulate.
+Return submitted data on errors so forms can repopulate. Users shouldn't lose their work.
 
 ## Cache Invalidation
+
+After mutations, users need to see the result immediately:
 
 \`\`\`tsx
 export async function updatePost(slug: string, formData: FormData) {
   // ... validate and update
-  updateTag('posts');        // Invalidate the list
-  updateTag(\`post-\${slug}\`); // Invalidate this post
+  revalidateTag('posts', 'max');    // Invalidate the list
+  revalidateTag(\`post-\${slug}\`, 'max'); // Invalidate this post
+  refresh(); // Immediate update for current user
 }
-\`\`\``,
+\`\`\`
+
+The combination ensures immediate feedback while other users get stale-while-revalidate behavior.`,
         description: 'Server Functions with "use server", Zod validation, returning errors, cache invalidation.',
         published: true,
         slug: 'server-functions',
@@ -202,7 +272,9 @@ export async function updatePost(slug: string, formData: FormData) {
       {
         content: `# useActionState
 
-\`useActionState\` manages form state across submissions, preserving input after validation errors.
+One of the most frustrating in-between states: validation fails and **the form clears**. Users lose their work and have to start over.
+
+\`useActionState\` solves this by managing form state across submissions, preserving input after errors.
 
 ## Example: PostForm
 
@@ -234,17 +306,21 @@ export function PostForm({ action, defaultValues, redirectTo }) {
 }
 \`\`\`
 
-On error, the form data is returned so fields keep their values.
+On error, the form data is returned so fields keep their values. The in-between state (validation failure) becomes recoverable instead of destructive.
 
 ## Reusing for Create and Edit
 
+The same pattern works for both:
+
 \`\`\`tsx
-// Create
+// Create - empty defaults
 <PostForm action={createPost} defaultValues={{ title: '' }} />
 
 // Edit - use .bind() to apply the slug
 <PostForm action={updatePost.bind(null, post.slug)} defaultValues={post} />
-\`\`\``,
+\`\`\`
+
+Same component, different actions, consistent error recovery.`,
         description: 'Preserve form input on validation errors, reuse forms for create and edit with .bind().',
         published: true,
         slug: 'useactionstate',
@@ -253,7 +329,9 @@ On error, the form data is returned so fields keep their values.
       {
         content: `# useFormStatus
 
-\`useFormStatus\` provides the pending state of the nearest parent form. It's the simplest way to show loading indicators during form submissions.
+**Localized feedback** is key to good in-between states. When a user clicks a submit button, the feedback should happen **in the button**, not as a full-page spinner.
+
+\`useFormStatus\` provides the pending state of the nearest parent form—perfect for building reusable submit buttons.
 
 ## Example: SubmitButton
 
@@ -268,16 +346,21 @@ export function SubmitButton({ children }) {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" disabled={pending}>
-      {pending ? <Spinner /> : children}
-    </button>
+    <Button type="submit" disabled={pending}>
+      {pending ? (
+        <span className="flex items-center gap-2">
+          {children}
+          <Loader2 className="size-4 animate-spin" />
+        </span>
+      ) : children}
+    </Button>
   );
 }
 \`\`\`
 
 ## The Child Component Constraint
 
-The hook only works in components that are children of the form:
+The hook only works in components that are **children** of the form:
 
 \`\`\`tsx
 // ❌ Always returns pending: false
@@ -292,7 +375,11 @@ function Form() {
 </form>
 \`\`\`
 
-React needs to track which form triggered the submission. By requiring the hook inside a form's children, React reliably determines the pending state for that specific form.`,
+React needs to track which form triggered the submission. By requiring the hook inside a form's children, React reliably determines the pending state for that specific form.
+
+## The UX Principle
+
+**Feedback should be proportional to the scope of the action.** A button click gets button feedback. A page navigation might warrant more.`,
         description: 'SubmitButton component pattern, why it must be a child of the form.',
         published: true,
         slug: 'useformstatus',
@@ -301,9 +388,11 @@ React needs to track which form triggered the submission. By requiring the hook 
       {
         content: `# useOptimistic
 
-\`useOptimistic\` provides immediate UI feedback while an action runs in the background.
+The best in-between state is **no perceived delay at all**. Optimistic updates show the result immediately while the action runs in the background.
 
-## Example: ArchiveButton with Pending State
+\`useOptimistic\` makes this pattern easy—especially for actions with high success rates like toggles.
+
+## Example: ArchiveButton
 
 From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
@@ -345,7 +434,7 @@ While the action runs, these values differ. When complete, they sync up and \`is
 
 ## Styling Parent Elements with CSS :has()
 
-Expose pending state via \`data-pending\` attribute. Parent Server Components can style based on this using Tailwind's \`has-data-pending:\` variant:
+Expose pending state via \`data-pending\` attribute. Parent Server Components can style based on this:
 
 \`\`\`tsx
 // PostList.tsx (Server Component - no 'use client' needed!)
@@ -363,11 +452,9 @@ Expose pending state via \`data-pending\` attribute. Parent Server Components ca
 5. When complete, the real \`archived\` prop replaces the optimistic value
 6. \`data-pending\` is removed, styles revert
 
-## Important: Requires Action Context
+## When to Use
 
-The optimistic setter must be called inside an Action—a function passed to an action prop or wrapped in \`startTransition\`. Form \`action\` props are automatically called inside \`startTransition\`.
-
-Use for actions with high success rates: toggles, likes, bookmarks.`,
+Best for actions with high success rates: toggles, likes, bookmarks. Avoid for operations that commonly fail—users see confusing rollbacks.`,
         description: 'Deriving pending state from optimistic vs real value, data-pending for parent styling.',
         published: true,
         slug: 'useoptimistic',
@@ -376,11 +463,13 @@ Use for actions with high success rates: toggles, likes, bookmarks.`,
       {
         content: `# The "use cache" Directive
 
-Next.js 16 introduces \`"use cache"\` for fine-grained caching. With \`cacheComponents: true\`, data fetching is dynamic by default—you opt into caching explicitly.
+Caching eliminates in-between states entirely—if content is pre-rendered, there's nothing to wait for. Next.js 16 introduces \`"use cache"\` for fine-grained control over what gets cached.
+
+With \`cacheComponents: true\`, data fetching is **dynamic by default**—you opt into caching explicitly.
 
 ## Basic Usage
 
-From \`data/queries/post-queries.ts\`:
+From \`data/queries/post.ts\`:
 
 \`\`\`tsx
 import { cache } from 'react';
@@ -398,7 +487,7 @@ export const getPublishedPosts = cache(async () => {
 
 ## Cache Invalidation with revalidateTag + refresh
 
-In Server Actions, use \`revalidateTag\` with a profile plus \`refresh()\` for immediate UI updates:
+After mutations, the cache needs updating. Use \`revalidateTag\` with a profile plus \`refresh()\` for immediate UI updates:
 
 \`\`\`tsx
 import { refresh, revalidateTag } from 'next/cache';
@@ -422,7 +511,7 @@ The combination ensures the current user sees updates instantly while other user
 
 ## Granular Tags
 
-Tag individual items separately:
+Tag individual items for surgical invalidation:
 
 \`\`\`tsx
 export const getPublishedPostBySlug = cache(async (slug: string) => {
@@ -442,7 +531,9 @@ When updating a post, invalidate both its specific tag and the list tag.`,
       {
         content: `# View Transitions
 
-React's \`<ViewTransition>\` component wraps the browser's View Transitions API for smooth animations between route changes.
+Route changes are a unique in-between state—the old page is leaving, the new one arriving. Without animation, this feels abrupt. **View Transitions** smooth the handoff, making navigation feel continuous.
+
+React's \`<ViewTransition>\` component wraps the browser's View Transitions API.
 
 ## Page-Level Transitions
 
@@ -484,6 +575,8 @@ Uses the browser's native View Transitions API. In unsupported browsers, navigat
       },
       {
         content: `# Error Handling
+
+Errors are an in-between state we hope users never see—but they will. Well-designed error boundaries provide **recovery paths** instead of dead ends.
 
 Next.js provides file conventions for handling errors automatically.
 
@@ -538,6 +631,8 @@ Errors bubble up to the nearest boundary. Create \`error.tsx\` at different rout
       {
         content: `# generateStaticParams
 
+The best in-between state is **none at all**. When pages are pre-rendered at build time, users see content immediately.
+
 \`generateStaticParams\` pre-renders dynamic routes at build time—instant page loads, no loading states.
 
 ## Basic Usage
@@ -577,6 +672,8 @@ New slugs not in \`generateStaticParams\` are generated on-demand and cached. Us
       },
       {
         content: `# URL State with searchParams
+
+Filters and sorts affect **what data is loading**—change the URL, trigger a new fetch, show a loading state. URL-driven state makes these transitions predictable and shareable.
 
 URL search parameters provide shareable, bookmarkable state that persists across refreshes.
 
@@ -669,11 +766,11 @@ URL state works with browser history and makes pages shareable—\`/dashboard?fi
       {
         content: `# React cache()
 
-React's \`cache()\` deduplicates requests within a single render pass.
+Duplicate requests mean duplicate loading time. React's \`cache()\` deduplicates requests within a single render pass—call the same function from multiple components, get one network request.
 
 ## Example: getPostBySlug
 
-From \`data/queries/post-queries.ts\`:
+From \`data/queries/post.ts\`:
 
 \`\`\`tsx
 import { cache } from 'react';
@@ -709,7 +806,9 @@ Both work together—\`cache()\` prevents duplicate queries during rendering, \`
       {
         content: `# useTransition
 
-\`useTransition\` marks state updates as non-urgent, keeping your UI responsive during expensive operations.
+Destructive actions need clear in-between states. When deleting a post, users should see **immediate feedback** that something is happening—and be prevented from clicking again.
+
+\`useTransition\` marks state updates as non-urgent, keeping your UI responsive during operations.
 
 ## Example: DeletePostButton
 
@@ -761,7 +860,9 @@ In the delete example, \`router.push\` handles this internally.`,
       {
         content: `# Skeleton Loading
 
-Skeletons are placeholder UI that mimics content shape, reducing perceived loading time.
+**Skeletons communicate that content is coming.** They reduce perceived loading time by establishing layout before data arrives—no jarring content shifts when the real content loads.
+
+Skeletons are placeholder UI that mimics content shape.
 
 ## Example: PostListSkeleton
 
@@ -808,6 +909,8 @@ Keep skeletons next to their components—when you change the layout, the skelet
       },
       {
         content: `# Authorization Patterns
+
+Authorization failures are error states that deserve their own UI. Instead of a generic error, \`unauthorized()\` triggers a dedicated page explaining what went wrong and how to fix it.
 
 Next.js provides \`unauthorized()\` for handling authorization in Server Components.
 
@@ -857,6 +960,8 @@ export async function deletePost(slug: string) {
       },
       {
         content: `# Static vs Dynamic Rendering
+
+Understanding when pages are static vs dynamic determines **when loading states appear**. Static pages have no in-between state—content is ready. Dynamic pages need Suspense boundaries to show skeletons while fetching.
 
 With \`cacheComponents: true\`, Next.js defaults to dynamic. You opt into static with \`"use cache"\`.
 
@@ -908,6 +1013,8 @@ After \`updateTag\`, the next request regenerates the content.`,
       },
       {
         content: `# The Action Prop Pattern
+
+Design systems should **own their in-between states**. When a TabList receives an async action, it should handle the pending state, optimistic updates, and spinner internally—not push that complexity to every consumer.
 
 Design components can accept \`action\` props and handle async coordination internally—keeping parent components simple.
 
@@ -984,7 +1091,9 @@ Use descriptive suffixes: \`changeAction\`, \`submitAction\`, \`deleteAction\`. 
       {
         content: `# useLinkStatus for Link Pending State
 
-The \`useLinkStatus\` hook provides pending state for \`<Link>\` navigations. It must be used inside a descendant component of \`Link\`.
+Navigation isn't instant. When a Link click triggers loading, users need feedback. \`useLinkStatus\` provides a pending state specifically for \`<Link>\` navigations—no transition management required.
+
+The hook must be used inside a descendant component of \`Link\`.
 
 ## When It Shows Pending
 
