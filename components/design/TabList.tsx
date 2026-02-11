@@ -23,12 +23,14 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className, ch
   const [optimisticTab, setOptimisticTab] = useOptimistic(activeTab);
   const [isPending, startTransition] = useTransition();
 
-  function tabChangeAction(value: string) {
+  function handleTabChange(value: string) {
     onChange?.(value);
-    startTransition(async () => {
-      setOptimisticTab(value);
-      await changeAction?.(value);
-    });
+    if (changeAction) {
+      startTransition(async () => {
+        setOptimisticTab(value);
+        await changeAction?.(value);
+      });
+    }
   }
 
   return (
@@ -41,7 +43,7 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className, ch
                 key={tab.value}
                 value={tab.value}
                 onClick={() => {
-                  tabChangeAction(tab.value);
+                  handleTabChange(tab.value);
                 }}
               >
                 {tab.label}

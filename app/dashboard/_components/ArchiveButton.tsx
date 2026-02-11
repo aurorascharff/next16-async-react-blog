@@ -18,11 +18,8 @@ export function ArchiveButton({ slug, archived }: Props) {
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        let newValue: boolean = false;
-        setOptimisticArchived(current => {
-          newValue = !current;
-          return newValue;
-        });
+        const newValue = !optimisticArchived;
+        setOptimisticArchived(newValue);
         await toggleArchivePost(slug, newValue);
       }}
       onClick={e => {
