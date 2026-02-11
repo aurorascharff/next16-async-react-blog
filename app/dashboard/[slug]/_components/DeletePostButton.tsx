@@ -27,17 +27,16 @@ export function DeletePostButton({ slug }: Props) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  function deleteAction() {
+  function handleDelete() {
     startTransition(async () => {
-      try {
-        await deletePost(slug);
+      const result = await deletePost(slug);
+      if (result.success) {
         toast.success('Post deleted successfully');
         router.push('/dashboard');
-      } catch {
-        toast.error('Something went wrong');
-      } finally {
-        setOpen(false);
+      } else {
+        toast.error(result.error);
       }
+      setOpen(false);
     });
   }
 
@@ -53,7 +52,7 @@ export function DeletePostButton({ slug }: Props) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={deleteAction} disabled={isPending}>
+          <AlertDialogAction variant="destructive" onClick={handleDelete} disabled={isPending}>
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
                 Delete

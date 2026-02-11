@@ -2,6 +2,7 @@
 
 import { Archive } from 'lucide-react';
 import { useOptimistic } from 'react';
+import { toast } from 'sonner';
 import { toggleArchivePost } from '@/data/actions/post';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +21,10 @@ export function ArchiveButton({ slug, archived }: Props) {
       action={async () => {
         const newValue = !optimisticArchived;
         setOptimisticArchived(newValue);
-        await toggleArchivePost(slug, newValue);
+        const result = await toggleArchivePost(slug, newValue);
+        if (!result.success) {
+          toast.error(result.error);
+        }
       }}
       onClick={e => {
         return e.stopPropagation();

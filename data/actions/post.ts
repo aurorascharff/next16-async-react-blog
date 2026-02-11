@@ -127,9 +127,9 @@ export async function updatePost(slug: string, formData: FormData): Promise<Acti
   return { success: true };
 }
 
-export async function deletePost(slug: string) {
+export async function deletePost(slug: string): Promise<ActionResult> {
   if (!canManagePosts()) {
-    throw new Error('Unauthorized');
+    return { error: 'Unauthorized', success: false };
   }
 
   await slow();
@@ -140,11 +140,12 @@ export async function deletePost(slug: string) {
   revalidateTag('posts', 'max');
   revalidateTag(`post-${slug}`, 'max');
   refresh();
+  return { success: true };
 }
 
-export async function toggleArchivePost(slug: string, archived: boolean) {
+export async function toggleArchivePost(slug: string, archived: boolean): Promise<ActionResult> {
   if (!canManagePosts()) {
-    throw new Error('Unauthorized');
+    return { error: 'Unauthorized', success: false };
   }
 
   await slow();
@@ -156,4 +157,5 @@ export async function toggleArchivePost(slug: string, archived: boolean) {
   revalidateTag('posts', 'max');
   revalidateTag(`post-${slug}`, 'max');
   refresh();
+  return { success: true };
 }
