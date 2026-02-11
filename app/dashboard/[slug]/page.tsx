@@ -14,14 +14,30 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
   const { slug } = await params;
 
   return (
-    <ViewTransition name={`post-card-${slug}`} share="morph">
+    <ViewTransition name={`post-card-${slug}`} share="morph" default="none">
       <article>
-        <Suspense fallback={<PostHeaderSkeleton />}>
-          <PostHeader slug={slug} />
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <PostHeaderSkeleton />
+            </ViewTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" exit="slide-down" default="none">
+            <PostHeader slug={slug} />
+          </ViewTransition>
         </Suspense>
         <Separator className="my-6" />
-        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-          <PostContent slug={slug} />
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <Skeleton className="h-64 w-full" />
+            </ViewTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" exit="slide-down" default="none">
+            <PostContent slug={slug} />
+          </ViewTransition>
         </Suspense>
       </article>
     </ViewTransition>

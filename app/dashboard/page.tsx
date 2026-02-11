@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { unauthorized } from 'next/navigation';
-import { Suspense } from 'react';
-import { ViewTransition } from 'react';
+import { Suspense, ViewTransition } from 'react';
+import { SlideRightTransition } from '@/components/ui/animations';
 import { buttonVariants } from '@/components/ui/button';
 import { canManagePosts } from '@/data/queries/auth';
 import { PostList, PostListSkeleton } from './_components/PostList';
@@ -14,7 +14,7 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
   }
 
   return (
-    <ViewTransition enter="slide-from-left" exit="slide-to-left">
+    <SlideRightTransition>
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -39,11 +39,19 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
               <SortButton />
             </Suspense>
           </div>
-          <Suspense fallback={<PostListSkeleton />}>
-            <PostList searchParams={searchParams} />
+          <Suspense
+            fallback={
+              <ViewTransition exit="slide-down">
+                <PostListSkeleton />
+              </ViewTransition>
+            }
+          >
+            <ViewTransition enter="slide-up" exit="slide-down">
+              <PostList searchParams={searchParams} />
+            </ViewTransition>
           </Suspense>
         </div>
       </div>
-    </ViewTransition>
+    </SlideRightTransition>
   );
 }
