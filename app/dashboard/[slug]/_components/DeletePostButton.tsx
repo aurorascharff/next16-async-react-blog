@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +29,7 @@ export function DeletePostButton({ slug }: Props) {
     if (result.success) {
       router.push('/dashboard');
     } else {
-      toast.error(result.error);
+      // Do nothing
     }
     setOpen(false);
   }

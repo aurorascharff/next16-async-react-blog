@@ -1,7 +1,7 @@
 'use client';
 
 import { Archive } from 'lucide-react';
-import { toast } from 'sonner';
+
 import { toggleArchivePost } from '@/data/actions/post';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +17,7 @@ export function ArchiveButton({ slug, archived }: Props) {
         const newValue = !archived;
         const result = await toggleArchivePost(slug, newValue);
         if (!result.success) {
-          toast.error(result.error);
+          // Do nothing
         }
       }}
       onClick={e => {

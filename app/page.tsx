@@ -15,8 +15,8 @@ export default function HomePage() {
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-            <p className="text-muted-foreground mt-1">Modern React patterns in Next.js 16</p>
+            <h1 className="text-4xl font-bold tracking-tight">Next.js 16 Async React</h1>
+            <p className="text-muted-foreground mt-1">Cache components & in-between states</p>
           </div>
           <div className="flex items-center gap-2">
             <a

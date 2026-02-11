@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActionState } from 'react';
-import { toast } from 'sonner';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,7 +43,7 @@ export function PostForm<T extends string>({
       router.push(redirectTo);
       return prevState;
     } else {
-      toast.error(result.error);
+      // Do nothing
       return result.formData ?? prevState;
     }
   }, defaultValues);

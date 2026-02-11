@@ -9,7 +9,7 @@ type Props = {
   reset: () => void;
 };
 
-export default function PostError({ error, reset }: Props) {
+export default function NewPostError({ error, reset }: Props) {
   useEffect(() => {
     // Log the error to an error reporting service
     // eslint-disable-next-line no-console
@@ -20,7 +20,7 @@ export default function PostError({ error, reset }: Props) {
     <Card className="text-center">
       <CardHeader>
         <CardTitle className="text-2xl text-red-600">Something went wrong!</CardTitle>
-        <CardDescription className="text-base">An unexpected error occurred while loading this post.</CardDescription>
+        <CardDescription className="text-base">An unexpected error occurred while creating this post.</CardDescription>
       </CardHeader>
       <CardContent>
         <Button onClick={reset} variant="default">
