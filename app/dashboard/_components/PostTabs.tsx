@@ -15,9 +15,10 @@ export function PostTabs() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const currentTab = searchParams.get('filter') ?? 'all';
+  const currentSort = searchParams.get('sort') ?? 'newest';
 
   function tabAction(value: string) {
-    router.push(`/dashboard?filter=${value}`);
+    router.push(`/dashboard?filter=${value}&sort=${currentSort}`);
   }
 
   return <TabList tabs={tabs} activeTab={currentTab} changeAction={tabAction} />;

@@ -8,15 +8,17 @@ import { formatDate } from '@/lib/utils';
 import { ArchiveButton } from './ArchiveButton';
 
 const filterSchema = z.enum(['all', 'published', 'drafts', 'archived']).catch('all');
+const sortSchema = z.enum(['newest', 'oldest', 'title']).catch('newest');
 
 type Props = {
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ filter?: string; sort?: string }>;
 };
 
 export async function PostList({ searchParams }: Props) {
-  const { filter } = await searchParams;
+  const { filter, sort } = await searchParams;
   const validFilter = filterSchema.parse(filter);
-  const posts = await getPosts(validFilter);
+  const validSort = sortSchema.parse(sort);
+  const posts = await getPosts(validFilter, validSort);
 
   if (posts.length === 0) {
     return (

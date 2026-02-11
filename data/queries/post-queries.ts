@@ -6,23 +6,32 @@ import { cache } from 'react';
 import { prisma } from '@/db';
 import { slow } from '@/lib/utils';
 
-export const getPosts = cache(async (filter?: 'all' | 'published' | 'drafts' | 'archived') => {
-  await slow();
+export const getPosts = cache(
+  async (filter?: 'all' | 'published' | 'drafts' | 'archived', sort?: 'newest' | 'oldest' | 'title') => {
+    await slow();
 
-  const where =
-    filter === 'archived'
-      ? { archived: true }
-      : filter === 'published'
-        ? { archived: false, published: true }
-        : filter === 'drafts'
-          ? { archived: false, published: false }
-          : { archived: false };
+    const where =
+      filter === 'archived'
+        ? { archived: true }
+        : filter === 'published'
+          ? { archived: false, published: true }
+          : filter === 'drafts'
+            ? { archived: false, published: false }
+            : { archived: false };
 
-  return await prisma.post.findMany({
-    orderBy: { createdAt: 'desc' },
-    where,
-  });
-});
+    const orderBy =
+      sort === 'oldest'
+        ? { createdAt: 'asc' as const }
+        : sort === 'title'
+          ? { title: 'asc' as const }
+          : { createdAt: 'desc' as const };
+
+    return await prisma.post.findMany({
+      orderBy,
+      where,
+    });
+  },
+);
 
 export const getPostBySlug = cache(async (slug: string) => {
   await slow();

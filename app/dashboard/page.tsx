@@ -6,9 +6,10 @@ import { buttonVariants } from '@/components/ui/button';
 import { canManagePosts } from '@/data/queries/auth-queries';
 import { PostList, PostListSkeleton } from './_components/PostList';
 import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
+import { SortButton, SortButtonSkeleton } from './_components/SortButton';
 
 type Props = {
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ filter?: string; sort?: string }>;
 };
 
 export default function DashboardPage({ searchParams }: Props) {
@@ -34,9 +35,12 @@ export default function DashboardPage({ searchParams }: Props) {
               </Link>
             </div>
           </div>
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <Suspense fallback={<PostTabsSkeleton />}>
               <PostTabs />
+            </Suspense>
+            <Suspense fallback={<SortButtonSkeleton />}>
+              <SortButton />
             </Suspense>
           </div>
           <Suspense fallback={<PostListSkeleton />}>

@@ -88,10 +88,10 @@ export async function PostList({ searchParams }) {
 The \`has-data-pending:\` variant (Tailwind's \`:has([data-pending])\`) lets the Card react to the button's pending state without becoming a Client Component.
 
 Keep Client Components at the leaves to maximize server rendering.`,
-        description: 'Understand when to use Server Components vs Client Components in Next.js App Router.',
+        description: 'Server vs Client Components, CSS :has() for parent styling, data-pending attribute pattern.',
         published: true,
         slug: 'react-server-components',
-        title: 'React Server Components',
+        title: 'Server & Client Components',
       },
       {
         content: `# Suspense and Streaming
@@ -144,10 +144,10 @@ export function PostListSkeleton() {
 \`\`\`
 
 Export skeletons alongside their components to keep them in sync.`,
-        description: 'Learn how Suspense enables streaming HTML and progressive loading in Next.js.',
+        description: 'Streaming with Suspense boundaries, co-locating skeleton components with their data.',
         published: true,
         slug: 'suspense-and-streaming',
-        title: 'Suspense and Streaming',
+        title: 'Suspense & Skeleton Co-location',
       },
       {
         content: `# Server Functions
@@ -194,10 +194,10 @@ export async function updatePost(slug: string, formData: FormData) {
   updateTag(\`post-\${slug}\`); // Invalidate this post
 }
 \`\`\``,
-        description: 'Learn how to define and use Server Functions for mutations in Next.js.',
+        description: 'Server Functions with "use server", Zod validation, returning errors, cache invalidation.',
         published: true,
         slug: 'server-functions',
-        title: 'Server Functions',
+        title: 'Server Functions & Validation',
       },
       {
         content: `# useActionState
@@ -245,10 +245,10 @@ On error, the form data is returned so fields keep their values.
 // Edit - use .bind() to apply the slug
 <PostForm action={updatePost.bind(null, post.slug)} defaultValues={post} />
 \`\`\``,
-        description: 'Manage form state across submissions with useActionState.',
+        description: 'Preserve form input on validation errors, reuse forms for create and edit with .bind().',
         published: true,
         slug: 'useactionstate',
-        title: 'useActionState',
+        title: 'useActionState for Form Errors',
       },
       {
         content: `# useFormStatus
@@ -293,10 +293,10 @@ function Form() {
 \`\`\`
 
 React needs to track which form triggered the submission. By requiring the hook inside a form's children, React reliably determines the pending state for that specific form.`,
-        description: 'Show loading states during form submissions with useFormStatus.',
+        description: 'SubmitButton component pattern, why it must be a child of the form.',
         published: true,
         slug: 'useformstatus',
-        title: 'useFormStatus',
+        title: 'useFormStatus in SubmitButton',
       },
       {
         content: `# useOptimistic
@@ -376,10 +376,10 @@ Expose pending state via \`data-pending\` attribute. Parent Server Components ca
 The optimistic setter must be called inside an Action—a function passed to an action prop or wrapped in \`startTransition\`. Form \`action\` props are automatically called inside \`startTransition\`.
 
 Use for actions with high success rates: toggles, likes, bookmarks.`,
-        description: 'Implement instant UI feedback with useOptimistic.',
+        description: 'Updater functions for rapid clicks, data-pending for parent styling, ArchiveButton pattern.',
         published: true,
         slug: 'useoptimistic',
-        title: 'useOptimistic',
+        title: 'useOptimistic & Updater Functions',
       },
       {
         content: `# The "use cache" Directive
@@ -429,10 +429,10 @@ export const getPublishedPostBySlug = cache(async (slug: string) => {
 \`\`\`
 
 When updating a post, invalidate both its specific tag and the list tag.`,
-        description: 'Control caching with the "use cache" directive and cache tags.',
+        description: 'Opt-in caching with "use cache", cacheTag() for granular invalidation, updateTag() pattern.',
         published: true,
         slug: 'use-cache-directive',
-        title: 'The "use cache" Directive',
+        title: '"use cache" & Cache Tags',
       },
       {
         content: `# View Transitions
@@ -472,10 +472,10 @@ The card morphs into the detail page when navigating.
 ## Browser Support
 
 Uses the browser's native View Transitions API. In unsupported browsers, navigation works normally—progressive enhancement.`,
-        description: 'Add smooth page transitions with the ViewTransition component.',
+        description: 'Page-level enter/exit animations, shared element transitions with name + share="morph".',
         published: true,
         slug: 'view-transitions',
-        title: 'View Transitions',
+        title: 'ViewTransition & Shared Elements',
       },
       {
         content: `# Error Handling
@@ -525,10 +525,10 @@ if (!post) notFound();
 \`\`\`
 
 Errors bubble up to the nearest boundary. Create \`error.tsx\` at different route levels for granular handling.`,
-        description: 'Handle errors with error.tsx and not-found.tsx conventions.',
+        description: 'error.tsx with reset(), not-found.tsx with notFound(), error boundary placement.',
         published: true,
         slug: 'error-handling',
-        title: 'Error Handling',
+        title: 'Error Boundaries & not-found',
       },
       {
         content: `# generateStaticParams
@@ -565,10 +565,10 @@ export async function generateMetadata({ params }) {
 \`\`\`
 
 New slugs not in \`generateStaticParams\` are generated on-demand and cached. Use \`updateTag()\` to invalidate when content changes.`,
-        description: 'Pre-render dynamic routes at build time for instant page loads.',
+        description: 'Pre-render dynamic routes, generateMetadata for SEO, on-demand generation for new slugs.',
         published: true,
         slug: 'generatestaticparams',
-        title: 'generateStaticParams',
+        title: 'Static Generation & Metadata',
       },
       {
         content: `# URL State with searchParams
@@ -581,11 +581,13 @@ From \`app/dashboard/_components/PostList.tsx\`:
 
 \`\`\`tsx
 const filterSchema = z.enum(['all', 'published', 'drafts', 'archived']).catch('all');
+const sortSchema = z.enum(['newest', 'oldest', 'title']).catch('newest');
 
 export async function PostList({ searchParams }) {
-  const { filter } = await searchParams;
+  const { filter, sort } = await searchParams;
   const validFilter = filterSchema.parse(filter);
-  const posts = await getPosts(validFilter);
+  const validSort = sortSchema.parse(sort);
+  const posts = await getPosts(validFilter, validSort);
   // ...
 }
 \`\`\`
@@ -601,20 +603,63 @@ export function PostTabs() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const currentTab = searchParams.get('filter') ?? 'all';
+  const currentSort = searchParams.get('sort') ?? 'newest';
 
   function tabAction(value: string) {
-    router.push(\`/dashboard?filter=\${value}\`);
+    // Preserve other params when updating one
+    router.push(\`/dashboard?filter=\${value}&sort=\${currentSort}\`);
   }
 
   return <TabList activeTab={currentTab} changeAction={tabAction} />;
 }
 \`\`\`
 
-URL state works with browser history and makes pages shareable—\`/dashboard?filter=drafts\` shows exactly that view.`,
-        description: 'Use URL searchParams for shareable, bookmarkable filter state.',
+## Cycle Button with Optimistic State
+
+From \`app/dashboard/_components/SortButton.tsx\`—a button that cycles through options:
+
+\`\`\`tsx
+'use client';
+
+const sortOptions = [
+  { icon: ArrowUpDown, label: 'Newest', value: 'newest' },
+  { icon: ArrowDownUp, label: 'Oldest', value: 'oldest' },
+  { icon: ArrowDownAZ, label: 'Title', value: 'title' },
+];
+
+export function SortButton() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const currentSort = searchParams.get('sort') ?? 'newest';
+  const currentFilter = searchParams.get('filter') ?? 'all';
+
+  const [optimisticSort, setOptimisticSort] = useOptimistic(currentSort);
+  const [isPending, startTransition] = useTransition();
+
+  const currentIndex = sortOptions.findIndex(opt => opt.value === optimisticSort);
+  const nextIndex = (currentIndex + 1) % sortOptions.length;
+  const nextSort = sortOptions[nextIndex].value;
+
+  function sortAction() {
+    startTransition(() => {
+      setOptimisticSort(nextSort);
+      router.push(\`/dashboard?filter=\${currentFilter}&sort=\${nextSort}\`);
+    });
+  }
+
+  return (
+    <Button onClick={sortAction} disabled={isPending}>
+      {sortOptions[currentIndex].label}
+    </Button>
+  );
+}
+\`\`\`
+
+URL state works with browser history and makes pages shareable—\`/dashboard?filter=drafts&sort=title\` shows exactly that view.`,
+        description: 'Shareable filter/sort state, preserving params on update, cycle button with optimistic UI.',
         published: true,
         slug: 'url-state-searchparams',
-        title: 'URL State with searchParams',
+        title: 'URL State & Cycle Buttons',
       },
       {
         content: `# React cache()
@@ -651,10 +696,10 @@ export const getPublishedPostBySlug = cache(async (slug: string) => {
 \`\`\`
 
 Both work together—\`cache()\` prevents duplicate queries during rendering, \`"use cache"\` stores results for future requests.`,
-        description: 'Deduplicate data requests with React cache().',
+        description: 'Request deduplication with cache(), combining with "use cache" for cross-request caching.',
         published: true,
         slug: 'react-cache',
-        title: 'React cache()',
+        title: 'cache() for Deduplication',
       },
       {
         content: `# useTransition
@@ -703,10 +748,10 @@ startTransition(async () => {
 \`\`\`
 
 In the delete example, \`router.push\` handles this internally.`,
-        description: 'Keep your UI responsive during expensive operations with useTransition.',
+        description: 'isPending for delete buttons, nested startTransition for state updates after await.',
         published: true,
         slug: 'usetransition',
-        title: 'useTransition',
+        title: 'useTransition & Pending State',
       },
       {
         content: `# Skeleton Loading
@@ -751,10 +796,10 @@ export function PostListSkeleton() {
 \`\`\`
 
 Keep skeletons next to their components—when you change the layout, the skeleton is right there to update.`,
-        description: 'Build skeleton loaders that match your content layout.',
+        description: 'Export skeletons alongside components, match layout structure, use with Suspense.',
         published: true,
         slug: 'skeleton-loading',
-        title: 'Skeleton Loading',
+        title: 'Skeleton Co-location Pattern',
       },
       {
         content: `# Authorization Patterns
@@ -800,10 +845,10 @@ export async function deletePost(slug: string) {
   await prisma.post.delete({ where: { slug } });
 }
 \`\`\``,
-        description: 'Handle authorization with unauthorized() and unauthorized.tsx.',
+        description: 'unauthorized() in Server Components, unauthorized.tsx files, protecting Server Functions.',
         published: true,
         slug: 'authorization',
-        title: 'Authorization Patterns',
+        title: 'unauthorized() & Auth Checks',
       },
       {
         content: `# Static vs Dynamic Rendering
@@ -851,7 +896,7 @@ export async function createPost(formData: FormData) {
 \`\`\`
 
 After \`updateTag\`, the next request regenerates the content.`,
-        description: 'Understand when pages are static vs dynamic and why loading states differ.',
+        description: 'What triggers dynamic rendering, when Suspense shows fallbacks, updateTag() for ISR.',
         published: true,
         slug: 'static-vs-dynamic',
         title: 'Static vs Dynamic Rendering',
@@ -926,10 +971,70 @@ export function PostTabs() {
 ## Naming Convention
 
 Use descriptive suffixes: \`changeAction\`, \`submitAction\`, \`deleteAction\`. This signals that the prop triggers an async operation with built-in UX handling.`,
-        description: 'Build reusable design components that handle async coordination internally.',
+        description: 'Parent passes async function, child owns useTransition, design/SubmitButton pattern.',
         published: true,
         slug: 'action-prop-pattern',
-        title: 'The Action Prop Pattern',
+        title: 'Action Props & useTransition',
+      },
+      {
+        content: `# useLinkStatus for Link Pending State
+
+The \`useLinkStatus\` hook provides pending state for \`<Link>\` navigations. It must be used inside a descendant component of \`Link\`.
+
+## When to Use
+
+Use \`useLinkStatus\` when:
+- Prefetching is disabled or in progress
+- The destination route is dynamic and doesn't have a \`loading.js\`
+- You want inline feedback (spinner, shimmer) on the clicked link itself
+
+## The Pattern
+
+\`\`\`tsx
+'use client';
+
+import Link, { useLinkStatus } from 'next/link';
+import { Loader2, ArrowUpDown } from 'lucide-react';
+
+function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <>
+      {pending ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
+      <span>{label}</span>
+    </>
+  );
+}
+
+export function SortButton() {
+  return (
+    <Link href="/dashboard?sort=newest" prefetch={false} className="...">
+      <SortIndicator icon={ArrowUpDown} label="Newest" />
+    </Link>
+  );
+}
+\`\`\`
+
+## Key Points
+
+1. **Must be a Link descendant** - \`useLinkStatus\` only works inside a component rendered within \`<Link>\`
+2. **Use \`prefetch={false}\`** - If the route is prefetched, pending state is skipped
+3. **Extract to child component** - The hook tracks the parent Link's navigation state
+4. **Style as Link** - Use \`buttonVariants\` from shadcn/ui to style Links as buttons
+
+## vs useTransition + router.push
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| \`useLinkStatus\` | Simpler, no state management, declarative | Must use \`<Link>\`, no optimistic updates |
+| \`useTransition\` + \`router.push\` | Full control, optimistic updates possible | More boilerplate, imperative |
+
+Choose \`useLinkStatus\` for simple navigation feedback. Use \`useTransition\` when you need optimistic state updates during navigation.`,
+        description: 'Track Link pending state, SortButton pattern, prefetch={false} for visible feedback.',
+        published: true,
+        slug: 'uselinkstatus',
+        title: 'useLinkStatus for Navigation',
       },
     ],
   });
