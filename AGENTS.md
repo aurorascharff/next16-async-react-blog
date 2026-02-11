@@ -40,7 +40,8 @@ These APIs are new in Next.js 16 and may not be in model training data:
 - `cookies()` / `headers()` - Now async, must be awaited
 - `connection()` - For dynamic rendering opt-in
 - `'use cache'` directive - For caching with `cacheLife()` and `cacheTag()`
-- `revalidateTag()` - Invalidate cache tags
+- `revalidateTag()` - Invalidate cache tags (use with `'max'` profile)
+- `refresh()` - Refresh client router from Server Actions
 - `after()` - Run code after response is sent
 
 ## Code Style
@@ -86,7 +87,7 @@ Route-specific code goes in `_components` folders. Shared code lives at the near
 Push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree to maximize static content. Async components accessing dynamic data should be wrapped in `<Suspense>` with skeleton fallbacks.
 
 - **Fetching data** — Create queries in `data/queries/`, call in Server Components. Use `cache()` for deduplication.
-- **Mutating data** — Create Server Functions in `data/actions/` with `"use server"`. Invalidate with `revalidateTag()`. Use `useOptimistic` for instant feedback.
+- **Mutating data** — Create Server Functions in `data/actions/` with `"use server"`. Invalidate with `revalidateTag(tag, 'max')` + `refresh()`. Use `useOptimistic` for instant feedback.
 - **Caching** — Add `"use cache"` directive to pages, components, or functions you want to cache.
 
 ## Server Components (Default)
@@ -120,7 +121,8 @@ export const getPost = cache(async (slug: string) => {
 export async function createPost(data: PostData) {
   "use server";
   // ... create post
-  revalidateTag("posts");
+  revalidateTag("posts", "max");
+  refresh();
 }
 ```
 

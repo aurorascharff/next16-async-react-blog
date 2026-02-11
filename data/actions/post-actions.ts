@@ -1,6 +1,6 @@
 'use server';
 
-import { updateTag } from 'next/cache';
+import { refresh, revalidateTag } from 'next/cache';
 import { remark } from 'remark';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
@@ -90,7 +90,8 @@ export async function createPost(formData: FormData): Promise<ActionResult> {
     data: { content, description, published, slug, title },
   });
 
-  updateTag('posts');
+  revalidateTag('posts', 'max');
+  refresh();
   return { success: true };
 }
 
@@ -120,8 +121,9 @@ export async function updatePost(slug: string, formData: FormData): Promise<Acti
     where: { slug },
   });
 
-  updateTag('posts');
-  updateTag(`post-${slug}`);
+  revalidateTag('posts', 'max');
+  revalidateTag(`post-${slug}`, 'max');
+  refresh();
   return { success: true };
 }
 
@@ -135,8 +137,9 @@ export async function deletePost(slug: string) {
     where: { slug },
   });
 
-  updateTag('posts');
-  updateTag(`post-${slug}`);
+  revalidateTag('posts', 'max');
+  revalidateTag(`post-${slug}`, 'max');
+  refresh();
 }
 
 export async function toggleArchivePost(slug: string, archived: boolean) {
@@ -150,6 +153,7 @@ export async function toggleArchivePost(slug: string, archived: boolean) {
     where: { slug },
   });
 
-  updateTag('posts');
-  updateTag(`post-${slug}`);
+  revalidateTag('posts', 'max');
+  revalidateTag(`post-${slug}`, 'max');
+  refresh();
 }

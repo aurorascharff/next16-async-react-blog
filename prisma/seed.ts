@@ -404,16 +404,29 @@ export const getPublishedPosts = cache(async () => {
 });
 \`\`\`
 
-## Cache Invalidation
+## Cache Invalidation with revalidateTag + refresh
 
-From \`data/actions/post-actions.ts\`:
+In Server Actions, use \`revalidateTag\` with a profile plus \`refresh()\` for immediate UI updates:
 
 \`\`\`tsx
+import { refresh, revalidateTag } from 'next/cache';
+
 export async function createPost(formData: FormData) {
   await prisma.post.create({ data });
-  updateTag('posts');
+  
+  revalidateTag('posts', 'max'); // Stale-while-revalidate for other users
+  refresh(); // Immediate refresh for the current user
 }
 \`\`\`
+
+## Why Both?
+
+| Function | Purpose |
+|----------|---------|
+| \`revalidateTag(tag, 'max')\` | Marks cache as stale, background revalidation |
+| \`refresh()\` | Forces client router re-render immediately |
+
+The combination ensures the current user sees updates instantly while other users get stale-while-revalidate behavior.
 
 ## Granular Tags
 
@@ -429,7 +442,7 @@ export const getPublishedPostBySlug = cache(async (slug: string) => {
 \`\`\`
 
 When updating a post, invalidate both its specific tag and the list tag.`,
-        description: 'Opt-in caching with "use cache", cacheTag() for granular invalidation, updateTag() pattern.',
+        description: 'Opt-in caching with "use cache", revalidateTag + refresh() for invalidation.',
         published: true,
         slug: 'use-cache-directive',
         title: 'Caching with use cache',
