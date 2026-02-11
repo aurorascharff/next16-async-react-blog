@@ -8,11 +8,7 @@ import { PostList, PostListSkeleton } from './_components/PostList';
 import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
 import { SortButton, SortButtonSkeleton } from './_components/SortButton';
 
-type Props = {
-  searchParams: Promise<{ filter?: string; sort?: string }>;
-};
-
-export default function DashboardPage({ searchParams }: Props) {
+export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
   if (!canManagePosts()) {
     unauthorized();
   }
