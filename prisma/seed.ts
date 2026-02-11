@@ -371,7 +371,7 @@ Use for actions with high success rates: toggles, likes, bookmarks.`,
         description: 'Deriving pending state from optimistic vs real value, data-pending for parent styling.',
         published: true,
         slug: 'useoptimistic',
-        title: 'useOptimistic Updater Pattern',
+        title: 'useOptimistic for Instant Feedback',
       },
       {
         content: `# The "use cache" Directive
