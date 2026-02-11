@@ -21,9 +21,7 @@ export default function NewPostError({ error, reset }: Props) {
     <Card className="text-center">
       <CardHeader>
         <CardTitle className="text-2xl text-red-600">Something went wrong!</CardTitle>
-        <CardDescription className="text-base">
-          An unexpected error occurred while creating this post.
-        </CardDescription>
+        <CardDescription className="text-base">An unexpected error occurred while creating this post.</CardDescription>
       </CardHeader>
       <CardContent>
         <Button onClick={reset} variant="default">
