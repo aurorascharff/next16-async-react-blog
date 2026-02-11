@@ -1,7 +1,7 @@
 
 # Next.js 16 Modern Blog
 
-A modern blog built with Next.js 16, React 19, Prisma, TailwindCSS v4, and shadcn/ui (Base UI). It showcases advanced patterns like streaming UI, View Transitions, and Cache Components, with each post explaining a real pattern used in the app.
+A modern blog built with Next.js 16, Async React, Prisma, TailwindCSS v4, and shadcn/ui (Base UI). It showcases advanced patterns like streaming UI, View Transitions, and Cache Components, with each post explaining a real pattern used in the app.
 
 ## Getting Started
 
