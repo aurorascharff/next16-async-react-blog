@@ -313,19 +313,15 @@ From \`app/dashboard/_components/ArchiveButton.tsx\`:
 import { useOptimistic } from 'react';
 
 export function ArchiveButton({ slug, archived }) {
-  const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
-  const isPending = optimisticArchived !== archived;
+  const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived ?? false);
+  const isPending = optimisticArchived !== (archived ?? false);
 
   return (
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        // Use updater function to read current pending state
-        let newValue;
-        setOptimisticArchived(current => {
-          newValue = !current;
-          return newValue;
-        });
+        const newValue = !optimisticArchived;
+        setOptimisticArchived(newValue);
         await toggleArchivePost(slug, newValue);
       }}
     >
@@ -337,19 +333,15 @@ export function ArchiveButton({ slug, archived }) {
 }
 \`\`\`
 
-## Why Use Updater Functions?
+## Deriving Pending State
 
-When users click rapidly, multiple actions queue up. Each closure captures the same \`optimisticArchived\` value:
+Compare the optimistic value to the real prop:
 
 \`\`\`tsx
-// ❌ Stale closure - both clicks see archived=false
-setOptimisticArchived(!optimisticArchived); // false → true
-setOptimisticArchived(!optimisticArchived); // false → true (stale!)
-
-// ✅ Updater function reads from React's queue
-setOptimisticArchived(current => !current); // false → true  
-setOptimisticArchived(current => !current); // true → false
+const isPending = optimisticArchived !== (archived ?? false);
 \`\`\`
+
+While the action runs, these values differ. When complete, they sync up and \`isPending\` becomes false.
 
 ## Styling Parent Elements with CSS :has()
 
@@ -376,7 +368,7 @@ Expose pending state via \`data-pending\` attribute. Parent Server Components ca
 The optimistic setter must be called inside an Action—a function passed to an action prop or wrapped in \`startTransition\`. Form \`action\` props are automatically called inside \`startTransition\`.
 
 Use for actions with high success rates: toggles, likes, bookmarks.`,
-        description: 'Updater functions for rapid clicks, data-pending for parent styling, ArchiveButton pattern.',
+        description: 'Deriving pending state from optimistic vs real value, data-pending for parent styling.',
         published: true,
         slug: 'useoptimistic',
         title: 'useOptimistic Updater Pattern',
@@ -994,12 +986,14 @@ Use descriptive suffixes: \`changeAction\`, \`submitAction\`, \`deleteAction\`. 
 
 The \`useLinkStatus\` hook provides pending state for \`<Link>\` navigations. It must be used inside a descendant component of \`Link\`.
 
-## When to Use
+## When It Shows Pending
 
-Use \`useLinkStatus\` when:
-- Prefetching is disabled or in progress
-- The destination route is dynamic and doesn't have a \`loading.js\`
-- You want inline feedback (spinner, shimmer) on the clicked link itself
+The spinner appears automatically when navigation takes time:
+- **Slow connections** — Prefetching hasn't completed before the click
+- **Dynamic routes** — Routes that can't be fully prefetched (e.g., routes reading \`searchParams\`)
+- **Large payloads** — Even prefetched routes can take time to render
+
+On fast connections with prefetched routes, the spinner won't appear—and that's the ideal case. Don't disable prefetching just to see the spinner.
 
 ## The Pattern
 
@@ -1022,7 +1016,7 @@ function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label:
 
 export function SortButton() {
   return (
-    <Link href="/dashboard?sort=newest" prefetch={false} className="...">
+    <Link href="/dashboard?sort=newest" className="...">
       <SortIndicator icon={ArrowUpDown} label="Newest" />
     </Link>
   );
@@ -1032,7 +1026,7 @@ export function SortButton() {
 ## Key Points
 
 1. **Must be a Link descendant** - \`useLinkStatus\` only works inside a component rendered within \`<Link>\`
-2. **Use \`prefetch={false}\`** - If the route is prefetched, pending state is skipped
+2. **Keep prefetching enabled** - The spinner is a fallback for when prefetching hasn't completed, not a feature to engineer
 3. **Extract to child component** - The hook tracks the parent Link's navigation state
 4. **Style as Link** - Use \`buttonVariants\` from shadcn/ui to style Links as buttons
 
@@ -1044,7 +1038,7 @@ export function SortButton() {
 | \`useTransition\` + \`router.push\` | Full control, optimistic updates possible | More boilerplate, imperative |
 
 Choose \`useLinkStatus\` for simple navigation feedback. Use \`useTransition\` when you need optimistic state updates during navigation.`,
-        description: 'Track Link pending state, SortButton pattern, prefetch={false} for visible feedback.',
+        description: 'Track Link pending state, SortButton pattern, spinner as fallback not feature.',
         published: true,
         slug: 'uselinkstatus',
         title: 'useLinkStatus for Navigation',
