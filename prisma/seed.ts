@@ -91,7 +91,7 @@ Keep Client Components at the leaves to maximize server rendering.`,
         description: 'Server vs Client Components, CSS :has() for parent styling, data-pending attribute pattern.',
         published: true,
         slug: 'react-server-components',
-        title: 'Server & Client Components',
+        title: 'When to Use Client Components',
       },
       {
         content: `# Suspense and Streaming
@@ -147,7 +147,7 @@ Export skeletons alongside their components to keep them in sync.`,
         description: 'Streaming with Suspense boundaries, co-locating skeleton components with their data.',
         published: true,
         slug: 'suspense-and-streaming',
-        title: 'Suspense & Skeleton Co-location',
+        title: 'Streaming with Suspense',
       },
       {
         content: `# Server Functions
@@ -197,7 +197,7 @@ export async function updatePost(slug: string, formData: FormData) {
         description: 'Server Functions with "use server", Zod validation, returning errors, cache invalidation.',
         published: true,
         slug: 'server-functions',
-        title: 'Server Functions & Validation',
+        title: 'Server Functions with Zod',
       },
       {
         content: `# useActionState
@@ -379,7 +379,7 @@ Use for actions with high success rates: toggles, likes, bookmarks.`,
         description: 'Updater functions for rapid clicks, data-pending for parent styling, ArchiveButton pattern.',
         published: true,
         slug: 'useoptimistic',
-        title: 'useOptimistic & Updater Functions',
+        title: 'useOptimistic Updater Pattern',
       },
       {
         content: `# The "use cache" Directive
@@ -432,7 +432,7 @@ When updating a post, invalidate both its specific tag and the list tag.`,
         description: 'Opt-in caching with "use cache", cacheTag() for granular invalidation, updateTag() pattern.',
         published: true,
         slug: 'use-cache-directive',
-        title: '"use cache" & Cache Tags',
+        title: 'Caching with use cache',
       },
       {
         content: `# View Transitions
@@ -475,7 +475,7 @@ Uses the browser's native View Transitions API. In unsupported browsers, navigat
         description: 'Page-level enter/exit animations, shared element transitions with name + share="morph".',
         published: true,
         slug: 'view-transitions',
-        title: 'ViewTransition & Shared Elements',
+        title: 'View Transitions API',
       },
       {
         content: `# Error Handling
@@ -528,7 +528,7 @@ Errors bubble up to the nearest boundary. Create \`error.tsx\` at different rout
         description: 'error.tsx with reset(), not-found.tsx with notFound(), error boundary placement.',
         published: true,
         slug: 'error-handling',
-        title: 'Error Boundaries & not-found',
+        title: 'Error Handling Patterns',
       },
       {
         content: `# generateStaticParams
@@ -568,7 +568,7 @@ New slugs not in \`generateStaticParams\` are generated on-demand and cached. Us
         description: 'Pre-render dynamic routes, generateMetadata for SEO, on-demand generation for new slugs.',
         published: true,
         slug: 'generatestaticparams',
-        title: 'Static Generation & Metadata',
+        title: 'generateStaticParams',
       },
       {
         content: `# URL State with searchParams
@@ -659,7 +659,7 @@ URL state works with browser history and makes pages shareable—\`/dashboard?fi
         description: 'Shareable filter/sort state, preserving params on update, cycle button with optimistic UI.',
         published: true,
         slug: 'url-state-searchparams',
-        title: 'URL State & Cycle Buttons',
+        title: 'URL State with searchParams',
       },
       {
         content: `# React cache()
@@ -751,7 +751,7 @@ In the delete example, \`router.push\` handles this internally.`,
         description: 'isPending for delete buttons, nested startTransition for state updates after await.',
         published: true,
         slug: 'usetransition',
-        title: 'useTransition & Pending State',
+        title: 'useTransition for Pending UI',
       },
       {
         content: `# Skeleton Loading
@@ -848,7 +848,7 @@ export async function deletePost(slug: string) {
         description: 'unauthorized() in Server Components, unauthorized.tsx files, protecting Server Functions.',
         published: true,
         slug: 'authorization',
-        title: 'unauthorized() & Auth Checks',
+        title: 'Authorization with unauthorized()',
       },
       {
         content: `# Static vs Dynamic Rendering
@@ -974,7 +974,7 @@ Use descriptive suffixes: \`changeAction\`, \`submitAction\`, \`deleteAction\`. 
         description: 'Parent passes async function, child owns useTransition, design/SubmitButton pattern.',
         published: true,
         slug: 'action-prop-pattern',
-        title: 'Action Props & useTransition',
+        title: 'The Action Prop Pattern',
       },
       {
         content: `# useLinkStatus for Link Pending State
