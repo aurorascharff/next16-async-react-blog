@@ -1,6 +1,5 @@
 import { Github } from 'lucide-react';
 import Link from 'next/link';
-import { SlideRightTransition } from '@/components/ui/animations';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { canManagePosts } from '@/data/queries/auth';
@@ -11,35 +10,33 @@ export default function HomePage() {
   const showDashboard = canManagePosts();
 
   return (
-    <SlideRightTransition>
-      <div className="min-h-screen">
-        <div className="container mx-auto max-w-4xl px-4 py-12">
-          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight">Next.js 16 Async React</h1>
-              <p className="text-muted-foreground mt-1">Async patterns for polished user experiences</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <a
-                target="_blank"
-                href="https://github.com/aurorascharff/next16-interactive-posts"
-                rel="noopener noreferrer"
-                className={buttonVariants({ size: 'icon', variant: 'ghost' })}
-                aria-label="View source on GitHub"
-              >
-                <Github className="size-5" />
-              </a>
-              {showDashboard && (
-                <Link href="/dashboard" className={buttonVariants({ variant: 'outline' })}>
-                  Dashboard
-                </Link>
-              )}
-            </div>
+    <div className="min-h-screen">
+      <div className="container mx-auto max-w-4xl px-4 py-12">
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight">Next.js 16 Async React</h1>
+            <p className="text-muted-foreground mt-1">Cache components & in-between states</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              target="_blank"
+              href="https://github.com/aurorascharff/next16-interactive-posts"
+              rel="noopener noreferrer"
+              className={buttonVariants({ size: 'icon', variant: 'ghost' })}
+              aria-label="View source on GitHub"
+            >
+              <Github className="size-5" />
+            </a>
+            {showDashboard && (
+              <Link href="/dashboard" className={buttonVariants({ variant: 'outline' })}>
+                Dashboard
+              </Link>
+            )}
           </div>
         </div>
         <BlogList />
       </div>
-    </SlideRightTransition>
+    </div>
   );
 }
 
