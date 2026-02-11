@@ -12,9 +12,11 @@ type Props = {
 
 export function ArchiveButton({ slug, archived }: Props) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived ?? false);
+  const isPending = optimisticArchived !== (archived ?? false);
 
   return (
     <form
+      data-pending={isPending || undefined}
       action={async () => {
         setOptimisticArchived(!optimisticArchived);
         await toggleArchivePost(slug, !optimisticArchived);

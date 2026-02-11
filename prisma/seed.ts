@@ -48,21 +48,25 @@ From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
 export function ArchiveButton({ slug, archived }) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
+  const isPending = optimisticArchived !== archived;
 
   return (
-    <form action={async () => {
-      setOptimisticArchived(!optimisticArchived);
-      await toggleArchivePost(slug, !optimisticArchived);
-    }}>
+    <form
+      data-pending={isPending || undefined}
+      action={async () => {
+        setOptimisticArchived(!optimisticArchived);
+        await toggleArchivePost(slug, !optimisticArchived);
+      }}
+    >
       <button>{optimisticArchived ? 'Unarchive' : 'Archive'}</button>
     </form>
   );
 }
 \`\`\`
 
-## Example: Composition
+## Example: Composition with CSS :has()
 
-Server Components render Client Components and pass data as props:
+Server Components render Client Components. Use CSS \`:has()\` to style parent elements based on child state—no state lifting required:
 
 \`\`\`tsx
 // PostList.tsx (Server Component)
@@ -70,12 +74,14 @@ export async function PostList({ searchParams }) {
   const posts = await getPosts(validFilter);
 
   return posts.map(post => (
-    <Card key={post.slug}>
+    <Card className="has-data-pending:animate-pulse has-data-pending:bg-muted/70">
       <ArchiveButton slug={post.slug} archived={post.archived} />
     </Card>
   ));
 }
 \`\`\`
+
+The \`has-data-pending:\` variant (Tailwind's \`:has([data-pending])\`) lets the Card react to the button's pending state without becoming a Client Component.
 
 Keep Client Components at the leaves to maximize server rendering.`,
         description: 'Understand when to use Server Components vs Client Components in Next.js App Router.',
@@ -293,7 +299,7 @@ React needs to track which form triggered the submission. By requiring the hook 
 
 \`useOptimistic\` provides immediate UI feedback while an action runs in the background.
 
-## Example: ArchiveButton
+## Example: ArchiveButton with Pending State
 
 From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
@@ -304,9 +310,11 @@ import { useOptimistic } from 'react';
 
 export function ArchiveButton({ slug, archived }) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
+  const isPending = optimisticArchived !== archived;
 
   return (
     <form
+      data-pending={isPending || undefined}
       action={async () => {
         setOptimisticArchived(!optimisticArchived);
         await toggleArchivePost(slug, !optimisticArchived);
@@ -320,13 +328,25 @@ export function ArchiveButton({ slug, archived }) {
 }
 \`\`\`
 
+## Styling Parent Elements with CSS :has()
+
+Expose pending state via \`data-pending\` attribute. Parent Server Components can style based on this using Tailwind's \`has-data-pending:\` variant:
+
+\`\`\`tsx
+// PostList.tsx (Server Component - no 'use client' needed!)
+<Card className="has-data-pending:animate-pulse has-data-pending:bg-muted/70">
+  <ArchiveButton slug={post.slug} archived={post.archived} />
+</Card>
+\`\`\`
+
 ## How It Works
 
 1. User submits the form
-2. \`setOptimisticArchived\` immediately updates the UI
-3. The Server Function runs in the background
-4. When complete, the real \`archived\` prop replaces the optimistic value
-5. If the action fails, the UI reverts to the original prop
+2. \`setOptimisticArchived\` immediately updates the UI and sets \`data-pending\`
+3. CSS \`:has([data-pending])\` triggers parent styles (pulse animation)
+4. The Server Function runs in the background
+5. When complete, the real \`archived\` prop replaces the optimistic value
+6. \`data-pending\` is removed, styles revert
 
 ## Important: Requires Action Context
 

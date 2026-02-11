@@ -42,7 +42,7 @@ export async function PostList({ searchParams }: Props) {
         return (
           <Link key={post.slug} href={`/dashboard/${post.slug}`} className="block">
             <ViewTransition name={`post-card-${post.slug}`} share="morph">
-              <Card className="hover:bg-muted/50 transition-all duration-200 hover:shadow-md">
+              <Card className="hover:bg-muted/50 has-data-pending:bg-muted/70 transition-all duration-200 hover:shadow-md has-data-pending:animate-pulse">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
