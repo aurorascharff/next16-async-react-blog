@@ -7,10 +7,6 @@ import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post';
 import { formatDate, getWordCount } from '@/lib/utils';
 import type { Metadata } from 'next';
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
 export async function generateStaticParams() {
   const posts = await getPublishedPosts();
   return posts.map(post => {
@@ -18,7 +14,7 @@ export async function generateStaticParams() {
   });
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublishedPostBySlug(slug);
 
@@ -28,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function BlogPostPage({ params }: Props) {
+export default async function BlogPostPage({ params }: PageProps<'/[slug]'>) {
   const { slug } = await params;
   const post = await getPublishedPostBySlug(slug);
 

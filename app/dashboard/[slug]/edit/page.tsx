@@ -5,11 +5,7 @@ import { updatePost } from '@/data/actions/post';
 import { getPostBySlug } from '@/data/queries/post';
 import { PostForm } from '../../_components/PostForm';
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
-export default async function EditPostPage({ params }: Props) {
+export default async function EditPostPage({ params }: PageProps<'/dashboard/[slug]/edit'>) {
   const { slug } = await params;
 
   return (

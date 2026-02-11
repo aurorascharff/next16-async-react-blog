@@ -9,11 +9,7 @@ export async function generateStaticParams() {
   });
 }
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function PostLayout({ children }: Props) {
+export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'>) {
   return (
     <ViewTransition enter="slide-from-right" exit="slide-to-right">
       <div className="bg-muted/30 min-h-screen">

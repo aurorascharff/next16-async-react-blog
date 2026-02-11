@@ -10,11 +10,7 @@ import { getPostBySlug } from '@/data/queries/post';
 import { formatDate, getWordCount } from '@/lib/utils';
 import { DeletePostButton } from './_components/DeletePostButton';
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
-export default async function PostPage({ params }: Props) {
+export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'>) {
   const { slug } = await params;
 
   return (
