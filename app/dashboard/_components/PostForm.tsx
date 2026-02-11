@@ -38,15 +38,15 @@ export function PostForm<T extends string>({
 }: Props<T>) {
   const router = useRouter();
 
-  const [state, formAction] = useActionState(async (_prevState: FormValues, formData: FormData) => {
+  const [state, formAction] = useActionState(async (prevState: FormValues, formData: FormData) => {
     const result = await action(formData);
     if (result.success) {
       toast.success(successMessage);
       router.push(redirectTo);
-      return _prevState;
+      return prevState;
     } else {
       toast.error(result.error);
-      return result.formData ?? _prevState;
+      return result.formData ?? prevState;
     }
   }, defaultValues);
 
