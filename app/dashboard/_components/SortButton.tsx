@@ -14,17 +14,6 @@ const sortOptions = [
 
 type SortValue = (typeof sortOptions)[number]['value'];
 
-function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
-  const { pending } = useLinkStatus();
-
-  return (
-    <>
-      {pending ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
-      <span className="hidden sm:inline">{label}</span>
-    </>
-  );
-}
-
 export function SortButton() {
   const searchParams = useSearchParams();
   const currentSort = (searchParams.get('sort') as SortValue) ?? 'newest';
@@ -45,6 +34,17 @@ export function SortButton() {
     >
       <SortIndicator icon={CurrentIcon} label={sortOptions[currentIndex].label} />
     </Link>
+  );
+}
+
+function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <>
+      {pending ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
+      <span className="hidden sm:inline">{label}</span>
+    </>
   );
 }
 
