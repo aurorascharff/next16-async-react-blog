@@ -1,15 +1,7 @@
 import { BackButton } from '@/components/BackButton';
 import { SlideLeftTransition } from '@/components/ui/animations';
-import { getPosts } from '@/data/queries/post';
 
-export async function generateStaticParams() {
-  const posts = await getPosts();
-  return posts.map(post => {
-    return { slug: post.slug };
-  });
-}
-
-export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'>) {
+export default function NewPostLayout({ children }: LayoutProps<'/dashboard/new'>) {
   return (
     <SlideLeftTransition>
       <div className="bg-muted/30 min-h-screen">
