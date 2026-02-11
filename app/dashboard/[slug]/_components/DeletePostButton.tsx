@@ -1,8 +1,7 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -25,19 +24,15 @@ type Props = {
 export function DeletePostButton({ slug }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
-  function handleDelete() {
-    startTransition(async () => {
-      const result = await deletePost(slug);
-      if (result.success) {
-        toast.success('Post deleted successfully');
-        router.push('/dashboard');
-      } else {
-        toast.error(result.error);
-      }
-      setOpen(false);
-    });
+  async function handleDelete() {
+    const result = await deletePost(slug);
+    if (result.success) {
+      router.push('/dashboard');
+    } else {
+      toast.error(result.error);
+    }
+    setOpen(false);
   }
 
   return (
@@ -51,16 +46,9 @@ export function DeletePostButton({ slug }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={handleDelete} disabled={isPending}>
-            {isPending ? (
-              <span className="flex items-center justify-center gap-2">
-                Delete
-                <Loader2 className="size-4 animate-spin" />
-              </span>
-            ) : (
-              'Delete'
-            )}
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={handleDelete}>
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

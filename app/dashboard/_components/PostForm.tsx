@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActionState } from 'react';
 import { toast } from 'sonner';
-import { SubmitButton } from '@/components/design/SubmitButton';
-import { buttonVariants } from '@/components/ui/button';
+
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -38,15 +38,14 @@ export function PostForm<T extends string>({
 }: Props<T>) {
   const router = useRouter();
 
-  const [state, formAction] = useActionState(async (_prevState: FormValues, formData: FormData) => {
+  const [state, formAction] = useActionState(async (prevState: FormValues, formData: FormData) => {
     const result = await action(formData);
     if (result.success) {
-      toast.success(successMessage);
       router.push(redirectTo);
-      return _prevState;
+      return prevState;
     } else {
       toast.error(result.error);
-      return result.formData ?? _prevState;
+      return result.formData ?? prevState;
     }
   }, defaultValues);
 
@@ -103,7 +102,9 @@ export function PostForm<T extends string>({
         </Label>
       </div>
       <div className="flex gap-3 pt-2">
-        <SubmitButton size="lg">{submitLabel}</SubmitButton>
+        <Button type="submit" size="lg">
+          {submitLabel}
+        </Button>
         <Link href={cancelHref} className={buttonVariants({ size: 'lg', variant: 'outline' })}>
           Cancel
         </Link>

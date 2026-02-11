@@ -1,5 +1,5 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
-import { ViewTransition } from 'react';
+
 import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { Separator } from '@/components/ui/separator';
@@ -31,34 +31,32 @@ export default async function BlogPostPage({ params }: PageProps<'/[slug]'>) {
   const wasUpdated = post.updatedAt > post.createdAt;
 
   return (
-    <ViewTransition enter="slide-from-right" exit="slide-to-right">
-      <div className="min-h-screen">
-        <div className="container mx-auto max-w-3xl px-4 py-12">
-          <BackButton href="/" size="sm" className="mb-8">
-            ← Back to blog
-          </BackButton>
-          <article>
-            <MarkdownContent>{post.content}</MarkdownContent>
-            <Separator className="mt-12 mb-6" />
-            <footer className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+    <div className="min-h-screen">
+      <div className="container mx-auto max-w-3xl px-4 py-12">
+        <BackButton href="/" size="sm" className="mb-8">
+          ← Back to blog
+        </BackButton>
+        <article>
+          <MarkdownContent>{post.content}</MarkdownContent>
+          <Separator className="mt-12 mb-6" />
+          <footer className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              {formatDate(post.createdAt)}
+            </span>
+            {wasUpdated && (
               <span className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
-                {formatDate(post.createdAt)}
+                <Clock className="h-4 w-4" />
+                Updated {formatDate(post.updatedAt)}
               </span>
-              {wasUpdated && (
-                <span className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
-                  Updated {formatDate(post.updatedAt)}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <FileText className="h-4 w-4" />
-                {getWordCount(post.content)} words
-              </span>
-            </footer>
-          </article>
-        </div>
+            )}
+            <span className="flex items-center gap-1.5">
+              <FileText className="h-4 w-4" />
+              {getWordCount(post.content)} words
+            </span>
+          </footer>
+        </article>
       </div>
-    </ViewTransition>
+    </div>
   );
 }

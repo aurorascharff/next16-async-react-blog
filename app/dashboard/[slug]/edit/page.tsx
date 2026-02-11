@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { updatePost } from '@/data/actions/post';
@@ -14,9 +13,7 @@ export default async function EditPostPage({ params }: PageProps<'/dashboard/[sl
         <CardTitle className="text-2xl">Edit Post</CardTitle>
       </CardHeader>
       <CardContent>
-        <Suspense fallback={<EditPostPageSkeleton />}>
-          <EditPostContent slug={slug} />
-        </Suspense>
+        <EditPostContent slug={slug} />
       </CardContent>
     </Card>
   );

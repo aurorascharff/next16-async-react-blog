@@ -1,6 +1,5 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
 import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -14,17 +13,11 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
   const { slug } = await params;
 
   return (
-    <ViewTransition name={`post-card-${slug}`} share="morph">
-      <article>
-        <Suspense fallback={<PostHeaderSkeleton />}>
-          <PostHeader slug={slug} />
-        </Suspense>
-        <Separator className="my-6" />
-        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-          <PostContent slug={slug} />
-        </Suspense>
-      </article>
-    </ViewTransition>
+    <article>
+      <PostHeader slug={slug} />
+      <Separator className="my-6" />
+      <PostContent slug={slug} />
+    </article>
   );
 }
 
