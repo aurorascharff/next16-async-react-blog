@@ -18,13 +18,19 @@ async function main() {
   // Clear existing data
   await prisma.post.deleteMany();
 
-  // Seed posts - "Designing the In-Between States in React"
+  // Seed posts - "Async React Patterns with Next.js 16"
   await prisma.post.createMany({
     data: [
       {
         content: `# The In-Between States
 
 Have you ever used an app and thought "this feels slow" or "this is janky" without knowing exactly why? The answer often lies in the **in-between moments**—loading screens, error states, and the gaps between user action and final render.
+
+## The Coordination Problem
+
+Building async UIs has always been difficult. Navigation hides content behind spinners, search boxes create race conditions, and form submissions require manual state management for every loading flag. Every async operation forces you to orchestrate the coordination manually.
+
+This isn't a performance problem—it's a **coordination problem**. And React's primitives now solve it declaratively.
 
 ## What Happens Between?
 
@@ -51,30 +57,24 @@ The in-between states determine how polished your app feels:
 | Full-page spinners | Localized loading indicators |
 | Generic errors | Contextual error recovery |
 
-## The Core Web Vitals Connection
-
-These patterns directly impact measurable performance:
-
-- **CLS (Cumulative Layout Shift)** — Skeletons prevent content jumping
-- **FCP (First Contentful Paint)** — Streaming shows content progressively
-- **INP (Interaction to Next Paint)** — Optimistic UI feels instant
-
 ## Not a DX Problem
 
 These are **UX problems**, which is why engineers often overlook them. We focus on making things work, not on what users see while they wait.
 
-Async React provides the blueprint to solve them systematically. The following posts explore each pattern with real examples from this app.`,
-        description: 'Why in-between states matter—loading, errors, and the impact on perceived performance.',
+The following posts explore each pattern with real examples from this app—showing how to coordinate loading, mutations, and navigation seamlessly.`,
+        description: 'Why in-between states matter and how to solve the coordination problem.',
         published: true,
         slug: 'in-between-states',
         title: 'The In-Between States',
       },
       {
-        content: `# React Server Components
+        content: `# When to Use Client Components
 
-Server Components render on the server, can be \`async\`, and fetch data directly. This is the foundation for handling in-between states—Server Components determine **what** loads, while Suspense determines **how** users experience the loading.
+Server Components fetch data. Client Components handle interactions. The split determines where in-between states live.
 
-## Example: BlogList
+**Server Components** determine *what* loads—they're async, fetch data directly, and render on the server. **Client Components** handle *how users interact* during mutations—optimistic updates, pending indicators, form state.
+
+## Server Components: Data Fetching
 
 From \`app/page.tsx\`:
 
@@ -85,9 +85,11 @@ async function BlogList() {
 }
 \`\`\`
 
-## When to Use Client Components
+No loading state management needed—Suspense handles that declaratively.
 
-Add \`'use client'\` when you need interactivity—event handlers or React hooks. Client Components are where you handle the **mutation** in-between states: optimistic updates, pending indicators, form state.
+## Client Components: Interactions
+
+Add \`'use client'\` when you need hooks or event handlers. This is where you coordinate mutation feedback.
 
 From \`app/dashboard/_components/ArchiveButton.tsx\`:
 
@@ -102,12 +104,8 @@ export function ArchiveButton({ slug, archived }) {
     <form
       data-pending={isPending || undefined}
       action={async () => {
-        let newValue;
-        setOptimisticArchived(current => {
-          newValue = !current;
-          return newValue;
-        });
-        await toggleArchivePost(slug, newValue);
+        setOptimisticArchived(!optimisticArchived);
+        await toggleArchivePost(slug, !optimisticArchived);
       }}
     >
       <button>{optimisticArchived ? 'Unarchive' : 'Archive'}</button>
@@ -116,70 +114,68 @@ export function ArchiveButton({ slug, archived }) {
 }
 \`\`\`
 
-## Propagating Pending State with CSS :has()
+## Propagating State with CSS :has()
 
-Here's where it gets interesting for in-between states. The \`data-pending\` attribute exposes loading state to CSS, letting Server Components style based on Client Component state:
+The \`data-pending\` attribute bridges Client and Server Component styling. Parent Server Components can react to child pending states:
 
 \`\`\`tsx
 // PostList.tsx (Server Component)
-export async function PostList({ searchParams }) {
-  const posts = await getPosts(validFilter);
-
-  return posts.map(post => (
-    <Card className="has-data-pending:animate-pulse has-data-pending:bg-muted/70">
-      <ArchiveButton slug={post.slug} archived={post.archived} />
-    </Card>
-  ));
-}
+<Card className="has-data-pending:animate-pulse has-data-pending:bg-muted/70">
+  <ArchiveButton slug={post.slug} archived={post.archived} />
+</Card>
 \`\`\`
 
-The \`has-data-pending:\` variant (Tailwind's \`:has([data-pending])\`) lets the Card react to the button's pending state without becoming a Client Component.
+Tailwind's \`has-data-pending:\` maps to CSS \`:has([data-pending])\`. The Card pulses during the archive action—no Client Component needed.
 
-Keep Client Components at the leaves to maximize server rendering.`,
+## The Principle
+
+Keep Client Components at the leaves. Server Components handle layout and data; Client Components handle the interactive in-between states.`,
         description: 'Server vs Client Components, CSS :has() for parent styling, data-pending attribute pattern.',
         published: true,
         slug: 'react-server-components',
         title: 'When to Use Client Components',
       },
       {
-        content: `# Suspense and Streaming
+        content: `# Streaming with Suspense
 
-Suspense is how you **design** loading states. Instead of showing a blank screen or a full-page spinner, you declare exactly what users see while async content loads.
+Without Suspense, users see blank screens while data loads. With it, you **design** what they see—skeleton placeholders that indicate progress, not emptiness.
 
-## The Dashboard Pattern
+Each Suspense boundary is a design decision: "What should users see while this section loads?"
 
-Each Suspense boundary is a design decision: "What should users see while this section loads?" From \`app/dashboard/page.tsx\`:
+## Independent Streaming
+
+From \`app/dashboard/page.tsx\`:
 
 \`\`\`tsx
 export default function DashboardPage({ searchParams }) {
   return (
-    <div>
+    <>
       <Suspense fallback={<PostTabsSkeleton />}>
         <PostTabs />
       </Suspense>
       <Suspense fallback={<PostListSkeleton />}>
         <PostList searchParams={searchParams} />
       </Suspense>
-    </div>
+    </>
   );
 }
 \`\`\`
 
-Separate boundaries let each section stream independently. The tabs can render before the post list—users see progress, not a blank page.
+Separate boundaries let sections stream independently. Tabs render before posts—users see progress instead of a blank page.
 
-## Where to Place Boundaries
+## Boundary Placement
 
-**Ask your designer**: "How should this load?" The answer determines boundary placement:
+Ask: "How should this load?" The answer determines where boundaries go:
 
-| Scenario | Boundary Strategy |
-|----------|-------------------|
+| Scenario | Strategy |
+|----------|----------|
 | Related content | Single boundary, load together |
 | Independent sections | Separate boundaries, stream in parallel |
-| Critical header | Outside boundary, always visible |
+| Critical UI (header, nav) | Outside boundaries, always visible |
 
 ## Co-locating Skeletons
 
-From \`app/dashboard/_components/PostList.tsx\`:
+Export skeletons alongside their components. From \`app/dashboard/_components/PostList.tsx\`:
 
 \`\`\`tsx
 export async function PostList({ searchParams }) {
@@ -201,12 +197,12 @@ export function PostListSkeleton() {
 }
 \`\`\`
 
-Export skeletons alongside their components to keep them in sync. When the layout changes, the skeleton is right there to update.
+When the layout changes, the skeleton is right there to update.
 
-## Suspense is Declarative UX
+## Transitions Keep Content Visible
 
-You're not just handling loading—you're **designing** it.`,
-        description: 'Streaming with Suspense boundaries, co-locating skeleton components with their data.',
+Suspense fallbacks appear on initial load. During navigation, wrapping updates in \`startTransition\` keeps existing content visible while new data loads—preventing the fallback from appearing again.`,
+        description: 'Streaming with Suspense boundaries, co-locating skeletons, transition behavior.',
         published: true,
         slug: 'suspense-and-streaming',
         title: 'Streaming with Suspense',
@@ -214,9 +210,11 @@ You're not just handling loading—you're **designing** it.`,
       {
         content: `# Server Functions
 
-Server Functions handle the **mutation** side of in-between states. When a user submits a form, what happens in that gap between click and result? Server Functions let you control validation, error handling, and how updates propagate.
+Forms are the classic in-between state challenge. User clicks submit—then what? A frozen button? A spinner? What if validation fails?
 
-## Example: createPost
+Server Functions (\`"use server"\`) handle the mutation lifecycle: validation, database writes, cache invalidation, and error recovery.
+
+## The Pattern
 
 From \`data/actions/post.ts\`:
 
@@ -224,7 +222,10 @@ From \`data/actions/post.ts\`:
 'use server';
 
 export async function createPost(formData: FormData): Promise<ActionResult> {
-  const rawData = { title: formData.get('title'), ... };
+  const rawData = {
+    title: formData.get('title') as string,
+    content: formData.get('content') as string,
+  };
 
   const result = postSchema.safeParse(rawData);
   if (!result.success) {
@@ -238,9 +239,9 @@ export async function createPost(formData: FormData): Promise<ActionResult> {
 }
 \`\`\`
 
-## Returning Errors for Form Recovery
+## Preserving Input on Errors
 
-The key to good form UX is preserving user input when validation fails:
+The worst form UX: validation fails and everything clears. Return submitted data so forms can repopulate:
 
 \`\`\`tsx
 export type ActionResult =
@@ -248,42 +249,35 @@ export type ActionResult =
   | { success: false; error: string; formData?: FormValues };
 \`\`\`
 
-Return submitted data on errors so forms can repopulate. Users shouldn't lose their work.
+Users shouldn't lose their work.
 
-## Cache Invalidation
+## Immediate Cache Updates
 
-After mutations, users need to see the result immediately:
+After mutations, users expect to see results immediately:
 
 \`\`\`tsx
-export async function updatePost(slug: string, formData: FormData) {
-  // ... validate and update
-  revalidateTag('posts', 'max');    // Invalidate the list
-  revalidateTag(\`post-\${slug}\`, 'max'); // Invalidate this post
-  refresh(); // Immediate update for current user
-}
+revalidateTag('posts', 'max');      // Stale-while-revalidate for other users
+revalidateTag(\`post-\${slug}\`, 'max'); // Invalidate specific post
+refresh();                           // Immediate update for current user
 \`\`\`
 
-The combination ensures immediate feedback while other users get stale-while-revalidate behavior.`,
-        description: 'Server Functions with "use server", Zod validation, returning errors, cache invalidation.',
+The combination of \`revalidateTag\` + \`refresh\` ensures the current user sees changes instantly while other users get efficient background revalidation.`,
+        description: 'Server Functions with validation, error recovery, and cache invalidation patterns.',
         published: true,
         slug: 'server-functions',
-        title: 'Server Functions with Zod',
+        title: 'Server Functions',
       },
       {
         content: `# useActionState
 
-One of the most frustrating in-between states: validation fails and **the form clears**. Users lose their work and have to start over.
+The worst form experience: submit, validation fails, and all your input disappears. \`useActionState\` prevents this by managing state across submissions.
 
-\`useActionState\` solves this by managing form state across submissions, preserving input after errors.
-
-## Example: PostForm
+## Preserving Input on Errors
 
 From \`app/dashboard/_components/PostForm.tsx\`:
 
 \`\`\`tsx
 'use client';
-
-import { useActionState } from 'react';
 
 export function PostForm({ action, defaultValues, redirectTo }) {
   const router = useRouter();
@@ -299,41 +293,50 @@ export function PostForm({ action, defaultValues, redirectTo }) {
 
   return (
     <form action={formAction}>
-      <input name="title" defaultValue={state.title} />
+      <Input name="title" defaultValue={state.title} />
+      <Textarea name="content" defaultValue={state.content} />
       <SubmitButton>Save</SubmitButton>
     </form>
   );
 }
 \`\`\`
 
-On error, the form data is returned so fields keep their values. The in-between state (validation failure) becomes recoverable instead of destructive.
+When validation fails, the Server Function returns \`formData\`. The hook updates \`state\`, inputs repopulate. Users can fix the issue and retry without retyping.
 
 ## Reusing for Create and Edit
 
-The same pattern works for both:
+One component handles both cases:
 
 \`\`\`tsx
 // Create - empty defaults
-<PostForm action={createPost} defaultValues={{ title: '' }} />
+<PostForm action={createPost} defaultValues={{ title: '', content: '' }} />
 
-// Edit - use .bind() to apply the slug
+// Edit - bind the slug, prefill with existing data
 <PostForm action={updatePost.bind(null, post.slug)} defaultValues={post} />
 \`\`\`
 
-Same component, different actions, consistent error recovery.`,
-        description: 'Preserve form input on validation errors, reuse forms for create and edit with .bind().',
+Same component, different actions, consistent error recovery.
+
+## The Flow
+
+1. User submits form
+2. \`formAction\` wraps the submission in a transition (automatic pending state)
+3. Server Function validates and returns \`{ success: false, formData }\` on error
+4. \`state\` updates with the returned data
+5. Form inputs repopulate via \`defaultValue={state.field}\``,
+        description: 'Preserve form input on validation errors, reuse forms for create and edit.',
         published: true,
         slug: 'useactionstate',
-        title: 'useActionState for Form Errors',
+        title: 'useActionState for Forms',
       },
       {
         content: `# useFormStatus
 
-**Localized feedback** is key to good in-between states. When a user clicks a submit button, the feedback should happen **in the button**, not as a full-page spinner.
+Feedback should be **localized**. When clicking a submit button, the indicator belongs in that button—not a full-page spinner somewhere else.
 
-\`useFormStatus\` provides the pending state of the nearest parent form—perfect for building reusable submit buttons.
+\`useFormStatus\` provides the pending state of the nearest parent form, enabling reusable submit buttons that handle their own loading state.
 
-## Example: SubmitButton
+## The SubmitButton Pattern
 
 From \`components/design/SubmitButton.tsx\`:
 
@@ -358,32 +361,34 @@ export function SubmitButton({ children }) {
 }
 \`\`\`
 
-## The Child Component Constraint
+Drop it in any form—no prop drilling, no manual state tracking.
 
-The hook only works in components that are **children** of the form:
+## The Child Constraint
+
+The hook must be called from a **child** of the form:
 
 \`\`\`tsx
-// ❌ Always returns pending: false
+// ❌ Won't work - hook is outside the form
 function Form() {
   const { pending } = useFormStatus();
   return <form>...</form>;
 }
 
-// ✅ Works - SubmitButton is a child of the form
+// ✅ Works - SubmitButton is inside the form
 <form action={formAction}>
   <SubmitButton>Save</SubmitButton>
 </form>
 \`\`\`
 
-React needs to track which form triggered the submission. By requiring the hook inside a form's children, React reliably determines the pending state for that specific form.
+React tracks which form triggered the submission. Calling the hook inside a form's children ensures it returns the correct pending state.
 
-## The UX Principle
+## The Principle
 
-**Feedback should be proportional to the scope of the action.** A button click gets button feedback. A page navigation might warrant more.`,
-        description: 'SubmitButton component pattern, why it must be a child of the form.',
+Feedback should match the scope of the action. Button click → button feedback. Navigation → page-level indicator. \`useFormStatus\` keeps form feedback where it belongs.`,
+        description: 'SubmitButton pattern, localized feedback, child component constraint.',
         published: true,
         slug: 'useformstatus',
-        title: 'useFormStatus in SubmitButton',
+        title: 'useFormStatus',
       },
       {
         content: `# useOptimistic
@@ -531,7 +536,9 @@ When updating a post, invalidate both its specific tag and the list tag.`,
       {
         content: `# View Transitions
 
-Route changes are a unique in-between state—the old page is leaving, the new one arriving. Without animation, this feels abrupt. **View Transitions** smooth the handoff, making navigation feel continuous.
+Route changes are a unique in-between state—the old page is leaving, the new one is arriving. Without animation, this handoff feels abrupt: content disappears, then reappears somewhere else. Users lose spatial context.
+
+**View Transitions** bridge this gap. They animate the change, showing users *where* content went and *where* new content came from. Navigation becomes continuous rather than fragmented.
 
 React's \`<ViewTransition>\` component wraps the browser's View Transitions API.
 
@@ -578,52 +585,81 @@ Uses the browser's native View Transitions API. In unsupported browsers, navigat
 
 Errors are an in-between state we hope users never see—but they will. Well-designed error boundaries provide **recovery paths** instead of dead ends.
 
-Next.js provides file conventions for handling errors automatically.
+Next.js provides file conventions for handling errors automatically. Design layer components keep the UX consistent.
 
-## error.tsx
+## The Design Layer
+
+From \`components/design/ErrorCard.tsx\`—a reusable card for page-level errors:
+
+\`\`\`tsx
+export function ErrorCard({ error, reset, title, description }: Props) {
+  return (
+    <Card className="text-center">
+      <CardHeader>
+        <AlertCircle className="text-destructive size-8" />
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description || error.message}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={reset}>Try again</Button>
+      </CardContent>
+    </Card>
+  );
+}
+\`\`\`
+
+From \`components/design/ErrorBoundary.tsx\`—for inline/localized errors:
+
+\`\`\`tsx
+<ErrorBoundary label="Failed to load posts" fullWidth>
+  <Suspense fallback={<PostListSkeleton />}>
+    <PostList searchParams={searchParams} />
+  </Suspense>
+</ErrorBoundary>
+\`\`\`
+
+## error.tsx Uses ErrorCard
 
 From \`app/dashboard/[slug]/error.tsx\`:
 
 \`\`\`tsx
 'use client';
 
-export default function PostError({ error, reset }) {
-  return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <p>{error.message}</p>
-      <button onClick={reset}>Try again</button>
-    </div>
-  );
+import { ErrorCard } from '@/components/design/ErrorCard';
+import { useTrackError } from '@/lib/useTrackError';
+
+export default function PostError({ error, reset }: Props) {
+  useTrackError(error);
+  return <ErrorCard error={error} reset={reset} description="..." />;
 }
 \`\`\`
 
-Error boundaries must be Client Components. The \`reset\` function re-renders the boundary's contents.
+The \`useTrackError\` hook handles logging separately—keeping ErrorCard pure presentation.
 
-## not-found.tsx
+## not-found.tsx Uses StatusCard
 
 From \`app/dashboard/[slug]/not-found.tsx\`:
 
 \`\`\`tsx
+import { StatusCard } from '@/components/design/StatusCard';
+
 export default function PostNotFound() {
   return (
-    <div>
-      <h2>Post Not Found</h2>
-      <Link href="/dashboard">Back to posts</Link>
-    </div>
+    <StatusCard
+      icon={FileQuestion}
+      title="Post Not Found"
+      description="The post you're looking for doesn't exist."
+    >
+      <BackButton href="/dashboard">Back to posts</BackButton>
+    </StatusCard>
   );
 }
 \`\`\`
 
-Trigger it with \`notFound()\` in queries:
+## The Pattern
 
-\`\`\`tsx
-const post = await prisma.post.findUnique({ where: { slug } });
-if (!post) notFound();
-\`\`\`
-
-Errors bubble up to the nearest boundary. Create \`error.tsx\` at different route levels for granular handling.`,
-        description: 'error.tsx with reset(), not-found.tsx with notFound(), error boundary placement.',
+Design components own the visual treatment. Route files become thin wrappers that pass context-specific props.`,
+        description: 'ErrorCard, ErrorBoundary, StatusCard design components for error UX.',
         published: true,
         slug: 'error-handling',
         title: 'Error Handling Patterns',
@@ -673,9 +709,11 @@ New slugs not in \`generateStaticParams\` are generated on-demand and cached. Us
       {
         content: `# URL State with searchParams
 
-Filters and sorts affect **what data is loading**—change the URL, trigger a new fetch, show a loading state. URL-driven state makes these transitions predictable and shareable.
+When filters change, data must reload. The question is: **where does the loading state appear?**
 
-URL search parameters provide shareable, bookmarkable state that persists across refreshes.
+URL-driven state creates clear causality: clicking a tab → URL changes → Suspense boundary shows skeleton → new data arrives. Users understand *why* they're waiting because the action (tab click) and the result (new content) are visibly connected.
+
+This pattern also makes state shareable and bookmarkable—\`/dashboard?filter=drafts&sort=title\` shows exactly that view.
 
 ## Reading searchParams
 
@@ -766,7 +804,9 @@ URL state works with browser history and makes pages shareable—\`/dashboard?fi
       {
         content: `# React cache()
 
-Duplicate requests mean duplicate loading time. React's \`cache()\` deduplicates requests within a single render pass—call the same function from multiple components, get one network request.
+Every duplicate request extends the loading state. If three components fetch the same post, users wait for three round trips.
+
+React's \`cache()\` solves this—it deduplicates requests within a single render pass. Call the same function from multiple components, get one network request. Shorter loading time means better in-between states.
 
 ## Example: getPostBySlug
 
@@ -860,9 +900,11 @@ In the delete example, \`router.push\` handles this internally.`,
       {
         content: `# Skeleton Loading
 
-**Skeletons communicate that content is coming.** They reduce perceived loading time by establishing layout before data arrives—no jarring content shifts when the real content loads.
+Loading spinners say "something is happening." **Skeletons say "this is what's coming."**
 
-Skeletons are placeholder UI that mimics content shape.
+By showing the shape of content before it arrives, skeletons accomplish two things: they reduce *perceived* loading time (progress feels faster when you can see the destination), and they prevent layout shift (content slots into the space already reserved for it).
+
+The key is matching the skeleton to the actual layout.
 
 ## Example: PostListSkeleton
 
@@ -929,16 +971,20 @@ export default function DashboardPage() {
 
 ## The unauthorized.tsx File
 
-From \`app/dashboard/unauthorized.tsx\`:
+From \`app/dashboard/unauthorized.tsx\`—uses the StatusCard design component:
 
 \`\`\`tsx
+import { StatusCard } from '@/components/design/StatusCard';
+
 export default function Unauthorized() {
   return (
-    <Card className="text-center">
-      <CardTitle>Unauthorized</CardTitle>
-      <CardDescription>You need to be logged in.</CardDescription>
+    <StatusCard
+      icon={LockKeyhole}
+      title="Unauthorized"
+      description="You need to be logged in to access the dashboard."
+    >
       <Link href="/">Back to Blog</Link>
-    </Card>
+    </StatusCard>
   );
 }
 \`\`\`
@@ -953,7 +999,7 @@ export async function deletePost(slug: string) {
   await prisma.post.delete({ where: { slug } });
 }
 \`\`\``,
-        description: 'unauthorized() in Server Components, unauthorized.tsx files, protecting Server Functions.',
+        description: 'unauthorized() in Server Components, StatusCard for auth UI, protecting Server Functions.',
         published: true,
         slug: 'authorization',
         title: 'Authorization with unauthorized()',

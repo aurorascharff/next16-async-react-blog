@@ -20,4 +20,3 @@ export function isAuthorized(): boolean {
 export function canManagePosts(): boolean {
   return isAuthenticated() && isAuthorized();
 }
-
