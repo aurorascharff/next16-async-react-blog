@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { unauthorized } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
+import { ErrorBoundary } from '@/components/design/ErrorBoundary';
 
 import { buttonVariants } from '@/components/ui/button';
 import { canManagePosts } from '@/data/queries/auth';
-import { PostList } from './_components/PostList';
-import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
-import { SortButton, SortButtonSkeleton } from './_components/SortButton';
+import { PostList, PostListSkeleton } from './_components/PostList';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
   if (!canManagePosts()) {
@@ -29,14 +28,19 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
               Create Post
             </Link>
           </div>
-        </div>
-        <div className="mb-6 flex items-center justify-between">
-          <Suspense fallback={<PostTabsSkeleton />}>
-            <PostTabs />
-          </Suspense>
-          <Suspense fallback={<SortButtonSkeleton />}>
-            <SortButton />
-          </Suspense>
+          <ErrorBoundary label="Failed to load posts" fullWidth>
+            <Suspense
+              fallback={
+                <ViewTransition exit="slide-down">
+                  <PostListSkeleton />
+                </ViewTransition>
+              }
+            >
+              <ViewTransition enter="slide-up" exit="slide-down">
+                <PostList searchParams={searchParams} />
+              </ViewTransition>
+            </Suspense>
+          </ErrorBoundary>
         </div>
         <PostList searchParams={searchParams} />
       </div>

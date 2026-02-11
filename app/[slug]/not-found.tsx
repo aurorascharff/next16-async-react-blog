@@ -1,7 +1,8 @@
+import { FileQuestion } from 'lucide-react';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
+import { StatusCard } from '@/components/design/StatusCard';
 import { buttonVariants } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function PostNotFound() {
   return (
@@ -10,19 +11,15 @@ export default function PostNotFound() {
         <BackButton href="/" size="sm" className="mb-8">
           ← Back to blog
         </BackButton>
-        <Card className="text-center">
-          <CardHeader>
-            <CardTitle className="text-2xl">Post Not Found</CardTitle>
-            <CardDescription className="text-base">
-              The post you&apos;re looking for doesn&apos;t exist or has been deleted.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link href="/" className={buttonVariants({ variant: 'default' })}>
-              Back to blog
-            </Link>
-          </CardContent>
-        </Card>
+        <StatusCard
+          icon={FileQuestion}
+          title="Post Not Found"
+          description="The post you're looking for doesn't exist or has been deleted."
+        >
+          <Link href="/" className={buttonVariants({ variant: 'default' })}>
+            Back to blog
+          </Link>
+        </StatusCard>
       </div>
     </div>
   );
