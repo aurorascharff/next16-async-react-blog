@@ -139,7 +139,7 @@ Tailwind's \`has-data-pending:\` variant maps to CSS \`:has([data-pending])\`. T
 
 Keep Client Components at the leaves of your component tree:
 
-\`\`\`
+\`\`\`text
 ServerComponent (layout, data fetching)
 ├── ServerComponent (more layout)
 │   └── ClientComponent (button with pending state)
