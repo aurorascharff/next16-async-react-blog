@@ -1,4 +1,7 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { startTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
@@ -11,9 +14,18 @@ type Props = VariantProps<typeof buttonVariants> & {
 };
 
 export function BackButton({ variant = 'ghost', size, className, href, children = '← Back' }: Props) {
+  const router = useRouter();
+
   return (
-    <Link href={href} className={cn(buttonVariants({ size, variant }), className)}>
+    <button
+      onClick={() => {
+        startTransition(() => {
+          router.back();
+        });
+      }}
+      className={cn(buttonVariants({ size, variant }), className)}
+    >
       {children}
-    </Link>
+    </button>
   );
 }
