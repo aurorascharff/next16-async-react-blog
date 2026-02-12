@@ -611,9 +611,10 @@ export async function createPost(formData: FormData) {
 | Function | Purpose |
 |----------|---------|
 | \`revalidateTag(tag, 'max')\` | Marks cache stale, triggers background revalidation |
+| \`updateTag(tag)\` | Marks cache stale, revalidates immediately (blocking) |
 | \`refresh()\` | Forces immediate client re-render with fresh data |
 
-The \`'max'\` profile serves stale content while revalidating—other users get fast responses while fresh data generates.
+The \`'max'\` profile serves stale content while revalidating—other users get fast responses while fresh data generates. Use \`updateTag\` when you need the mutation to block until fresh data is ready.
 
 ## Granular Cache Tags
 
@@ -1318,24 +1319,6 @@ export default function Unauthorized() {
 }
 \`\`\`
 
-## In Server Functions
-
-Server Functions should throw errors for unauthorized access—these get caught by error boundaries:
-
-\`\`\`tsx
-'use server';
-
-export async function deletePost(slug: string) {
-  if (!canManagePosts()) {
-    throw new Error('Unauthorized');
-  }
-  
-  await prisma.post.delete({ where: { slug } });
-  revalidateTag('posts', 'max');
-  refresh();
-}
-\`\`\`
-
 ## unauthorized() vs forbidden()
 
 | Function | HTTP Status | Use When |
@@ -1344,7 +1327,7 @@ export async function deletePost(slug: string) {
 | \`forbidden()\` | 403 | User authenticated but lacks permission |
 
 Both render their respective \`.tsx\` files and stop execution.`,
-        description: 'unauthorized() in Server Components, throw in Server Functions, StatusCard UI.',
+        description: 'unauthorized() in Server Components and queries, StatusCard UI.',
         published: true,
         slug: 'authorization',
         title: 'Authorization with unauthorized()',
