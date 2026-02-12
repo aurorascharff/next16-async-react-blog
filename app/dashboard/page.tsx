@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Suspense, ViewTransition } from 'react';
 import { ErrorBoundary } from '@/components/design/ErrorBoundary';
-import { SlideRightTransition } from '@/components/ui/animations';
+import { SlideLeftTransition } from '@/components/ui/animations';
 import { buttonVariants } from '@/components/ui/button';
 import { PostList, PostListSkeleton } from './_components/PostList';
 import { PostTabsSkeleton, PostTabs } from './_components/PostTabs';
@@ -9,7 +9,7 @@ import { SortButtonSkeleton, SortButton } from './_components/SortButton';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
   return (
-    <SlideRightTransition>
+    <SlideLeftTransition>
       <div className="bg-muted/20 min-h-screen dark:bg-transparent">
         <div className="container mx-auto max-w-4xl px-4 py-16">
           <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -49,6 +49,6 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
           </ErrorBoundary>
         </div>
       </div>
-    </SlideRightTransition>
+    </SlideLeftTransition>
   );
 }

@@ -1,6 +1,4 @@
-import { SlideLeftTransition } from '@/components/ui/animations';
 import { getPosts } from '@/data/queries/post';
-
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map(post => {
@@ -10,10 +8,8 @@ export async function generateStaticParams() {
 
 export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'>) {
   return (
-    <SlideLeftTransition>
-      <div className="bg-muted/30 min-h-screen">
-        <div className="container mx-auto max-w-4xl px-4 py-12">{children}</div>
-      </div>
-    </SlideLeftTransition>
+    <div className="bg-muted/30 min-h-screen">
+      <div className="container mx-auto max-w-4xl px-4 py-12">{children}</div>
+    </div>
   );
 }

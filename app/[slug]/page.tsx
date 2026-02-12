@@ -1,7 +1,7 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
-import { SlideLeftTransition } from '@/components/ui/animations';
+import { SlideRightTransition } from '@/components/ui/animations';
 import { Separator } from '@/components/ui/separator';
 import { getPublishedPostBySlug, getPublishedPosts } from '@/data/queries/post';
 import { formatDate, getWordCount } from '@/lib/utils';
@@ -31,7 +31,7 @@ export default async function BlogPostPage({ params }: PageProps<'/[slug]'>) {
   const wasUpdated = post.updatedAt > post.createdAt;
 
   return (
-    <SlideLeftTransition>
+    <SlideRightTransition>
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
           <BackButton href="/" size="sm" className="mb-8">
@@ -59,6 +59,6 @@ export default async function BlogPostPage({ params }: PageProps<'/[slug]'>) {
           </article>
         </div>
       </div>
-    </SlideLeftTransition>
+    </SlideRightTransition>
   );
 }

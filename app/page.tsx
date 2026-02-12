@@ -1,6 +1,6 @@
 import { Github } from 'lucide-react';
 import Link from 'next/link';
-import { SlideRightTransition } from '@/components/ui/animations';
+import { SlideLeftTransition } from '@/components/ui/animations';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { canManagePosts } from '@/data/queries/auth';
@@ -11,7 +11,7 @@ export default function HomePage() {
   const showDashboard = canManagePosts();
 
   return (
-    <SlideRightTransition>
+    <SlideLeftTransition>
       <div className="min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-16">
           <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -39,7 +39,7 @@ export default function HomePage() {
           <BlogList />
         </div>
       </div>
-    </SlideRightTransition>
+    </SlideLeftTransition>
   );
 }
 
