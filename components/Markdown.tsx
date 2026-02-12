@@ -141,14 +141,14 @@ export function MarkdownContent({ children }: Props) {
               </div>
             );
           },
-          thead({ children }) {
-            return <thead className="bg-muted/50 border-b border-border font-medium">{children}</thead>;
+          td({ children }) {
+            return <td className="border-border/50 border-b px-4 py-3">{children}</td>;
           },
           th({ children }) {
             return <th className="px-4 py-3 font-semibold">{children}</th>;
           },
-          td({ children }) {
-            return <td className="border-b border-border/50 px-4 py-3">{children}</td>;
+          thead({ children }) {
+            return <thead className="bg-muted/50 border-border border-b font-medium">{children}</thead>;
           },
         }}
       >
