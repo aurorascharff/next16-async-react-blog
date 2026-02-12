@@ -100,6 +100,11 @@ export async function updatePost(slug: string, formData: FormData): Promise<Acti
     return { error: 'Unauthorized', success: false };
   }
 
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (post?.seed) {
+    return { error: 'Seed posts cannot be edited', success: false };
+  }
+
   const rawData = {
     content: (formData.get('content') as string) || '',
     description: (formData.get('description') as string) || '',
@@ -132,6 +137,11 @@ export async function deletePost(slug: string): Promise<ActionResult> {
     return { error: 'Unauthorized', success: false };
   }
 
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (post?.seed) {
+    return { error: 'Seed posts cannot be deleted', success: false };
+  }
+
   await slow();
   await prisma.post.delete({
     where: { slug },
@@ -146,6 +156,11 @@ export async function deletePost(slug: string): Promise<ActionResult> {
 export async function toggleArchivePost(slug: string, archived: boolean): Promise<ActionResult> {
   if (!canManagePosts()) {
     return { error: 'Unauthorized', success: false };
+  }
+
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (post?.seed) {
+    return { error: 'Seed posts cannot be archived', success: false };
   }
 
   await slow();

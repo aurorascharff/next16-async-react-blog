@@ -1,6 +1,7 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense, ViewTransition } from 'react';
+import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -16,6 +17,9 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
   return (
     <ViewTransition name={`post-card-${slug}`} share="morph" default="none">
       <article>
+        <div className="mb-6">
+          <BackButton href="/dashboard" />
+        </div>
         <Suspense
           fallback={
             <ViewTransition exit="slide-down">
