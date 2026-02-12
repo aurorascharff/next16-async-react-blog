@@ -878,6 +878,7 @@ const [state, formAction] = useActionState(async (prevState, formData) => {
 \`\`\`
 
 The key insight: **error boundaries handle unexpected failures** (crashes, network errors). **Toasts handle expected outcomes** (validation errors, success confirmations). Use both together—error boundaries catch what you didn't anticipate, toasts communicate what you did.`,
+        createdAt: new Date('2025-10-19T10:00:00Z'),
         description: 'ErrorCard for page errors, ErrorBoundary for inline, StatusCard for 404/expected states.',
         published: true,
         seed: true,
