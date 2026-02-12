@@ -1,21 +1,28 @@
+import { BackButton } from '@/components/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { updatePost } from '@/data/actions/post';
 import { getPostBySlug } from '@/data/queries/post';
 import { PostForm } from '../../_components/PostForm';
+import type { Route } from 'next';
 
 export default async function EditPostPage({ params }: PageProps<'/dashboard/[slug]/edit'>) {
   const { slug } = await params;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">Edit Post</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <EditPostContent slug={slug} />
-      </CardContent>
-    </Card>
+    <>
+      <div className="mb-6">
+        <BackButton href={`/dashboard/${slug}` as Route} />
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Edit Post</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EditPostContent slug={slug} />
+        </CardContent>
+      </Card>
+    </>
   );
 }
 

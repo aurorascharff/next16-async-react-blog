@@ -65,6 +65,7 @@ The following posts explore each pattern with real examples from this app—show
         createdAt: new Date('2025-11-06T10:00:00Z'),
         description: 'Why in-between states matter and how to solve the coordination problem.',
         published: true,
+        seed: true,
         slug: 'in-between-states',
         title: 'The In-Between States',
       },
@@ -150,6 +151,7 @@ Server Components handle layout and data; Client Components handle interactive i
         createdAt: new Date('2025-11-04T10:00:00Z'),
         description: 'Server vs Client Components, CSS :has() for parent styling, leaf principle.',
         published: true,
+        seed: true,
         slug: 'react-server-components',
         title: 'When to Use Client Components',
       },
@@ -227,6 +229,7 @@ This is why filtering and sorting feel instant even though data is refetching—
         createdAt: new Date('2025-11-02T10:00:00Z'),
         description: 'Independent streaming, boundary placement strategy, transitions preserve content.',
         published: true,
+        seed: true,
         slug: 'suspense-and-streaming',
         title: 'Streaming with Suspense',
       },
@@ -312,6 +315,7 @@ This ensures the post list updates and any cached detail pages for that specific
         createdAt: new Date('2025-10-31T10:00:00Z'),
         description: 'Server Functions with Zod validation, typed results, granular cache invalidation.',
         published: true,
+        seed: true,
         slug: 'server-functions',
         title: 'Server Functions',
       },
@@ -400,6 +404,7 @@ Place error messages near the relevant field or at the form level—wherever mak
         createdAt: new Date('2025-10-29T10:00:00Z'),
         description: 'Form state preservation with useActionState, defaultValue pattern, create/edit reuse.',
         published: true,
+        seed: true,
         slug: 'useactionstate',
         title: 'useActionState for Forms',
       },
@@ -480,6 +485,7 @@ The principle: button click → button feedback. Keep pending indicators close t
         createdAt: new Date('2025-10-27T10:00:00Z'),
         description: 'SubmitButton pattern, child component constraint, localized form feedback.',
         published: true,
+        seed: true,
         slug: 'useformstatus',
         title: 'useFormStatus',
       },
@@ -559,6 +565,7 @@ Avoid for actions that need validation feedback or have meaningful failure modes
         createdAt: new Date('2025-10-25T10:00:00Z'),
         description: 'Instant feedback with useOptimistic, derived pending state, data-pending for parent styling.',
         published: true,
+        seed: true,
         slug: 'useoptimistic',
         title: 'useOptimistic for Instant Feedback',
       },
@@ -654,6 +661,7 @@ To maximize cacheable content, push dynamic data access as deep as possible in t
         createdAt: new Date('2025-10-23T10:00:00Z'),
         description: '"use cache" with cacheTag, revalidateTag + refresh() for invalidation, granular tags.',
         published: true,
+        seed: true,
         slug: 'use-cache-directive',
         title: 'Caching with use cache',
       },
@@ -733,6 +741,7 @@ View Transitions use the native View Transitions API. In unsupported browsers, n
         createdAt: new Date('2025-10-21T10:00:00Z'),
         description: 'Page-level transitions, shared element morphing, directional navigation.',
         published: true,
+        seed: true,
         slug: 'view-transitions',
         title: 'View Transitions API',
       },
@@ -843,10 +852,35 @@ export default function NotFound() {
 }
 \`\`\`
 
-The pattern: design components own visuals and recovery UX; route files compose them with minimal logic.`,
-        createdAt: new Date('2025-10-19T10:00:00Z'),
+The pattern: design components own visuals and recovery UX; route files compose them with minimal logic.
+
+## Toasts for Action Feedback
+
+Not all errors need a full error boundary. For Server Function results—form submissions, deletions, toggles—use toasts (Sonner) to give immediate feedback without disrupting the page:
+
+\`\`\`tsx
+'use client';
+
+import { useActionState } from 'react';
+import { toast } from 'sonner';
+
+const [state, formAction] = useActionState(async (prevState, formData) => {
+  const result = await action(formData);
+  if (result.success) {
+    toast.success('Post saved successfully');
+    router.push(redirectTo);
+    return prevState;
+  } else {
+    toast.error(result.error);
+    return result.formData ?? prevState;
+  }
+}, defaultValues);
+\`\`\`
+
+The key insight: **error boundaries handle unexpected failures** (crashes, network errors). **Toasts handle expected outcomes** (validation errors, success confirmations). Use both together—error boundaries catch what you didn't anticipate, toasts communicate what you did.`,
         description: 'ErrorCard for page errors, ErrorBoundary for inline, StatusCard for 404/expected states.',
         published: true,
+        seed: true,
         slug: 'error-handling',
         title: 'Error Handling Patterns',
       },
@@ -932,6 +966,7 @@ Pages that read \`searchParams\` or need user-specific data should remain dynami
         createdAt: new Date('2025-10-17T10:00:00Z'),
         description: 'Pre-render dynamic routes, generateMetadata for SEO, on-demand generation.',
         published: true,
+        seed: true,
         slug: 'generatestaticparams',
         title: 'generateStaticParams',
       },
@@ -1028,6 +1063,7 @@ For filter, sort, pagination, and view modes—use URLs. For ephemeral UI state 
         createdAt: new Date('2025-10-15T10:00:00Z'),
         description: 'searchParams for shareable state, Zod validation, optimistic URL updates.',
         published: true,
+        seed: true,
         slug: 'url-state-searchparams',
         title: 'URL State with searchParams',
       },
@@ -1120,6 +1156,7 @@ The function must return a promise, and React uses the arguments to determine ca
         createdAt: new Date('2025-10-13T10:00:00Z'),
         description: 'Request deduplication with cache(), combining with "use cache" directive.',
         published: true,
+        seed: true,
         slug: 'react-cache',
         title: 'cache() for Deduplication',
       },
@@ -1191,6 +1228,7 @@ This ensures React batches both the action completion and the navigation correct
         createdAt: new Date('2025-10-11T10:00:00Z'),
         description: 'isPending for destructive actions, comparison with useOptimistic, keeping content visible.',
         published: true,
+        seed: true,
         slug: 'usetransition',
         title: 'useTransition for Pending UI',
       },
@@ -1276,6 +1314,7 @@ Use subtle animation (\`animate-pulse\`) to indicate loading, but keep it gentle
         createdAt: new Date('2025-10-09T10:00:00Z'),
         description: 'Co-locate skeletons with components, match layout structure, prevent CLS.',
         published: true,
+        seed: true,
         slug: 'skeleton-loading',
         title: 'Skeleton Co-location Pattern',
       },
@@ -1345,6 +1384,7 @@ Both render their respective \`.tsx\` files and stop execution.`,
         createdAt: new Date('2025-10-07T10:00:00Z'),
         description: 'unauthorized() in Server Components and queries, StatusCard UI.',
         published: true,
+        seed: true,
         slug: 'authorization',
         title: 'Authorization with unauthorized()',
       },
@@ -1450,6 +1490,7 @@ Users see the header instantly while posts stream in.`,
         createdAt: new Date('2025-10-05T10:00:00Z'),
         description: 'cacheComponents default, what triggers dynamic rendering, push dynamic access deep.',
         published: true,
+        seed: true,
         slug: 'static-vs-dynamic',
         title: 'Static vs Dynamic Rendering',
       },
@@ -1551,6 +1592,7 @@ Design components own their in-between states. Parents pass what should happen; 
         createdAt: new Date('2025-10-03T10:00:00Z'),
         description: 'Action props for reusable components, encapsulate transitions and optimistic state.',
         published: true,
+        seed: true,
         slug: 'action-prop-pattern',
         title: 'The Action Prop Pattern',
       },
@@ -1633,6 +1675,7 @@ Choose \`useLinkStatus\` for straightforward navigation feedback. Use \`useTrans
         createdAt: new Date('2025-10-01T10:00:00Z'),
         description: 'Link pending state with useLinkStatus, child component pattern, comparison with useTransition.',
         published: true,
+        seed: true,
         slug: 'uselinkstatus',
         title: 'useLinkStatus for Navigation',
       },
