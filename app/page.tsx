@@ -11,11 +11,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto max-w-4xl px-4 py-12">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container mx-auto max-w-4xl px-4 py-16">
+        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Next.js 16 Async React</h1>
-            <p className="text-muted-foreground mt-1">Cache components & in-between states</p>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">The In-Between States</h1>
+            <p className="text-muted-foreground mt-2 text-lg">Async React patterns with Next.js 16</p>
           </div>
           <div className="flex items-center gap-2">
             <a
