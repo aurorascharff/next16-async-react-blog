@@ -1,5 +1,4 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
-
 import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { SlideLeftTransition } from '@/components/ui/animations';

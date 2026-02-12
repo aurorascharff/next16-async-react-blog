@@ -26,7 +26,7 @@ export function PostTabs() {
 
 export function PostTabsSkeleton() {
   return (
-    <div className="flex gap-1">
+    <div className="flex flex-wrap gap-1">
       {tabs.map(tab => {
         return <Skeleton key={tab.value} className="h-9 w-20 rounded-md" />;
       })}
