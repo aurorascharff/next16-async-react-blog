@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { z } from 'zod';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPosts } from '@/data/queries/post';
@@ -49,11 +50,7 @@ export async function PostList({ searchParams }: Props) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <CardTitle className="text-xl">{post.title}</CardTitle>
-                      {!post.published && (
-                        <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-                          Draft
-                        </span>
-                      )}
+                      {!post.published && <Badge variant="warning">Draft</Badge>}
                     </div>
                     <ArchiveButton slug={post.slug} archived={post.archived} />
                   </div>

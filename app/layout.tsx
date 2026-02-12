@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   description:
-    'Async React patterns with Next.js 16 cacheComponents—caching, streaming, optimistic UI, transitions, and designing great UX in the in-between states.',
-  title: 'Next.js 16 Async React',
+    'The In-Between States: loading screens, errors, and pending states. Async React patterns with Next.js 16 for designing great UX in the moments between user action and final render.',
+  title: 'The In-Between States | Next.js 16',
 };
 
 export default function RootLayout({

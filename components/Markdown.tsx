@@ -1,5 +1,6 @@
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import remarkGfm from 'remark-gfm';
 
 // Light theme - minimal, monochromatic
 const themeLight = {
@@ -95,6 +96,7 @@ export function MarkdownContent({ children }: Props) {
   return (
     <div className="prose prose-neutral dark:prose-invert max-w-none">
       <Markdown
+        remarkPlugins={[remarkGfm]}
         components={{
           code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
@@ -131,6 +133,22 @@ export function MarkdownContent({ children }: Props) {
           },
           pre({ children }) {
             return <>{children}</>;
+          },
+          table({ children }) {
+            return (
+              <div className="my-4 overflow-x-auto">
+                <table className="w-full border-collapse text-left text-sm">{children}</table>
+              </div>
+            );
+          },
+          thead({ children }) {
+            return <thead className="bg-muted/50 border-b border-border font-medium">{children}</thead>;
+          },
+          th({ children }) {
+            return <th className="px-4 py-3 font-semibold">{children}</th>;
+          },
+          td({ children }) {
+            return <td className="border-b border-border/50 px-4 py-3">{children}</td>;
           },
         }}
       >
