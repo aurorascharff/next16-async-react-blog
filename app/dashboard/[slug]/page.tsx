@@ -20,9 +20,13 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
       <div className="mb-6">
         <BackButton href="/dashboard" />
       </div>
-      <PostHeader slug={slug} />
+      <Suspense fallback={<CenteredSpinner />}>
+        <PostHeader slug={slug} />
+      </Suspense>
       <Separator className="my-6" />
-      <PostContent slug={slug} />
+      <Suspense fallback={<CenteredSpinner />}>
+        <PostContent slug={slug} />
+      </Suspense>
     </article>
   );
 }
