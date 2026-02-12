@@ -1,15 +1,8 @@
 import Link from 'next/link';
-import { unauthorized } from 'next/navigation';
-
 import { buttonVariants } from '@/components/ui/button';
-import { canManagePosts } from '@/data/queries/auth';
 import { PostList } from './_components/PostList';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
-  if (!canManagePosts()) {
-    unauthorized();
-  }
-
   return (
     <div className="bg-muted/20 min-h-screen dark:bg-transparent">
       <div className="container mx-auto max-w-4xl px-4 py-16">

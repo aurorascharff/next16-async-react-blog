@@ -1,9 +1,9 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { useOptimistic, useTransition } from 'react';
 
 import { Tabs, TabsList as BaseTabsList, TabsTrigger, tabsListVariants } from '@/components/ui/tabs';
+import { Spinner } from '../ui/spinner';
 
 type Tab = {
   label: string;
@@ -51,7 +51,7 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className, ch
             );
           })}
         </BaseTabsList>
-        {isPending && <Loader2 className="text-muted-foreground size-4 animate-spin" />}
+        {isPending && <Spinner />}
       </div>
       {children}
     </Tabs>

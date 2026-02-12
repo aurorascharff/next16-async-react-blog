@@ -1,15 +1,19 @@
 import 'server-only';
 
 import { cacheTag } from 'next/cache';
-import { notFound } from 'next/navigation';
+import { notFound, unauthorized } from 'next/navigation';
 import { cache } from 'react';
 import { prisma } from '@/db';
 import { slow } from '@/lib/utils';
+import { canManagePosts } from './auth';
 
 export const getPosts = cache(
   async (filter?: 'all' | 'published' | 'drafts' | 'archived', sort?: 'newest' | 'oldest' | 'title') => {
-    await slow();
+    if (!canManagePosts()) {
+      unauthorized();
+    }
 
+    await slow();
     const where =
       filter === 'archived'
         ? { archived: true }
@@ -34,6 +38,10 @@ export const getPosts = cache(
 );
 
 export const getPostBySlug = cache(async (slug: string) => {
+  if (!canManagePosts()) {
+    unauthorized();
+  }
+
   await slow();
   const post = await prisma.post.findUnique({
     where: { slug },
@@ -49,7 +57,7 @@ export const getPublishedPosts = cache(async () => {
   cacheTag('posts');
 
   await slow();
-  return await prisma.post.findMany({
+  return prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
     where: { archived: false, published: true },
   });

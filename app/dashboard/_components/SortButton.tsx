@@ -1,9 +1,10 @@
 'use client';
 
 import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
-import Link from 'next/link';
+import Link, { useLinkStatus } from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 const sortOptions = [
@@ -38,4 +39,16 @@ export function SortButton() {
 
 export function SortButtonSkeleton() {
   return <div className="bg-muted h-9 w-9 animate-pulse rounded-md sm:w-24" />;
+}
+
+// eslint-disable-next-line autofix/no-unused-vars
+function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <>
+      {pending ? <Spinner /> : <Icon className="size-4" />}
+      <span className="hidden sm:inline">{label}</span>
+    </>
+  );
 }
