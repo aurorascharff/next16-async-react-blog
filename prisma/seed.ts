@@ -62,6 +62,7 @@ The in-between states determine how polished your app feels:
 These are **UX problems**, which is why engineers often overlook them. We focus on making things work, not on what users see while they wait.
 
 The following posts explore each pattern with real examples from this app—showing how to coordinate loading, mutations, and navigation seamlessly.`,
+        createdAt: new Date('2025-11-06T10:00:00Z'),
         description: 'Why in-between states matter and how to solve the coordination problem.',
         published: true,
         slug: 'in-between-states',
@@ -146,6 +147,7 @@ ServerComponent (layout, data fetching)
 \`\`\`
 
 Server Components handle layout and data; Client Components handle interactive in-between states. This maximizes server work and minimizes client JavaScript.`,
+        createdAt: new Date('2025-11-04T10:00:00Z'),
         description: 'Server vs Client Components, CSS :has() for parent styling, leaf principle.',
         published: true,
         slug: 'react-server-components',
@@ -222,6 +224,7 @@ Here's a crucial distinction: Suspense fallbacks appear on **initial load**. Dur
 \`\`\`
 
 This is why filtering and sorting feel instant even though data is refetching—the skeleton only shows on first load. For subsequent interactions, the current list stays visible with a subtle pending state.`,
+        createdAt: new Date('2025-11-02T10:00:00Z'),
         description: 'Independent streaming, boundary placement strategy, transitions preserve content.',
         published: true,
         slug: 'suspense-and-streaming',
@@ -306,6 +309,7 @@ refresh();
 \`\`\`
 
 This ensures the post list updates and any cached detail pages for that specific post are also refreshed.`,
+        createdAt: new Date('2025-10-31T10:00:00Z'),
         description: 'Server Functions with Zod validation, typed results, granular cache invalidation.',
         published: true,
         slug: 'server-functions',
@@ -393,6 +397,7 @@ if (!result.success) {
 \`\`\`
 
 Place error messages near the relevant field or at the form level—wherever makes sense for your UI.`,
+        createdAt: new Date('2025-10-29T10:00:00Z'),
         description: 'Form state preservation with useActionState, defaultValue pattern, create/edit reuse.',
         published: true,
         slug: 'useactionstate',
@@ -472,6 +477,7 @@ function FormProgress() {
 \`\`\`
 
 The principle: button click → button feedback. Keep pending indicators close to where users took action.`,
+        createdAt: new Date('2025-10-27T10:00:00Z'),
         description: 'SubmitButton pattern, child component constraint, localized form feedback.',
         published: true,
         slug: 'useformstatus',
@@ -550,6 +556,7 @@ Best for high success rate, reversible actions:
 - Settings updates
 
 Avoid for actions that need validation feedback or have meaningful failure modes—use \`useTransition\` instead so you can handle errors before updating UI.`,
+        createdAt: new Date('2025-10-25T10:00:00Z'),
         description: 'Instant feedback with useOptimistic, derived pending state, data-pending for parent styling.',
         published: true,
         slug: 'useoptimistic',
@@ -644,6 +651,7 @@ This ensures both the post list and the individual post's detail page update.
 ## Push Dynamic Data Deep
 
 To maximize cacheable content, push dynamic data access as deep as possible in the component tree. Components that read \`searchParams\`, \`cookies()\`, or \`headers()\` become dynamic—wrap them in \`<Suspense>\` so static parent content can render immediately.`,
+        createdAt: new Date('2025-10-23T10:00:00Z'),
         description: '"use cache" with cacheTag, revalidateTag + refresh() for invalidation, granular tags.',
         published: true,
         slug: 'use-cache-directive',
@@ -722,6 +730,7 @@ Forward navigation slides right; back navigation slides left. Users build a ment
 ## Browser Support
 
 View Transitions use the native View Transitions API. In unsupported browsers, navigation works normally without animation—progressive enhancement by default.`,
+        createdAt: new Date('2025-10-21T10:00:00Z'),
         description: 'Page-level transitions, shared element morphing, directional navigation.',
         published: true,
         slug: 'view-transitions',
@@ -835,6 +844,7 @@ export default function NotFound() {
 \`\`\`
 
 The pattern: design components own visuals and recovery UX; route files compose them with minimal logic.`,
+        createdAt: new Date('2025-10-19T10:00:00Z'),
         description: 'ErrorCard for page errors, ErrorBoundary for inline, StatusCard for 404/expected states.',
         published: true,
         slug: 'error-handling',
@@ -919,6 +929,7 @@ Pre-render pages that are:
 - SEO-important (need metadata in HTML)
 
 Pages that read \`searchParams\` or need user-specific data should remain dynamic.`,
+        createdAt: new Date('2025-10-17T10:00:00Z'),
         description: 'Pre-render dynamic routes, generateMetadata for SEO, on-demand generation.',
         published: true,
         slug: 'generatestaticparams',
@@ -1014,6 +1025,7 @@ The tab/button updates instantly; the URL changes; Suspense handles the loading 
 | SEO-friendly | Not indexable |
 
 For filter, sort, pagination, and view modes—use URLs. For ephemeral UI state like modal open/close—use component state.`,
+        createdAt: new Date('2025-10-15T10:00:00Z'),
         description: 'searchParams for shareable state, Zod validation, optimistic URL updates.',
         published: true,
         slug: 'url-state-searchparams',
@@ -1105,6 +1117,7 @@ Wrap any data fetching function that might be called multiple times during a ren
 - Any async function where arguments determine the result
 
 The function must return a promise, and React uses the arguments to determine cache keys.`,
+        createdAt: new Date('2025-10-13T10:00:00Z'),
         description: 'Request deduplication with cache(), combining with "use cache" directive.',
         published: true,
         slug: 'react-cache',
@@ -1175,6 +1188,7 @@ startTransition(async () => {
 \`\`\`
 
 This ensures React batches both the action completion and the navigation correctly.`,
+        createdAt: new Date('2025-10-11T10:00:00Z'),
         description: 'isPending for destructive actions, comparison with useOptimistic, keeping content visible.',
         published: true,
         slug: 'usetransition',
@@ -1259,6 +1273,7 @@ export default function DashboardPage({ searchParams }) {
 | Button | Rectangle with rounded corners |
 
 Use subtle animation (\`animate-pulse\`) to indicate loading, but keep it gentle—aggressive animation is distracting.`,
+        createdAt: new Date('2025-10-09T10:00:00Z'),
         description: 'Co-locate skeletons with components, match layout structure, prevent CLS.',
         published: true,
         slug: 'skeleton-loading',
@@ -1327,6 +1342,7 @@ export default function Unauthorized() {
 | \`forbidden()\` | 403 | User authenticated but lacks permission |
 
 Both render their respective \`.tsx\` files and stop execution.`,
+        createdAt: new Date('2025-10-07T10:00:00Z'),
         description: 'unauthorized() in Server Components and queries, StatusCard UI.',
         published: true,
         slug: 'authorization',
@@ -1431,6 +1447,7 @@ export default function DashboardPage({ searchParams }) {
 \`\`\`
 
 Users see the header instantly while posts stream in.`,
+        createdAt: new Date('2025-10-05T10:00:00Z'),
         description: 'cacheComponents default, what triggers dynamic rendering, push dynamic access deep.',
         published: true,
         slug: 'static-vs-dynamic',
@@ -1531,6 +1548,7 @@ This signals that the function may be async and will be wrapped in a transition.
 ## The Principle
 
 Design components own their in-between states. Parents pass what should happen; components handle how it looks while happening.`,
+        createdAt: new Date('2025-10-03T10:00:00Z'),
         description: 'Action props for reusable components, encapsulate transitions and optimistic state.',
         published: true,
         slug: 'action-prop-pattern',
@@ -1612,6 +1630,7 @@ function GoodLink() {
 | \`useTransition\` + \`router.push\` | Need optimistic updates, imperative control, error handling |
 
 Choose \`useLinkStatus\` for straightforward navigation feedback. Use \`useTransition\` when you need to update state optimistically or handle the navigation outcome programmatically.`,
+        createdAt: new Date('2025-10-01T10:00:00Z'),
         description: 'Link pending state with useLinkStatus, child component pattern, comparison with useTransition.',
         published: true,
         slug: 'uselinkstatus',
