@@ -32,17 +32,15 @@ export function SortButton() {
       prefetch={false}
       className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}
     >
-      <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
+      <SortIndicator icon={sortOptions[currentIndex].icon} label={sortOptions[currentIndex].label} />
     </Link>
   );
 }
 
 function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
-  const { pending } = useLinkStatus();
-
   return (
     <>
-      {pending ? <Spinner /> : <Icon className="size-4" />}
+      <Icon className="size-4" />
       <span className="hidden sm:inline">{label}</span>
     </>
   );
