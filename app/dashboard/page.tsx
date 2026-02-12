@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button';
-import { PostList } from './_components/PostList';
+import { PostList, PostListSkeleton } from './_components/PostList';
+import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
+import { Suspense } from 'react';
+import { SortButtonSkeleton, SortButton } from './_components/SortButton';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
   return (
@@ -19,6 +22,14 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
               Create Post
             </Link>
           </div>
+        </div>
+        <div className="mb-6 flex items-center justify-between">
+          <Suspense fallback={<PostTabsSkeleton />}>
+            <PostTabs />
+          </Suspense>
+          <Suspense fallback={<SortButtonSkeleton />}>
+            <SortButton />
+          </Suspense>
         </div>
         <PostList searchParams={searchParams} />
       </div>
