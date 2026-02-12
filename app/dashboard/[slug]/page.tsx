@@ -20,18 +20,15 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
       <div className="mb-6">
         <BackButton href="/dashboard" />
       </div>
-      <Suspense fallback={<CenteredSpinner />}>
-        <PostHeader slug={slug} />
-      </Suspense>
+      <PostHeader slug={slug} />
       <Separator className="my-6" />
-      <Suspense fallback={<CenteredSpinner />}>
-        <PostContent slug={slug} />
-      </Suspense>
+      <PostContent slug={slug} />
     </article>
   );
 }
 
 async function PostHeader({ slug }: { slug: string }) {
+  await slow(2000);
   const post = await getPostBySlug(slug);
   const wasUpdated = post.updatedAt > post.createdAt;
 
@@ -69,7 +66,6 @@ async function PostHeader({ slug }: { slug: string }) {
 }
 
 async function PostContent({ slug }: { slug: string }) {
-  await slow(2000);
   const post = await getPostBySlug(slug);
 
   return <MarkdownContent>{post.content}</MarkdownContent>;
