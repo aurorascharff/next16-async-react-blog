@@ -7,8 +7,10 @@ import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPostBySlug } from '@/data/queries/post';
-import { formatDate, getWordCount } from '@/lib/utils';
+import { formatDate, getWordCount, slow } from '@/lib/utils';
 import { DeletePostButton } from './_components/DeletePostButton';
+import { Suspense } from 'react';
+import { CenteredSpinner, Spinner } from '@/components/ui/spinner';
 
 export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'>) {
   const { slug } = await params;
@@ -18,9 +20,13 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
       <div className="mb-6">
         <BackButton href="/dashboard" />
       </div>
-      <PostHeader slug={slug} />
+      <Suspense fallback={<CenteredSpinner />}>
+        <PostHeader slug={slug} />
+      </Suspense>
       <Separator className="my-6" />
-      <PostContent slug={slug} />
+      <Suspense fallback={<CenteredSpinner />}>
+        <PostContent slug={slug} />
+      </Suspense>
     </article>
   );
 }
@@ -63,6 +69,7 @@ async function PostHeader({ slug }: { slug: string }) {
 }
 
 async function PostContent({ slug }: { slug: string }) {
+  await slow(2000);
   const post = await getPostBySlug(slug);
 
   return <MarkdownContent>{post.content}</MarkdownContent>;
