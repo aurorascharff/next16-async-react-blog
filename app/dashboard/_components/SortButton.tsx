@@ -37,11 +37,6 @@ export function SortButton() {
   );
 }
 
-export function SortButtonSkeleton() {
-  return <div className="bg-muted h-9 w-9 animate-pulse rounded-md sm:w-24" />;
-}
-
-// eslint-disable-next-line autofix/no-unused-vars
 function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
   const { pending } = useLinkStatus();
 
@@ -51,4 +46,8 @@ function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label:
       <span className="hidden sm:inline">{label}</span>
     </>
   );
+}
+
+export function SortButtonSkeleton() {
+  return <div className="bg-muted h-9 w-9 animate-pulse rounded-md sm:w-24" />;
 }
