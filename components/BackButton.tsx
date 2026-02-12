@@ -10,7 +10,7 @@ import type { Route } from 'next';
 type Props = VariantProps<typeof buttonVariants> & {
   children?: React.ReactNode;
   className?: string;
-  href: Route;
+  href?: Route;
 };
 
 export function BackButton({ variant = 'ghost', size, className, href, children = '← Back' }: Props) {
@@ -19,9 +19,19 @@ export function BackButton({ variant = 'ghost', size, className, href, children 
   return (
     <button
       onClick={() => {
+        const savedPosition = href ? Number(sessionStorage.getItem(`scroll-${href}`) || '0') : 0;
         startTransition(() => {
-          router.back();
+          if (href) {
+            router.push(href);
+          } else {
+            router.back();
+          }
         });
+        if (href) {
+          setTimeout(() => {
+            window.scrollTo({ top: savedPosition });
+          }, 100);
+        }
       }}
       className={cn(buttonVariants({ size, variant }), className)}
     >

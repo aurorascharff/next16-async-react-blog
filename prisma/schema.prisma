@@ -18,6 +18,7 @@ model Post {
     content     String
     published   Boolean  @default(false)
     archived    Boolean  @default(false)
+    seed        Boolean  @default(false)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }

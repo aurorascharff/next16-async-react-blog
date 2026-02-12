@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from 'next/font/google';
+import { ScrollPositionSaver } from '@/components/ScrollPositionSaver';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Toaster } from '@/components/ui/sonner';
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="en" className={geistSans.variable} suppressHydrationWarning>
       <body className={`${geistMono.variable} antialiased`}>
         <ThemeProvider>
+          <ScrollPositionSaver />
           <main>{children}</main>
           <ThemeToggle />
           <Toaster />
