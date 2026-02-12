@@ -1,6 +1,5 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -16,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { deletePost } from '@/data/actions/post';
 
 type Props = {
@@ -56,7 +56,7 @@ export function DeletePostButton({ slug }: Props) {
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
                 Delete
-                <Loader2 className="size-4 animate-spin" />
+                <Spinner />
               </span>
             ) : (
               'Delete'

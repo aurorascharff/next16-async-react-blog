@@ -1,9 +1,10 @@
 'use client';
 
-import { ArrowDownAZ, ArrowDownUp, ArrowUpDown, Loader2 } from 'lucide-react';
+import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
 import Link, { useLinkStatus } from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 const sortOptions = [
@@ -42,7 +43,7 @@ function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label:
 
   return (
     <>
-      {pending ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
+      {pending ? <Spinner /> : <Icon className="size-4" />}
       <span className="hidden sm:inline">{label}</span>
     </>
   );

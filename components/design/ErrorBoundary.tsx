@@ -44,9 +44,22 @@ function ErrorFallback({
   );
 }
 
+const shouldRethrow = (error: Error) => {
+  // Next.js errors that should not be caught by the error boundary
+  return (
+    error.toString().startsWith('Error: NEXT_HTTP_ERROR_FALLBACK;') ||
+    error.toString().startsWith('Error: NEXT_REDIRECT')
+  );
+};
+
 export function ErrorBoundary({ children, label = 'Something went wrong', fullWidth = false }: Props) {
   return (
     <ReactErrorBoundary
+      onError={error => {
+        if (error instanceof Error && shouldRethrow(error)) {
+          throw error;
+        }
+      }}
       fallbackRender={({ error, resetErrorBoundary }) => {
         const errorInstance = error instanceof Error ? error : new Error(String(error));
         return (

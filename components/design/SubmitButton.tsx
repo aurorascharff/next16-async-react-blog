@@ -1,10 +1,9 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
-
 import type { buttonVariants } from '@/components/ui/button';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '../ui/spinner';
 import type { VariantProps } from 'class-variance-authority';
 
 type Props = React.ComponentProps<'button'> &
@@ -21,7 +20,7 @@ export function SubmitButton({ children, loading, disabled, ...props }: Props) {
       {isSubmitting ? (
         <span className="flex items-center justify-center gap-2">
           {children}
-          <Loader2 className="size-4 animate-spin" />
+          <Spinner />
         </span>
       ) : (
         children

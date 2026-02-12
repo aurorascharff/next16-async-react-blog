@@ -1,19 +1,13 @@
 import Link from 'next/link';
-import { unauthorized } from 'next/navigation';
 import { Suspense, ViewTransition } from 'react';
 import { ErrorBoundary } from '@/components/design/ErrorBoundary';
 import { SlideRightTransition } from '@/components/ui/animations';
 import { buttonVariants } from '@/components/ui/button';
-import { canManagePosts } from '@/data/queries/auth';
 import { PostList, PostListSkeleton } from './_components/PostList';
 import { PostTabsSkeleton, PostTabs } from './_components/PostTabs';
 import { SortButtonSkeleton, SortButton } from './_components/SortButton';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {
-  if (!canManagePosts()) {
-    unauthorized();
-  }
-
   return (
     <SlideRightTransition>
       <div className="bg-muted/20 min-h-screen dark:bg-transparent">
