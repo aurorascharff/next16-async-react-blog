@@ -20,7 +20,7 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <a
               target="_blank"
-              href="https://github.com/aurorascharff/next16-interactive-posts"
+              href="https://github.com/aurorascharff/next16-async-react-blog"
               rel="noopener noreferrer"
               className={buttonVariants({ size: 'icon', variant: 'ghost' })}
               aria-label="View source on GitHub"
