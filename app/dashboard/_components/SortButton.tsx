@@ -1,10 +1,10 @@
 'use client';
 
 import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
-import Link, { useLinkStatus } from 'next/link';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+
 import { cn } from '@/lib/utils';
 
 const sortOptions = [

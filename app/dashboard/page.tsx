@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { buttonVariants } from '@/components/ui/button';
-import { PostList, PostListSkeleton } from './_components/PostList';
-import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
 import { Suspense } from 'react';
+import { buttonVariants } from '@/components/ui/button';
+import { PostList } from './_components/PostList';
+import { PostTabs, PostTabsSkeleton } from './_components/PostTabs';
 import { SortButtonSkeleton, SortButton } from './_components/SortButton';
 
 export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>) {

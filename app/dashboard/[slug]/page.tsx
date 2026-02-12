@@ -1,16 +1,16 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CenteredSpinner } from '@/components/ui/spinner';
 import { getPostBySlug } from '@/data/queries/post';
 import { formatDate, getWordCount, slow } from '@/lib/utils';
 import { DeletePostButton } from './_components/DeletePostButton';
-import { Suspense } from 'react';
-import { CenteredSpinner, Spinner } from '@/components/ui/spinner';
 
 export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'>) {
   const { slug } = await params;
