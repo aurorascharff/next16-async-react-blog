@@ -774,9 +774,6 @@ The \`error.tsx\` route file becomes a thin wrapper:
 \`\`\`tsx
 'use client';
 
-import { ErrorCard } from '@/components/design/ErrorCard';
-import { useTrackError } from '@/hooks/useTrackError';
-
 export default function PostError({ error, reset }) {
   useTrackError(error); // Log to error tracking service
 
@@ -798,9 +795,6 @@ The \`reset\` function re-renders the error boundary's children, giving the oper
 For errors within a page (not full-page), use an error boundary component:
 
 \`\`\`tsx
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { ErrorCard } from './ErrorCard';
-
 export function ErrorBoundary({ children, label }) {
   return (
     <ReactErrorBoundary
@@ -829,10 +823,6 @@ For states like 404 that aren't really "errors," use a neutral status card:
 
 \`\`\`tsx
 // not-found.tsx
-import { FileQuestion } from 'lucide-react';
-import { StatusCard } from '@/components/design/StatusCard';
-import { BackButton } from '@/components/BackButton';
-
 export default function NotFound() {
   return (
     <StatusCard
@@ -1504,7 +1494,6 @@ A tablist that handles its own optimistic updates and transitions:
 'use client';
 
 import { useOptimistic, useTransition } from 'react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type Props = {
   tabs: { value: string; label: string }[];
