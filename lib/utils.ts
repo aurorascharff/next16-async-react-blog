@@ -21,7 +21,7 @@ export function getReadTime(content: string): number {
   return Math.max(1, Math.ceil(getWordCount(content) / 200));
 }
 
-export async function slow(delay: number = 1000) {
+export async function slow(delay: number = 700) {
   await new Promise(resolve => {
     return setTimeout(resolve, delay);
   });
