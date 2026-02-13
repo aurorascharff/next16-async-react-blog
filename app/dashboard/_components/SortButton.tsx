@@ -24,12 +24,7 @@ export function SortButton() {
   const [optimisticSort, setOptimisticSort] = useOptimistic(currentSort);
   const [isPending, startTransition] = useTransition();
 
-  const currentIndex = sortOptions.findIndex(opt => {
-    return opt.value === optimisticSort;
-  });
-  const nextIndex = (currentIndex + 1) % sortOptions.length;
-  const nextSort = sortOptions[nextIndex].value;
-  const CurrentIcon = sortOptions[currentIndex].icon;
+  const { currentIcon: CurrentIcon, currentLabel, nextSort } = getSortInfo(optimisticSort);
 
   return (
     <button
@@ -43,11 +38,23 @@ export function SortButton() {
       className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}
     >
       {isPending ? <Spinner /> : <CurrentIcon className="size-4" />}
-      <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
+      <span className="hidden sm:inline">{currentLabel}</span>
     </button>
   );
 }
 
 export function SortButtonSkeleton() {
   return <div className="bg-muted h-9 w-9 animate-pulse rounded-md sm:w-24" />;
+}
+
+function getSortInfo(currentSort: SortValue) {
+  const currentIndex = sortOptions.findIndex(opt => {
+    return opt.value === currentSort;
+  });
+  const nextIndex = (currentIndex + 1) % sortOptions.length;
+  return {
+    currentIcon: sortOptions[currentIndex].icon,
+    currentLabel: sortOptions[currentIndex].label,
+    nextSort: sortOptions[nextIndex].value,
+  };
 }

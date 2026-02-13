@@ -17,19 +17,20 @@ export function PostTabs() {
   const currentTab = searchParams.get('filter') ?? 'all';
   const currentSort = searchParams.get('sort') ?? 'newest';
 
-  function tabAction(value: string) {
+  function changeTab(value: string) {
     router.push(`/dashboard?filter=${value}&sort=${currentSort}`);
   }
 
-  return <TabList tabs={tabs} activeTab={currentTab} changeAction={tabAction} />;
+  return <TabList tabs={tabs} activeTab={currentTab} changeAction={changeTab} />;
 }
 
 export function PostTabsSkeleton() {
   return (
-    <div className="flex flex-wrap gap-1">
-      {tabs.map(tab => {
-        return <Skeleton key={tab.value} className="h-9 w-20 rounded-md" />;
-      })}
+    <div className="inline-flex flex-wrap items-center gap-1">
+      <Skeleton className="h-9 w-9 rounded-md" />
+      <Skeleton className="h-9 w-17.5 rounded-md" />
+      <Skeleton className="h-9 w-12 rounded-md" />
+      <Skeleton className="h-9 w-16.5 rounded-md" />
     </div>
   );
 }
