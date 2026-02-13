@@ -8,6 +8,18 @@ import { canManagePosts } from '@/data/queries/auth';
 import { prisma } from '@/db';
 import { slow } from '@/lib/utils';
 
+// Set to false to allow editing/deleting seed posts
+const PROTECT_SEED_POSTS = true;
+
+async function checkSeedPostProtection(slug: string, action: string): Promise<ActionResult | null> {
+  if (!PROTECT_SEED_POSTS) return null;
+  const post = await prisma.post.findUnique({ where: { slug } });
+  if (post?.seed) {
+    return { error: `Seed posts cannot be ${action}`, success: false };
+  }
+  return null;
+}
+
 function validateMarkdown(content: string): string | null {
   const tree = remark().parse(content);
 
@@ -100,6 +112,9 @@ export async function updatePost(slug: string, formData: FormData): Promise<Acti
     return { error: 'Unauthorized', success: false };
   }
 
+  const seedError = await checkSeedPostProtection(slug, 'edited');
+  if (seedError) return seedError;
+
   const rawData = {
     content: (formData.get('content') as string) || '',
     description: (formData.get('description') as string) || '',
@@ -132,6 +147,9 @@ export async function deletePost(slug: string): Promise<ActionResult> {
     return { error: 'Unauthorized', success: false };
   }
 
+  const seedError = await checkSeedPostProtection(slug, 'deleted');
+  if (seedError) return seedError;
+
   await slow();
   await prisma.post.delete({
     where: { slug },
@@ -147,6 +165,9 @@ export async function toggleArchivePost(slug: string, archived: boolean): Promis
   if (!canManagePosts()) {
     return { error: 'Unauthorized', success: false };
   }
+
+  const seedError = await checkSeedPostProtection(slug, 'edited');
+  if (seedError) return seedError;
 
   await slow();
   await prisma.post.update({

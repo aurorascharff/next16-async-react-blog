@@ -91,43 +91,37 @@ Add \`'use client'\` when you need React hooks, event handlers, or browser APIs:
 'use client';
 
 export function ArchiveButton({ slug, archived }) {
-  const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
-  const isPending = optimisticArchived !== archived;
-
-  function archiveAction() {
-    startTransition(async () => {
-      setOptimisticArchived(!optimisticArchived);
-      await toggleArchivePost(slug, !archived);
-    });
-  }
-
   return (
-    <form data-pending={isPending || undefined} action={archiveAction}>
-      <button disabled={isPending}>
-        {optimisticArchived ? 'Unarchive' : 'Archive'}
+    <form action={async () => {
+      await toggleArchivePost(slug, !archived);
+    }}>
+      <button type="submit">
+        {archived ? 'Unarchive' : 'Archive'}
       </button>
     </form>
   );
 }
 \`\`\`
 
-This component uses \`useOptimistic\` for instant feedback—it must be a Client Component.
+This component uses a form action—it must be a Client Component because the action is defined inline.
 
 ## CSS :has() for Parent Styling
 
-Here's a powerful pattern: Server Components can style based on Client Component state using CSS \`:has()\` and data attributes.
+Here's a powerful pattern: Server Components can style based on Client Component state using CSS \`:has()\` and the \`useFormStatus\` hook.
 
 \`\`\`tsx
-// Client Component sets data-pending
-<form data-pending={isPending || undefined}>...</form>
+// Client Component shows pending via useFormStatus
+<form action={action}>
+  <SubmitButton /> {/* Uses useFormStatus internally */}
+</form>
 
 // Server Component styles based on child state
-<Card className="has-data-pending:animate-pulse">
+<Card className="has-[[data-pending]]:animate-pulse">
   <ArchiveButton slug={post.slug} archived={post.archived} />
 </Card>
 \`\`\`
 
-Tailwind's \`has-data-pending:\` variant maps to CSS \`:has([data-pending])\`. The Card pulses during the archive action—without becoming a Client Component itself.
+Tailwind's \`has-[[data-pending]]:\` variant uses CSS \`:has([data-pending])\`—the Card can pulse during the action without becoming a Client Component itself.
 
 ## The Leaf Principle
 
@@ -492,7 +486,7 @@ The best in-between state is **no perceived delay at all**. When a user toggles 
 
 ## The Archive Button Pattern
 
-Here's a real example from this app—an archive toggle that feels instant:
+Here's an example using \`useOptimistic\` for instant archive toggle:
 
 \`\`\`tsx
 'use client';
@@ -503,15 +497,11 @@ export function ArchiveButton({ slug, archived }) {
   const [optimisticArchived, setOptimisticArchived] = useOptimistic(archived);
   const isPending = optimisticArchived !== archived;
 
-  function archiveAction() {
-    startTransition(async () => {
-      setOptimisticArchived(!optimisticArchived);
-      await toggleArchivePost(slug, !archived);
-    });
-  }
-
   return (
-    <form data-pending={isPending || undefined} action={archiveAction}>
+    <form action={async () => {
+      startTransition(() => setOptimisticArchived(!optimisticArchived));
+      await toggleArchivePost(slug, !archived);
+    }}>
       <button type="submit" disabled={isPending}>
         {optimisticArchived ? 'Unarchive' : 'Archive'}
       </button>
@@ -537,7 +527,7 @@ While the action runs, the optimistic value differs from the prop. When the acti
 The \`data-pending\` attribute enables something powerful: Server Components can style based on Client Component state.
 
 \`\`\`tsx
-// In the Client Component
+// In the Client Component - add data attribute based on pending
 <form data-pending={isPending || undefined}>
 
 // In the Server Component (PostList)
@@ -546,7 +536,7 @@ The \`data-pending\` attribute enables something powerful: Server Components can
 </Card>
 \`\`\`
 
-Tailwind's \`has-data-pending:\` variant uses CSS \`:has([data-pending])\`—the Card pulses during the action without becoming a Client Component itself.
+Tailwind's \`has-[[data-pending]]:\` variant uses CSS \`:has([data-pending])\`—the Card pulses during the action without becoming a Client Component itself.
 
 ## When to Use Optimistic Updates
 
@@ -1596,21 +1586,21 @@ Create a child component that shows loading feedback:
 
 import Link, { useLinkStatus } from 'next/link';
 
-function SortIndicator({ label }) {
+function NavIndicator({ children }) {
   const { pending } = useLinkStatus();
 
   return (
     <>
-      {pending ? <Spinner /> : <ArrowUpDown />}
-      <span>{label}</span>
+      {pending ? <Spinner className="size-4" /> : null}
+      {children}
     </>
   );
 }
 
-export function SortButton({ href, label }) {
+export function NavLink({ href, children }) {
   return (
     <Link href={href}>
-      <SortIndicator label={label} />
+      <NavIndicator>{children}</NavIndicator>
     </Link>
   );
 }
@@ -1638,11 +1628,11 @@ function BadLink() {
   return <Link href="/page">...</Link>;
 }
 
-// ✅ Works - SortIndicator is a child inside Link
+// ✅ Works - NavIndicator is a child inside Link
 function GoodLink() {
   return (
     <Link href="/page">
-      <SortIndicator />
+      <NavIndicator>Go to page</NavIndicator>
     </Link>
   );
 }

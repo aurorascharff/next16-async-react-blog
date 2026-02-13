@@ -2,9 +2,7 @@
 
 import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
 import { buttonVariants } from '@/components/ui/button';
-
 import { cn } from '@/lib/utils';
 
 const sortOptions = [

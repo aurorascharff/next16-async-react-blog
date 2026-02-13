@@ -1,7 +1,6 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { BackButton } from '@/components/BackButton';
 import { MarkdownContent } from '@/components/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -16,10 +15,7 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
   const { slug } = await params;
 
   return (
-    <article>
-      <div className="mb-6">
-        <BackButton href="/dashboard" />
-      </div>
+    <>
       <Suspense fallback={<CenteredSpinner />}>
         <PostHeader slug={slug} />
       </Suspense>
@@ -27,7 +23,7 @@ export default async function PostPage({ params }: PageProps<'/dashboard/[slug]'
       <Suspense fallback={<CenteredSpinner />}>
         <PostContent slug={slug} />
       </Suspense>
-    </article>
+    </>
   );
 }
 
@@ -78,13 +74,13 @@ async function PostContent({ slug }: { slug: string }) {
 export function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-5 w-96" />
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-5 w-20" />
-          <Skeleton className="h-5 w-36" />
-          <Skeleton className="h-5 w-20" />
+      <div className="w-full space-y-2 sm:w-auto">
+        <Skeleton className="h-10 w-full sm:h-8 sm:w-64" />
+        <Skeleton className="h-10 w-full sm:h-5 sm:w-96" />
+        <div className="flex flex-wrap items-center gap-4">
+          <Skeleton className="h-10 w-20 sm:h-5" />
+          <Skeleton className="h-10 w-36 sm:h-5" />
+          <Skeleton className="h-10 w-20 sm:h-5" />
         </div>
       </div>
       <div className="flex gap-2">
@@ -93,4 +89,8 @@ export function PostHeaderSkeleton() {
       </div>
     </div>
   );
+}
+
+export function PostContentSkeleton() {
+  return <Skeleton className="h-64 w-full" />;
 }

@@ -1,38 +1,51 @@
 {
-  "React Server Component": {
-    "prefix": "rsc",
-    "body": [
-      "export default async function ${1:Component}() {",
-      "  return (",
-      "    <div>",
-      "      $0",
-      "    </div>",
-      "  );",
-      "}"
-    ]
-  },
-  "React Client Component": {
-    "prefix": "rcc",
+  "errorUI": {
+    "prefix": "errorUI",
     "body": [
       "'use client';",
       "",
-      "export default function ${1:Component}() {",
-      "  return (",
-      "    <div>",
-      "      $0",
-      "    </div>",
-      "  );",
+      "import { ErrorCard } from '@/components/errors/ErrorCard';",
+      "import { useTrackError } from '@/hooks/useTrackError';",
+      "",
+      "type Props = {",
+      "  error: Error & { digest?: string };",
+      "  reset: () => void;",
+      "};",
+      "",
+      "export default function ErrorBoundary({ error, reset }: Props) {",
+      "  useTrackError(error);",
+      "  return <ErrorCard description=\"Failed to load post\" error={error} reset={reset} />;",
       "}"
     ]
   },
-  "Server Action": {
-    "prefix": "sa",
+  "suspensePostListWithAnimation": {
+    "prefix": "suspensePostListWithAnimation",
     "body": [
-      "'use server';",
-      "",
-      "export async function ${1:actionName}() {",
-      "  $0",
-      "}"
+      "<Suspense",
+      "  fallback={",
+      "    <ViewTransition exit=\"slide-down\">",
+      "      <PostListSkeleton />",
+      "    </ViewTransition>",
+      "  }",
+      ">",
+      "  <ViewTransition enter=\"slide-up\" exit=\"slide-down\">",
+      "    <PostList searchParams={searchParams} />",
+      "  </ViewTransition>",
+      "</Suspense>"
     ]
-  }
+  },
+    "customAsyncReact": {
+      "prefix": "customAsyncReact",
+      "body": [
+        "const [optimisticSort, setOptimisticSort] = useOptimistic(${1:currentSort});",
+        "const [isPending, startTransition] = useTransition();"
+      ]
+    },
+      "optimisticArchiveState": {
+        "prefix": "optimisticArchiveState",
+        "body": [
+        "const [optimisticArchived, setOptimisticArchived] = useOptimistic(${1:archived} ?? false);",
+        "const isPending = optimisticArchived !== (${1:archived} ?? false);"
+        ]
+      }
 }

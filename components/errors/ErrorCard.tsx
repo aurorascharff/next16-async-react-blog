@@ -12,17 +12,17 @@ type Props = {
 export function ErrorCard({ error, reset, title = 'Something went wrong!', description }: Props) {
   return (
     <Card className="text-center">
-      <CardHeader>
-        <div className="mx-auto mb-2">
-          <AlertCircle className="text-destructive size-8" />
+      <CardHeader className="pb-4">
+        <div className="mx-auto mb-1">
+          <AlertCircle className="text-destructive size-6" />
         </div>
-        <CardTitle className="text-destructive text-2xl">{title}</CardTitle>
-        <CardDescription className="text-base">
+        <CardTitle className="text-destructive text-base font-medium">{title}</CardTitle>
+        <CardDescription className="text-sm">
           {description || error.message || 'An unexpected error occurred.'}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Button onClick={reset} variant="default">
+      <CardContent className="pt-0">
+        <Button onClick={reset} variant="default" size="sm">
           Try again
         </Button>
       </CardContent>

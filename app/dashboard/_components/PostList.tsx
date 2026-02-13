@@ -1,5 +1,6 @@
 import Link from 'next/link';
-
+// eslint-disable-next-line autofix/no-unused-vars
+import { ViewTransition } from 'react';
 import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

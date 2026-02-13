@@ -47,7 +47,7 @@ async function EditPostContent({ slug }: { slug: string }) {
   );
 }
 
-export function EditPostPageSkeleton() {
+export function EditPostContentSkeleton() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
