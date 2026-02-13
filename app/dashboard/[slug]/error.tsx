@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorCard } from '@/components/design/ErrorCard';
+import { ErrorCard } from '@/components/errors/ErrorCard';
 import { useTrackError } from '@/hooks/useTrackError';
 
 type Props = {

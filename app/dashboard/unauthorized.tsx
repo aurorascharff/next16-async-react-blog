@@ -1,6 +1,6 @@
 import { LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
-import { StatusCard } from '@/components/design/StatusCard';
+import { StatusCard } from '@/components/errors/StatusCard';
 import { buttonVariants } from '@/components/ui/button';
 
 export default function Unauthorized() {

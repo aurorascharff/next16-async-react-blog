@@ -780,7 +780,7 @@ The \`error.tsx\` route file becomes a thin wrapper:
 \`\`\`tsx
 'use client';
 
-import { ErrorCard } from '@/components/design/ErrorCard';
+import { ErrorCard } from '@/components/errors/ErrorCard';
 import { useTrackError } from '@/hooks/useTrackError';
 
 export default function PostError({ error, reset }) {
