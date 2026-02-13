@@ -1,4 +1,7 @@
+import { ViewTransition } from 'react';
+import { BackButton } from '@/components/BackButton';
 import { getPosts } from '@/data/queries/post';
+
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map(post => {
@@ -6,10 +9,23 @@ export async function generateStaticParams() {
   });
 }
 
-export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'>) {
+export default async function PostLayout({ children, params }: LayoutProps<'/dashboard/[slug]'>) {
+  const { slug } = await params;
+
   return (
-    <div className="bg-muted/30 min-h-screen">
-      <div className="container mx-auto max-w-4xl px-4 py-12">{children}</div>
+    <div>
+      <div className="bg-muted/30 min-h-screen">
+        <div className="container mx-auto max-w-4xl px-4 py-12">
+          <ViewTransition name={`post-card-${slug}`} share="morph" default="none">
+            <article>
+              <div className="mb-6">
+                <BackButton href="/dashboard" />
+              </div>
+              {children}
+            </article>
+          </ViewTransition>
+        </div>
+      </div>
     </div>
   );
 }

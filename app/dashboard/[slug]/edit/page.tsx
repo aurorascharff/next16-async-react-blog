@@ -1,21 +1,17 @@
 import { Suspense, ViewTransition } from 'react';
-import { BackButton } from '@/components/BackButton';
+
 import { SlideRightTransition } from '@/components/ui/animations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { updatePost } from '@/data/actions/post';
 import { getPostBySlug } from '@/data/queries/post';
 import { PostForm } from '../../_components/PostForm';
-import type { Route } from 'next';
 
 export default async function EditPostPage({ params }: PageProps<'/dashboard/[slug]/edit'>) {
   const { slug } = await params;
 
   return (
     <SlideRightTransition>
-      <div className="mb-6">
-        <BackButton href={`/dashboard/${slug}` as Route} />
-      </div>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Edit Post</CardTitle>
@@ -24,7 +20,7 @@ export default async function EditPostPage({ params }: PageProps<'/dashboard/[sl
           <Suspense
             fallback={
               <ViewTransition exit="slide-down">
-                <EditPostPageSkeleton />
+                <EditPostContentSkeleton />
               </ViewTransition>
             }
           >
@@ -59,7 +55,7 @@ async function EditPostContent({ slug }: { slug: string }) {
   );
 }
 
-export function EditPostPageSkeleton() {
+export function EditPostContentSkeleton() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />

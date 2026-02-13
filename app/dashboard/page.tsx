@@ -18,18 +18,7 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Dashboard</h1>
               <p className="text-muted-foreground mt-2 text-lg">Manage your blog posts</p>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Link
-                href="/"
-                className={buttonVariants({ size: 'sm', variant: 'outline' }) + ' sm:size-auto sm:px-4 sm:py-2'}
-              >
-                Go to Blog
-              </Link>
-              <Link href="/dashboard/new" className={buttonVariants({ size: 'sm' }) + ' sm:size-auto sm:px-4 sm:py-2'}>
-                <Plus className="size-4 sm:hidden" />
-                <span className="hidden sm:inline">Create Post</span>
-              </Link>
-            </div>
+            <HeaderLinks />
           </div>
           <div className="mb-6 flex items-center justify-between">
             <Suspense fallback={<PostTabsSkeleton />}>
@@ -55,5 +44,19 @@ export default function DashboardPage({ searchParams }: PageProps<'/dashboard'>)
         </div>
       </div>
     </SlideLeftTransition>
+  );
+}
+
+function HeaderLinks() {
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <Link href="/" className={buttonVariants({ size: 'sm', variant: 'outline' }) + ' sm:size-auto sm:px-4 sm:py-2'}>
+        Go to Blog
+      </Link>
+      <Link href="/dashboard/new" className={buttonVariants({ size: 'sm' }) + ' sm:size-auto sm:px-4 sm:py-2'}>
+        <Plus className="size-4 sm:hidden" />
+        <span className="hidden sm:inline">Create Post</span>
+      </Link>
+    </div>
   );
 }
