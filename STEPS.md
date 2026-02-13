@@ -4,7 +4,7 @@
 
 - This is a blog app with this dashboard section to manage content.
 - The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience.
-- Demo app: You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
+- Demo app: Data fetching has been slowed down to simulate worse network conditions. You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
 
 ## Async Data Loading
 
