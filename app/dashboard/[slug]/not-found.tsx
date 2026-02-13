@@ -1,6 +1,6 @@
 import { FileQuestion } from 'lucide-react';
 import { BackButton } from '@/components/BackButton';
-import { StatusCard } from '@/components/design/StatusCard';
+import { StatusCard } from '@/components/errors/StatusCard';
 
 export default function PostNotFound() {
   return (
