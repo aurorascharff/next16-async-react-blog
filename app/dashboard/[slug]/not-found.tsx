@@ -9,9 +9,7 @@ export default function PostNotFound() {
       title="Post Not Found"
       description="The post you're looking for doesn't exist or has been deleted."
     >
-      <BackButton href="/dashboard" variant="default">
-        Back to posts
-      </BackButton>
+      <BackButton variant="default">Back to posts</BackButton>
     </StatusCard>
   );
 }

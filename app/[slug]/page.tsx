@@ -34,7 +34,7 @@ export default async function BlogPostPage({ params }: PageProps<'/[slug]'>) {
     <SlideRightTransition>
       <div className="min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-12">
-          <BackButton href="/" size="sm" className="mb-8">
+          <BackButton size="sm" className="mb-8">
             ← Back to blog
           </BackButton>
           <article>

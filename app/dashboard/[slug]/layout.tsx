@@ -19,7 +19,7 @@ export default async function PostLayout({ children, params }: LayoutProps<'/das
           <ViewTransition name={`post-card-${slug}`} share="morph" default="none">
             <article>
               <div className="mb-6">
-                <BackButton href="/dashboard" />
+                <BackButton />
               </div>
               {children}
             </article>
