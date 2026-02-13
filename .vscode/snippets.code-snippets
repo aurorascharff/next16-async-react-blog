@@ -33,8 +33,7 @@
       "  </ViewTransition>",
       "</Suspense>"
     ]
-  },
-    "customAsyncReact": {
+  }, "customAsyncReact": {
       "prefix": "customAsyncReact",
       "body": [
         "const [optimisticSort, setOptimisticSort] = useOptimistic(${1:currentSort});",
