@@ -1,5 +1,8 @@
 import { cn } from '@/lib/utils';
 
+// Original skeleton with theme colors:
+// className={cn('bg-muted animate-pulse rounded-md', className)}
+
 function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
