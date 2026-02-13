@@ -9,7 +9,7 @@ import { prisma } from '@/db';
 import { slow } from '@/lib/utils';
 
 // Set to false to allow editing/deleting seed posts
-const PROTECT_SEED_POSTS = false;
+const PROTECT_SEED_POSTS = true;
 
 async function checkSeedPostProtection(slug: string, action: string): Promise<ActionResult | null> {
   if (!PROTECT_SEED_POSTS) return null;
