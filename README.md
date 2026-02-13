@@ -1,7 +1,7 @@
 
 # Next.js 16 Async React Blog
 
-A demo blog exploring **async React patterns with Next.js 16's cacheComponents**. Each post covers a real pattern used in the app—from caching and streaming to optimistic updates and transitions—focusing on crafting great UX in the in-between states.
+A demo blog exploring **Async React patterns with Next.js 16's cacheComponents**. Each post covers a real pattern used in the app, from caching and streaming to optimistic updates and transitions, focusing on crafting great UX in the in-between states.
 
 Built with Next.js 16, React 19, Prisma, TailwindCSS v4, and shadcn/ui (Base UI).
 

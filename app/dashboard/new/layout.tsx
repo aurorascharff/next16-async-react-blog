@@ -5,7 +5,7 @@ export default function NewPostLayout({ children }: LayoutProps<'/dashboard/new'
     <div className="bg-muted/30 min-h-screen">
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <div className="mb-6">
-          <BackButton href="/dashboard" />
+          <BackButton />
         </div>
         {children}
       </div>

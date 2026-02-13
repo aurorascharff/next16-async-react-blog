@@ -15,7 +15,7 @@ export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'
         <div className="container mx-auto max-w-4xl px-4 py-12">
           <article>
             <div className="mb-6">
-              <BackButton href="/dashboard" />
+              <BackButton />
             </div>
             {children}
           </article>
