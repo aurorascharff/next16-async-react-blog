@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { deletePost } from '@/data/actions/post';
 
 type Props = {
@@ -23,15 +25,19 @@ type Props = {
 export function DeletePostButton({ slug }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleDelete() {
-    const result = await deletePost(slug);
-    if (result.success) {
-      router.push('/dashboard');
-    } else {
-      // Do nothing
-    }
-    setOpen(false);
+  function handleDelete() {
+    startTransition(async () => {
+      const result = await deletePost(slug);
+      if (result.success) {
+        toast.success('Post deleted successfully');
+        router.push('/dashboard');
+      } else {
+        toast.error(result.error);
+      }
+      setOpen(false);
+    });
   }
 
   return (
@@ -45,9 +51,16 @@ export function DeletePostButton({ slug }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={handleDelete}>
-            Delete
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={handleDelete} disabled={isPending}>
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                Delete
+                <Spinner />
+              </span>
+            ) : (
+              'Delete'
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
