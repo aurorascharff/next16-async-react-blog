@@ -1,8 +1,8 @@
 'use client';
 
 import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
-import Link, { useLinkStatus } from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useOptimistic, useTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
@@ -16,36 +16,33 @@ const sortOptions = [
 type SortValue = (typeof sortOptions)[number]['value'];
 
 export function SortButton() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const currentSort = (searchParams.get('sort') as SortValue) ?? 'newest';
   const currentFilter = searchParams.get('filter') ?? 'all';
 
+  const [optimisticSort, setOptimisticSort] = useOptimistic(currentSort);
+  const [isPending, startTransition] = useTransition();
+
   const currentIndex = sortOptions.findIndex(opt => {
-    return opt.value === currentSort;
+    return opt.value === optimisticSort;
   });
   const nextIndex = (currentIndex + 1) % sortOptions.length;
   const nextSort = sortOptions[nextIndex].value;
   const CurrentIcon = sortOptions[currentIndex].icon;
 
-  return (
-    <Link
-      href={`/dashboard?filter=${currentFilter}&sort=${nextSort}`}
-      prefetch={false}
-      className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}
-    >
-      <SortIndicator icon={CurrentIcon} label={sortOptions[currentIndex].label} />
-    </Link>
-  );
-}
-
-function SortIndicator({ icon: Icon, label }: { icon: typeof ArrowUpDown; label: string }) {
-  const { pending } = useLinkStatus();
+  function handleClick() {
+    startTransition(() => {
+      setOptimisticSort(nextSort);
+      router.push(`/dashboard?filter=${currentFilter}&sort=${nextSort}`);
+    });
+  }
 
   return (
-    <>
-      {pending ? <Spinner /> : <Icon className="size-4" />}
-      <span className="hidden sm:inline">{label}</span>
-    </>
+    <button onClick={handleClick} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}>
+      {isPending ? <Spinner /> : <CurrentIcon className="size-4" />}
+      <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
+    </button>
   );
 }
 
