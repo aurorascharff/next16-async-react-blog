@@ -166,9 +166,6 @@ export async function toggleArchivePost(slug: string, archived: boolean): Promis
     return { error: 'Unauthorized', success: false };
   }
 
-  const seedError = await checkSeedPostProtection(slug, 'archived');
-  if (seedError) return seedError;
-
   await slow();
   await prisma.post.update({
     data: { archived },

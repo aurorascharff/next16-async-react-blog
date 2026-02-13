@@ -2,7 +2,7 @@
 
 import { ArrowDownAZ, ArrowDownUp, ArrowUpDown } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useOptimistic } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
@@ -22,7 +22,7 @@ export function SortButton() {
   const currentFilter = searchParams.get('filter') ?? 'all';
 
   const [optimisticSort, setOptimisticSort] = useOptimistic(currentSort);
-  const isPending = optimisticSort !== currentSort;
+  const [isPending, startTransition] = useTransition();
 
   const currentIndex = sortOptions.findIndex(opt => {
     return opt.value === optimisticSort;
@@ -32,18 +32,19 @@ export function SortButton() {
   const CurrentIcon = sortOptions[currentIndex].icon;
 
   return (
-    <form
-      data-pending={isPending || undefined}
-      action={() => {
-        setOptimisticSort(nextSort);
-        router.push(`/dashboard?filter=${currentFilter}&sort=${nextSort}`);
+    <button
+      type="button"
+      onClick={() => {
+        startTransition(() => {
+          setOptimisticSort(nextSort);
+          router.push(`/dashboard?filter=${currentFilter}&sort=${nextSort}`);
+        });
       }}
+      className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}
     >
-      <button type="submit" className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'gap-2')}>
-        {isPending ? <Spinner /> : <CurrentIcon className="size-4" />}
-        <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
-      </button>
-    </form>
+      {isPending ? <Spinner /> : <CurrentIcon className="size-4" />}
+      <span className="hidden sm:inline">{sortOptions[currentIndex].label}</span>
+    </button>
   );
 }
 
