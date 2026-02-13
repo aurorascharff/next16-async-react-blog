@@ -96,7 +96,7 @@ export function PostForm<T extends string>({
           id="published"
           name="published"
           defaultChecked={state.published}
-          className="border-input size-4 rounded"
+          className="border-input accent-primary size-4 rounded"
         />
         <Label htmlFor="published" className="cursor-pointer">
           Published

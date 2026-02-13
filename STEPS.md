@@ -45,5 +45,5 @@
 
 - Let me get rid of all my changes and show you the difference before and after again.
 - Before, we had long paints and janky layouts, global spinners and frozen user interactions, and no error boundaries.
-- Here is the after, I deployed this one. I also added some other improvements. We have faster paints and a stable layout, skeletons and local feedback, and robust error states. These improvements also reduce First Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift dramatically. Meeting Web Vitals targets directly translates to a smoother feel and also better SEO and discoverability.
+- Here is the after, I deployed this one. I also added some other improvements, like better animations. We have faster paints and a stable layout, skeletons and local feedback, and robust error states. These improvements also reduce First Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift dramatically. Meeting Web Vitals targets directly translates to a smoother feel and also better SEO and discoverability.
 - If you are interested in learning more about Async React and how to implement these patterns in your own apps, or about the features I'm using from Next.js here, check out the blog posts inside the demo app. They cover what we did in more detail and reference the code itself.

@@ -1,5 +1,4 @@
 import { Suspense, ViewTransition } from 'react';
-
 import { SlideRightTransition } from '@/components/ui/animations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
