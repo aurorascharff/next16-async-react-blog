@@ -2,44 +2,39 @@
 
 ## Setup and starting point
 
-- This is a blog app with this dashboard section to manage content.
-- The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience.
-- Demo app: Data fetching has been slowed down to simulate worse network conditions. You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
+- Blog app with dashboard to manage content.
+- Stack: Next.js App Router, Prisma ORM, Prisma Postgres DB, Tailwind CSS, Next.js Cache Components.
+- Data fetching slowed down to simulate poor network. This is the bad UX from the slides—fix with proper in-between states.
 
 ## Async Data Loading
 
-- Let's work on our data loading. We can see the initial loading state is a Spinner. Let's convert it to a proper skeleton state. Here, see if your designer would like to create some reusable skeleton UI, or if your design system or component library already have some skeleton components, you can use those.
-- In Next.js, we have the loading.tsx file that allows us to define a loading state for our page. This is similar in other frameworks like Tanstack Router. However, here, we want to show more of the UI instead of hiding the whole page. Delete it.
-- Are you familiar with cache components? They will actually tell us if we are blocking our application from loading. Notice the error, we need to add back a suspense boundary here. But we want to add it further down the tree, so we can show more of the UI.
-- Use Suspense in the dashboard page.tsx. Skeletons give users a sense of the content structure and make loading feel faster. Use a skeleton component that mimics the structure of the content.
-- Now, we can see the shell of the page immediately, and then the post list will load in with a nice skeleton.
-- Increasing our perceived performance with a better FCP and LCP.
-- Now, we have a much better loading state, while revealing the UI faster. With CacheComponents, the shell will be statically rendered. I get a way better FCP and LCP here. And it will be prefetched for instant navigations.
-- Let's do the same for the blog page. We are already using Suspense here, but we have some CLS. All we need to do is just adjust these skeletons to match the content. Suspense lets us declaratively define loading states right next to our content.
-- Let's use the new React Devtools Suspense panel to pin these and easier design them for us. Switch screen to localhost suspense. Now, we could code this realtime and make sure there is no CLS and the shape of the skeleton matches the content. Update to proper skeleton for the header, showcase, then do the same for the content. Refresh the page and see how we have a stable layout and a much better loading experience.
-- Also, let's fix the edit page. Switch from loading to Suspense with skeleton: cacheComp error, use Suspense.
-- Already, our loading states feel way better.
-- What about the error state? What if it throws? Throw. Our entire app breaks. Let's add an error.tsx file to handle errors in our blog page. This way, we can show a user-friendly error message instead of a blank page, and use layouts to preserve the surrounding UI.
-- What about the post list error? Showcase the error states by throwing. App broke. We can use a local ErrorBoundary for post list to avoid hiding the top content if the post list fails to load, add a custom label and fullwidth, allow retry. Add snippet errorUI. Declarative approach, pairs with Suspense.
-- Different frameworks like react router 7 or tanstack router have their own route-level error boundaries similar to this.
-- Collaborate with the designer to create intentional error states that fit the app design.
-- Do the same for the global app errors if there is an issue with the system.
-- (Not found boundary: Let's add a not-found.tsx file to handle 404 errors in our app.)
-- (Bonus: We can also add an unauthenticated state to our app. This way, if a user tries to access a page that requires authentication without being logged in, we can show them a message prompting them to log in instead of just redirecting them or showing a blank page. Unauthorized.tsx and throw from the server if the user is not authenticated.)
-- Add animations our async data loading. Example of ViewTransition to the loading experience of the post list. This creates a smooth transition between the loading state and the loaded content. Add snippet suspensePostListWithAnimation.
+- Initial loading is a spinner. Convert to skeleton state. Use reusable skeleton UI from design system or component library.
+- Delete loading.tsx—show more UI instead of hiding the whole page. Similar pattern in Tanstack Router.
+- Cache components reveal blocking issues. Add Suspense boundary further down the tree to show more UI.
+- Use Suspense in dashboard page.tsx with skeleton mimicking content structure—users see the shell immediately.
+- Better FCP and LCP. Shell is statically rendered and prefetched for instant navigations.
+- Blog page: adjust skeletons to match content and eliminate CLS.
+- Use React Devtools Suspense panel to pin and design skeletons. Ensure no CLS and skeleton shape matches content.
+- Edit page: switch from loading to Suspense with skeleton.
+- Error states: throw → app breaks. Add error.tsx for user-friendly error message. Layouts preserve surrounding UI.
+- Post list error: use local ErrorBoundary to avoid hiding top content. Add custom label, fullwidth, retry. Snippet: errorUI. Declarative approach pairs with Suspense.
+- Other frameworks (React Router 7, Tanstack Router) have similar route-level error boundaries.
+- Collaborate with designer on intentional error states.
+- Handle global app errors as well.
+- (Not found: add not-found.tsx for 404s.)
+- (Bonus: unauthorized.tsx for auth errors—show login prompt instead of redirect/blank page.)
+- Add ViewTransition to post list loading for smooth transitions. Snippet: suspensePostListWithAnimation.
 
 ## Async Router
 
-- We also have navigations in this app that are delayed. Clicking the sort or the tabs use search params and refetch data from the server, an async routing navigation. Let's add some loading state to these as well.
-- Let's try the tabs, notice it uses the router. What if this component could handle it's own async coordination? Switch to an action prop to declaratively solve this. We can utilize our design component action prop to get an optimistic pending state for the tab buttons. This way, when a user clicks on a tab, we can immediately show a loading state on the button itself, giving them instant feedback. It uses async react under the hood, abstracted away from us, showcase. It also has been pre-designed for us to fit our app design.
-- SortButton: let's try the Async React primitives. A local spinner is suitable here, it's just a small and quick interaction.
-- Here, we can implement the startTransition useOptimistic pattern ourselves again. Let's say this is a custom thing we are building. Now it will be interactive and responsive. Add snippet customAsyncReact.
-- I might just add a small spinner next to the button, and then ask my designer if they agree, or if they have other ideas. They usually say "great, but maybe try this instead"! Usually they have some additional insight that I didn't think of.
-- Again, ask your designer what kind of loading states they would like to see for these interactions.
-- Design components can abstract away the complexities of async interactions and provide a consistent experience across the app. They can also be pre-designed to fit the app's design system, saving us time and ensuring a cohesive look and feel. As we see more of Async React primitives being adopted by design systems and component libraries, we can easily integrate these patterns into our apps without having to build them from scratch.
-- Let's add animations to our async routing. Animate the list reordering when we sort the posts so users see the changes in real-time, using the ViewTransition API around the Card.
-- Let's animate the page navigation to the blog post as well. This gives users a contextual transition that helps them understand the relationship between the list and the detail view. Add this reusable slider component wrapping the ViewTransition API. SlideRightTransition wrap list layout. Ask designer about preferred animations for navigations.
-- (Add slideRightAnimation to the new post page as well.)
+- Sort/tabs use searchParams and refetch data—async routing navigation. Add loading states.
+- Tabs: switch to action prop for optimistic pending state on buttons. Async React abstracted away, pre-designed to fit app.
+- SortButton: use startTransition + useOptimistic pattern. Small spinner for quick interaction. Snippet: customAsyncReact.
+- Consult designer on loading states—they often have additional insight.
+- Design components abstract async complexity and provide consistent UX. As design systems adopt Async React primitives, integration becomes easier.
+- Animate list reordering with ViewTransition API around Card.
+- Animate page navigation to blog post with SlideRightTransition wrapper. Consult designer on navigation animations.
+- (Add slideRightAnimation to new post page.)
 
 ## Async Mutations
 
