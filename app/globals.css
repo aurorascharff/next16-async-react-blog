@@ -186,6 +186,10 @@
   animation-name: via-blur;
 }
 
+::view-transition-group(anything) {
+  z-index: 100;
+}
+
 @keyframes via-blur {
   30% {
     filter: blur(3px);
