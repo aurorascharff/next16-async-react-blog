@@ -100,18 +100,18 @@ async function PostContent({ slug }: { slug: string }) {
 export function PostHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="w-full space-y-2 sm:w-auto">
-        <Skeleton className="h-10 w-full sm:h-8 sm:w-64" />
-        <Skeleton className="h-10 w-full sm:h-5 sm:w-96" />
-        <div className="flex flex-wrap items-center gap-4">
-          <Skeleton className="h-10 w-20 sm:h-5" />
-          <Skeleton className="h-10 w-36 sm:h-5" />
-          <Skeleton className="h-10 w-20 sm:h-5" />
+      <div className="w-full space-y-4 sm:w-auto sm:space-y-2">
+        <Skeleton className="h-10 w-48 sm:h-8 sm:w-64" />
+        <Skeleton className="h-8 w-full sm:h-6 sm:w-96" />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-y-1">
+          <Skeleton className="h-7 w-20 sm:h-4" />
+          <Skeleton className="h-7 w-28 sm:h-4" />
+          <Skeleton className="h-7 w-20 sm:h-4" />
         </div>
       </div>
       <div className="flex gap-2">
-        <Skeleton className="h-9 w-14" />
-        <Skeleton className="h-9 w-18" />
+        <Skeleton className="h-10 w-14 sm:h-10" />
+        <Skeleton className="h-10 w-18 sm:h-10" />
       </div>
     </div>
   );
