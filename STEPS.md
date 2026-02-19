@@ -8,7 +8,7 @@
 
 ## Async Data Loading
 
-- Let's work on our data loading. We can see the initial loading state is a Spinner, streaming RSCs. Let's convert it to a proper skeleton state. Here, see if your designer would like to create some reusable skeleton UI, or if your design system or component library already have some skeleton components, you can use those.
+- Let's work on our data loading. We can see the initial loading state is a Spinner, streaming async RSCs. Let's convert it to a proper skeleton state. Here, see if your designer would like to create some reusable skeleton UI, or if your design system or component library already have some skeleton components, you can use those.
 - In Next.js, we have the loading.tsx file that allows us to define a loading state for our page. This is similar in other frameworks like Tanstack Router. However, here, we want to show more of the UI instead of hiding the whole page. Delete it.
 - Are you familiar with cache components? They will actually tell us if we are blocking our application from loading. Notice the error, we need to add back a suspense boundary here. But we want to add it further down the tree, so we can show more of the UI.
 - Use Suspense in the dashboard page.tsx. Skeletons give users a sense of the content structure and make loading feel faster. Use a skeleton component that mimics the structure of the content. Wrap the PostList RSC.
@@ -32,7 +32,7 @@
 
 - We also have navigations in this app that are delayed. Clicking the sort or the tabs use search params and refetch data from the server, an async routing navigation. Let's add some loading state to these as well.
 - Let's try the tabs, notice it uses the router. What if this component could handle it's own async coordination? Switch to an action prop to declaratively solve this. We can utilize our design component action prop to get an optimistic pending state for the tab buttons. This way, when a user clicks on a tab, we can immediately show a loading state on the button itself, giving them instant feedback. It uses async react under the hood, abstracted away from us, showcase. It also has been pre-designed for us to fit our app design.
-- SortButton: let's try the Async React primitives. A local spinner is suitable here, it's just a small and quick interaction.
+- SortButton: Async sort params. let's try the Async React primitives. A local spinner is suitable here, it's just a small and quick interaction.
 - Here, we can implement the startTransition useOptimistic pattern ourselves again. Let's say this is a custom thing we are building. Now it will be interactive and responsive. Add snippet customAsyncReact.
 - I might just add a small spinner next to the button, and then ask my designer if they agree, or if they have other ideas. They usually say "great, but maybe try this instead"! Usually they have some additional insight that I didn't think of.
 - Again, ask your designer what kind of loading states they would like to see for these interactions.
@@ -43,7 +43,7 @@
 
 ## Async Mutations
 
-- Now, let's work on our mutations. When we click the Archive button here, we have no feedback at all. Form actions are already using transitions, we don't need to wrap transitions. We can add useOptimistic UI to immediately update the UI when we click the button, then we can check the optimistic similarity to show a glimmer on the card with CSS has().
+- Now, let's work on our mutations. When we click the Archive button here, we have no feedback at all. The async part is this function call to archive a post, using server functions here. Form actions are already using transitions, we don't need to wrap transitions. We can add useOptimistic UI to immediately update the UI when we click the button, then we can check the optimistic similarity to show a glimmer on the card with CSS has().
 - When we click a couple archives and then we switch tabs, the entire interaction is synced automatically with Async React, avoiding any weird states. Async React primitives handle all the complexities of async interactions for us.
 - And what about expected errors? We should probably toast here to let them know if something went wrong with the archiving. Let's stop them from archiving seed posts with a toast.
 - Notice how useOptimistic automatically rolls back the UI if the mutation fails, so we don't have to do any manual error handling here. This makes our code much cleaner and easier to maintain. We can just add a toast on error to inform the user about what went wrong.
