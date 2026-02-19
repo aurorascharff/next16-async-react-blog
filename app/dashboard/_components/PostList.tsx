@@ -76,11 +76,14 @@ export function PostListSkeleton() {
         return (
           <Card key={i}>
             <CardHeader className="pb-3">
-              <Skeleton className="h-6 w-48" />
+              <div className="flex items-start justify-between gap-3">
+                <Skeleton className="h-7 w-48" />
+                <Skeleton className="size-7 shrink-0 rounded-md" />
+              </div>
               <Skeleton className="h-4 w-24" />
             </CardHeader>
             <CardContent className="pt-0">
-              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-12 w-full sm:h-6" />
             </CardContent>
           </Card>
         );
