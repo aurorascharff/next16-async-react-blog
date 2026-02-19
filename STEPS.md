@@ -3,7 +3,7 @@
 ## Setup and starting point
 
 - The app is a static blog site, but it also has this dynamic dashboard for content management. This is a common pattern for a lot of websites, where you have a public facing side that is more static and optimized for performance and SEO, and then you have a dashboard or admin panel that is more dynamic and optimized for interactivity and user experience.
-- The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience.
+- The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience, to easily create this static dynamic hybrid app.
 - Demo app: Data fetching has been slowed down to simulate worse network conditions. You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
 
 ## Async Data Loading
