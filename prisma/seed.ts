@@ -618,7 +618,7 @@ export async function createPost(formData: FormData) {
 | \`updateTag(tag)\` | Marks cache stale, revalidates immediately (blocking) |
 | \`refresh()\` | Forces immediate client re-render with fresh data |
 
-The \`'max'\` profile serves stale content while revalidating—other users get fast responses while fresh data generates. Use \`updateTag\` when you need the mutation to block until fresh data is ready.
+The \`'max'\` profile serves stale content while revalidating—other users get fast responses while fresh data generates. This app uses \`revalidateTag()\` + \`refresh()\` for non-blocking invalidation with immediate UI updates. Use \`updateTag\` when you need the mutation to block until fresh data is ready.
 
 ## Granular Cache Tags
 
