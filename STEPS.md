@@ -28,7 +28,7 @@
 - (Bonus: We can also add an unauthenticated state to our app. This way, if a user tries to access a page that requires authentication without being logged in, we can show them a message prompting them to log in instead of just redirecting them or showing a blank page. Unauthorized.tsx and throw from the server if the user is not authenticated.)
 - Add animations our async data loading. Example of ViewTransition to the loading experience of the post list. This creates a smooth transition between the loading state and the loaded content. Add snippet suspensePostListWithAnimation.
 
-## Async Router
+## Async Navigations
 
 - We also have navigations in this app that are delayed. Clicking the sort or the tabs use search params and refetch data from the server, an async routing navigation. Let's add some loading state to these as well.
 - Let's try the tabs, notice it uses the router. What if this component could handle it's own async coordination? Switch to an action prop to declaratively solve this. We can utilize our design component action prop to get an optimistic pending state for the tab buttons. This way, when a user clicks on a tab, we can immediately show a loading state on the button itself, giving them instant feedback. It uses async react under the hood, abstracted away from us, showcase. It also has been pre-designed for us to fit our app design.
