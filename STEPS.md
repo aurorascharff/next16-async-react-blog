@@ -2,7 +2,7 @@
 
 ## Setup and starting point
 
-- This is a blog app with this dashboard section to manage content.
+- The app is a static blog site, but it also has this dynamic dashboard for content management. This is a common pattern for a lot of websites, where you have a public facing side that is more static and optimized for performance and SEO, and then you have a dashboard or admin panel that is more dynamic and optimized for interactivity and user experience.
 - The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience.
 - Demo app: Data fetching has been slowed down to simulate worse network conditions. You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
 
@@ -61,4 +61,5 @@
 - Let me get rid of all my changes and show you the difference before and after again.
 - Before, we had long paints and janky layouts, global spinners and frozen user interactions, and no error boundaries.
 - Here is the after, I deployed this one. I also added some other improvements, like better animations. We have faster paints and a stable layout, skeletons and local feedback, and robust error states. These improvements also reduce First Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift dramatically. Meeting Web Vitals targets directly translates to a smoother feel and also better SEO and discoverability.
+- Remember, the interactions themselves are not actually any faster.
 - If you are interested in learning more about Async React and how to implement these patterns in your own apps, or about the features I'm using from Next.js here, check out the blog posts inside the demo app. They cover what we did in more detail and reference the code itself.
