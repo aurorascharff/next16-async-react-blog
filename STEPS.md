@@ -39,7 +39,8 @@
 - Design components can abstract away the complexities of async interactions and provide a consistent experience across the app. They can also be pre-designed to fit the app's design system, saving us time and ensuring a cohesive look and feel. As we see more of Async React primitives being adopted by design systems and component libraries, we can easily integrate these patterns into our apps without having to build them from scratch.
 - Let's add animations to our async routing. Animate the list reordering when we sort the posts so users see the changes in real-time, using the ViewTransition API around the Card.
 - Let's animate the page navigation to the blog post as well. This gives users a contextual transition that helps them understand the relationship between the list and the detail view. Add this reusable slider component wrapping the ViewTransition API. SlideRightTransition wrap list layout. Ask designer about preferred animations for navigations.
-- (Add slideRightAnimation to the new post page as well.)
+- (Add SlideRightTransition to the edit post layout: `dashboard/[slug]/edit/layout.tsx`. Note: This layout has its own BackButton with href back to the post detail page, not dashboard.)
+- (Add SlideRightTransition to the new post layout as well: `dashboard/new/layout.tsx`.)
 
 ## Async Mutations
 

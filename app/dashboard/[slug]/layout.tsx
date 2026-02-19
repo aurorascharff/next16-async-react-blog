@@ -1,4 +1,3 @@
-import { BackButton } from '@/components/BackButton';
 import { getPosts } from '@/data/queries/post';
 
 export async function generateStaticParams() {
@@ -13,12 +12,7 @@ export default function PostLayout({ children }: LayoutProps<'/dashboard/[slug]'
     <div>
       <div className="bg-muted/30 min-h-screen">
         <div className="container mx-auto max-w-4xl px-4 py-12">
-          <article>
-            <div className="mb-6">
-              <BackButton />
-            </div>
-            {children}
-          </article>
+          <article>{children}</article>
         </div>
       </div>
     </div>
