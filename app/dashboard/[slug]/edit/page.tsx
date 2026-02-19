@@ -1,5 +1,4 @@
 import { Suspense, ViewTransition } from 'react';
-import { SlideRightTransition } from '@/components/ui/animations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { updatePost } from '@/data/actions/post';
@@ -10,26 +9,24 @@ export default async function EditPostPage({ params }: PageProps<'/dashboard/[sl
   const { slug } = await params;
 
   return (
-    <SlideRightTransition>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Edit Post</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Suspense
-            fallback={
-              <ViewTransition exit="slide-down">
-                <EditPostContentSkeleton />
-              </ViewTransition>
-            }
-          >
-            <ViewTransition enter="slide-up" exit="slide-down" default="none">
-              <EditPostContent slug={slug} />
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-2xl">Edit Post</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <EditPostContentSkeleton />
             </ViewTransition>
-          </Suspense>
-        </CardContent>
-      </Card>
-    </SlideRightTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" exit="slide-down" default="none">
+            <EditPostContent slug={slug} />
+          </ViewTransition>
+        </Suspense>
+      </CardContent>
+    </Card>
   );
 }
 
