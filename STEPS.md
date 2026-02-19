@@ -3,15 +3,15 @@
 ## Setup and starting point
 
 - The app is a static blog site, but it also has this dynamic dashboard for content management. This is a common pattern for a lot of websites, where you have a public facing side that is more static and optimized for performance and SEO, and then you have a dashboard or admin panel that is more dynamic and optimized for interactivity and user experience.
-- The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. I also use Next.js Cache Components here for the optimal data fetching and caching experience, to easily create this static dynamic hybrid app.
+- The setup is the Next.js App Router, Prisma ORM and an Prisma Postgres DB, Tailwind CSS. Using React Server Components as my data fetching framework. I also use Next.js Cache Components here for the optimal data fetching and caching experience, to easily create this static dynamic hybrid app.
 - Demo app: Data fetching has been slowed down to simulate worse network conditions. You can see this is the bad UX we had from the beginning in the slides. Let's fix it by designing the appropriate in-between states.
 
 ## Async Data Loading
 
-- Let's work on our data loading. We can see the initial loading state is a Spinner. Let's convert it to a proper skeleton state. Here, see if your designer would like to create some reusable skeleton UI, or if your design system or component library already have some skeleton components, you can use those.
+- Let's work on our data loading. We can see the initial loading state is a Spinner, streaming RSCs. Let's convert it to a proper skeleton state. Here, see if your designer would like to create some reusable skeleton UI, or if your design system or component library already have some skeleton components, you can use those.
 - In Next.js, we have the loading.tsx file that allows us to define a loading state for our page. This is similar in other frameworks like Tanstack Router. However, here, we want to show more of the UI instead of hiding the whole page. Delete it.
 - Are you familiar with cache components? They will actually tell us if we are blocking our application from loading. Notice the error, we need to add back a suspense boundary here. But we want to add it further down the tree, so we can show more of the UI.
-- Use Suspense in the dashboard page.tsx. Skeletons give users a sense of the content structure and make loading feel faster. Use a skeleton component that mimics the structure of the content.
+- Use Suspense in the dashboard page.tsx. Skeletons give users a sense of the content structure and make loading feel faster. Use a skeleton component that mimics the structure of the content. Wrap the PostList RSC.
 - Now, we can see the shell of the page immediately, and then the post list will load in with a nice skeleton.
 - Increasing our perceived performance with a better FCP and LCP.
 - Now, we have a much better loading state, while revealing the UI faster. With CacheComponents, the shell will be statically rendered. I get a way better FCP and LCP here. And it will be prefetched for instant navigations.
@@ -19,7 +19,7 @@
 - Let's use the new React Devtools Suspense panel to pin these and easier design them for us. Switch screen to localhost suspense. Now, we could code this realtime and make sure there is no CLS and the shape of the skeleton matches the content. Update to proper skeleton for the header, showcase, then do the same for the content. Refresh the page and see how we have a stable layout and a much better loading experience.
 - Also, let's fix the edit page. Switch from loading to Suspense with skeleton: cacheComp error, use Suspense.
 - Already, our loading states feel way better.
-- What about the error state? What if it throws? Throw. Our entire app breaks. Let's add an error.tsx file to handle errors in our blog page. This way, we can show a user-friendly error message instead of a blank page, and use layouts to preserve the surrounding UI.
+- What about the error state? What if content throws? Throw. Our entire app breaks. Let's add an error.tsx file to handle errors in our blog page. This way, we can show a user-friendly error message instead of a blank page, and use layouts to preserve the surrounding UI.
 - What about the post list error? Showcase the error states by throwing. App broke. We can use a local ErrorBoundary for post list to avoid hiding the top content if the post list fails to load, add a custom label and fullwidth, allow retry. Add snippet errorUI. Declarative approach, pairs with Suspense.
 - Different frameworks like react router 7 or tanstack router have their own route-level error boundaries similar to this.
 - Collaborate with the designer to create intentional error states that fit the app design.
