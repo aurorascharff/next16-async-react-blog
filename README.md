@@ -1,7 +1,6 @@
-
 # Next.js 16 Async React Blog
 
-A demo blog exploring **Async React patterns with Next.js 16's cacheComponents**. Each post covers a real pattern used in the app, from caching and streaming to optimistic updates and transitions, focusing on crafting great UX in the in-between states.
+A demo blog exploring Async React patterns with Next.js 16's Cache Components. Each post covers a real pattern used in the app, from caching and streaming to optimistic updates and transitions, focusing on crafting great UX in the in-between states.
 
 Built with Next.js 16, React 19, Prisma, TailwindCSS v4, and shadcn/ui (Base UI).
 
@@ -44,7 +43,7 @@ components/
   design/                 # Action prop components
   ui/                     # shadcn/ui primitives
 data/
-  actions/                # Server Functions
+  actions/                # Server Actions
   queries/                # Data fetching with cache()
 ```
 
@@ -53,15 +52,21 @@ data/
 
 Every page folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
 
-**Naming:** PascalCase for components, kebab-case for files/folders, camelCase for functions/hooks.
+**Naming:** PascalCase for components, kebab-case for files/folders, camelCase for functions/hooks. Suffix transition-based functions with "Action".
+
+## Key Patterns
+
+**Cache Components:** Uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) to statically render server components that don't access dynamic data. Keep pages non-async and push dynamic data access into `<Suspense>` boundaries to maximize the static shell. Use [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) with `cacheLife()` to explicitly cache additional components or functions.
+
+**Async React:** Replace manual `isLoading`/`isError` state with React 19's coordination primitives — `useTransition` for tracking async work, `useOptimistic` for instant feedback, `Suspense` for loading boundaries, and `use()` for reading promises during render. See `AGENTS.md` for detailed patterns and examples.
 
 ## Development Flow
 
-This project uses [`cacheComponents: true`](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) — data fetching is **dynamic by default**. Push dynamic data access (`searchParams`, `cookies()`, `headers()`, uncached fetches) as deep as possible in the component tree to maximize static content. Async components accessing dynamic data must be wrapped in `<Suspense>` with skeleton fallbacks.
-
-- **Fetching data** — Create queries in `data/queries/`, call in Server Components. Wrap with `cache()` for deduplication.
-- **Mutating data** — Create Server Functions in `data/actions/` with `"use server"`. Invalidate with `revalidateTag()`, `updateTag()`, or `refresh()`. Use `useTransition` or `useFormStatus` for pending states, `useOptimistic` for instant feedback.
-- **Caching** — Add [`"use cache"`](https://nextjs.org/docs/app/api-reference/directives/use-cache) to pages, components, or functions you want to pre-render or cache.
+- **Fetching data** — Queries in `data/queries/`, wrapped with `cache()`. Await in Server Components directly, or pass the promise to a client component and unwrap with `use()`.
+- **Mutating data** — Server Actions in `data/actions/` with `"use server"`. Invalidate with `revalidateTag()` + `refresh()`. Use `useTransition` + `useOptimistic` for pending state and instant feedback.
+- **Navigation** — Wrap route changes in `useTransition` to get `isPending` for loading UI.
+- **Caching** — Add `"use cache"` with `cacheLife()` to pages, components, or functions to include them in the static shell.
+- **Errors** — `error.tsx` for boundaries, `not-found.tsx` + `notFound()` for 404s. Errors thrown inside transitions automatically reach the nearest error boundary.
 
 ## Development Tools
 
