@@ -16,10 +16,9 @@ type TabListProps = {
   changeAction?: (value: string) => void | Promise<void>;
   onChange?: (value: string) => void;
   className?: string;
-  children?: React.ReactNode;
 };
 
-export function TabList({ tabs, activeTab, changeAction, onChange, className, children }: TabListProps) {
+export function TabList({ tabs, activeTab, changeAction, onChange, className }: TabListProps) {
   const [optimisticTab, setOptimisticTab] = useOptimistic(activeTab);
   const [isPending, startTransition] = useTransition();
 
@@ -53,7 +52,6 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className, ch
         </BaseTabsList>
         {isPending && <Spinner />}
       </div>
-      {children}
     </Tabs>
   );
 }
