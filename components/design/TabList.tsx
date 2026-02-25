@@ -14,7 +14,7 @@ type TabListProps = {
   tabs: Tab[];
   activeTab: string;
   changeAction?: (value: string) => void | Promise<void>;
-  onChange?: (value: string) => void;
+  onChange?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 };
 
@@ -22,8 +22,8 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className }: 
   const [optimisticTab, setOptimisticTab] = useOptimistic(activeTab);
   const [isPending, startTransition] = useTransition();
 
-  function handleTabChange(value: string) {
-    onChange?.(value);
+  function handleTabChange(e: React.MouseEvent<HTMLButtonElement>, value: string) {
+    onChange?.(e);
     if (changeAction) {
       startTransition(async () => {
         setOptimisticTab(value);
@@ -41,8 +41,8 @@ export function TabList({ tabs, activeTab, changeAction, onChange, className }: 
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                onClick={() => {
-                  handleTabChange(tab.value);
+                onClick={e => {
+                  handleTabChange(e, tab.value);
                 }}
               >
                 {tab.label}
