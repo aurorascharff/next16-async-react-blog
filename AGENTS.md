@@ -7,10 +7,10 @@ Instructions for AI coding agents working on this Next.js 16 App Router project.
 ## Commands
 
 ```bash
-npm install
-npm run dev          # http://localhost:3000
-npm run build        # run before committing
-npm run lint         # run before committing
+bun install
+bun run dev          # http://localhost:3000
+bun run build        # run before committing
+bun run lint         # run before committing
 ```
 
 ## Stack
@@ -46,7 +46,7 @@ app/                    # File-based routing
       _components/      # Nested route-local components
     new/                # Create post
 components/
-  ui/                   # shadcn/ui primitives (add: npx shadcn@latest add <n>)
+  ui/                   # shadcn/ui primitives (add: bunx shadcn@latest add <n>)
   design/               # Design system — Action props pattern (see below)
 data/
   queries/              # Server-side data fetching, wrapped with cache()
@@ -174,11 +174,11 @@ Export skeleton components from the **same file** as their component, placed bel
 ## Prisma
 
 ```bash
-npm run prisma.push      # Push schema changes to DB
-npm run prisma.seed      # Seed the database
-npm run prisma.studio    # Open Prisma Studio
-npm run prisma.migrate   # Run migrations
-npm run prisma.generate  # Generate Prisma client
+bun run prisma.push      # Push schema changes to DB
+bun run prisma.seed      # Seed the database
+bun run prisma.studio    # Open Prisma Studio
+bun run prisma.migrate   # Run migrations
+bun run prisma.generate  # Generate Prisma client
 ```
 
 ## Error Handling
