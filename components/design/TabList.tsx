@@ -1,7 +1,6 @@
 'use client';
 
 import { useOptimistic, useTransition } from 'react';
-
 import { Tabs, TabsList as BaseTabsList, TabsTrigger, tabsListVariants } from '@/components/ui/tabs';
 import { Spinner } from '../ui/spinner';
 
