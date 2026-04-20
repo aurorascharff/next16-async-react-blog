@@ -1,12 +1,4 @@
 import { ViewTransition } from 'react';
-import { getPosts } from '@/data/queries/post';
-
-export async function generateStaticParams() {
-  const posts = await getPosts();
-  return posts.map(post => {
-    return { slug: post.slug };
-  });
-}
 
 export default async function PostLayout({ children, params }: LayoutProps<'/dashboard/[slug]'>) {
   const { slug } = await params;
