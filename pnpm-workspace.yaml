@@ -1,0 +1,16 @@
+packages:
+  - .
+
+minimumReleaseAge: 2880 # 48 hrs
+minimumReleaseAgeExclude:
+  - '@next/*'
+  - eslint-config-next
+  - next
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - msw
+  - prisma
+  - sharp
+  - unrs-resolver
