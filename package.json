@@ -74,5 +74,6 @@
   },
   "overrides": {
     "zod-validation-error": "^5.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }

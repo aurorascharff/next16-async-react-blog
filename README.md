@@ -7,8 +7,8 @@ Built with Next.js 16, React 19, Prisma, TailwindCSS v4, and shadcn/ui (Base UI)
 ## Getting Started
 
 ```bash
-bun install
-bun run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -22,10 +22,10 @@ DATABASE_URL="postgres://..."
 ```
 
 ```bash
-bun run prisma.generate   # Generate the Prisma client
-bun run prisma.push       # Push schema to database
-bun run prisma.seed       # Seed blog posts
-bun run prisma.studio     # View data in Prisma Studio
+pnpm prisma.generate   # Generate the Prisma client
+pnpm prisma.push       # Push schema to database
+pnpm prisma.seed       # Seed blog posts
+pnpm prisma.studio     # View data in Prisma Studio
 ```
 
 **Using SQLite instead:** Change the provider in `prisma/schema.prisma` to `sqlite`, update `db.ts` to use `@prisma/adapter-libsql`, and set `DATABASE_URL="file:./dev.db"` in `.env`.
@@ -47,7 +47,7 @@ data/
   queries/                # Data fetching with cache()
 ```
 
-- **components/ui** — [shadcn/ui](https://ui.shadcn.com/) components. Add with `bunx shadcn@latest add <component-name>`
+- **components/ui** — [shadcn/ui](https://ui.shadcn.com/) components. Add with `pnpm dlx shadcn@latest add <component-name>`
 - **components/design** — Components that expose [Action props](https://react.dev/reference/react/useTransition#exposing-action-props-from-components) and handle async coordination internally
 
 Every page folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
@@ -75,7 +75,7 @@ Uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) with for
 ## Deployment
 
 ```bash
-bun run build
+pnpm build
 ```
 
 Deploy to [Vercel](https://vercel.com) for the easiest experience with Prisma Postgres.
